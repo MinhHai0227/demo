@@ -1,0 +1,90 @@
+import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import type { KnowledgeChunk } from "@/types/knowledge-chunk-type"
+
+type KnowledgeChunkDeleteDialogProps = {
+  open: boolean
+  chunk?: KnowledgeChunk | null
+  isDeleting?: boolean
+  onOpenChange: (open: boolean) => void
+  onConfirm: () => void | Promise<void>
+}
+
+const KnowledgeChunkDeleteDialog = ({
+  open,
+  chunk,
+  isDeleting = false,
+  onOpenChange,
+  onConfirm,
+}: KnowledgeChunkDeleteDialogProps) => {
+  const chunkLabel = chunk?.title || chunk?.category || null
+
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200 p-0">
+        {/* Icon header */}
+        <div className="flex flex-col items-center gap-3 bg-red-50 px-6 py-6 text-center">
+          <div className="flex size-12 items-center justify-center rounded-full border border-red-200 bg-white text-red-500">
+            <AlertTriangle className="size-5" />
+          </div>
+          <AlertDialogHeader className="space-y-1 text-center">
+            <AlertDialogTitle className="text-base font-semibold text-slate-900">
+              Delete knowledge chunk?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-xs leading-relaxed text-slate-500">
+              {chunkLabel ? (
+                <>
+                  This will permanently remove{" "}
+                  <span className="font-medium text-slate-700">
+                    "{chunkLabel}"
+                  </span>{" "}
+                  from the database.
+                </>
+              ) : (
+                "This will permanently remove the selected knowledge chunk."
+              )}{" "}
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+        </div>
+
+        {/* Footer */}
+        <AlertDialogFooter className="flex flex-row items-center justify-end gap-2 border-t border-slate-100 bg-white px-5 py-4">
+          <AlertDialogCancel
+            disabled={isDeleting}
+            className="h-9 rounded-xl border-slate-200 text-sm text-slate-600"
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            disabled={isDeleting}
+            onClick={onConfirm}
+            className="h-9 rounded-xl bg-red-600 text-sm hover:bg-red-700 focus:ring-red-500"
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" /> Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 className="size-3.5" /> Delete chunk
+              </>
+            )}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+
+export default KnowledgeChunkDeleteDialog

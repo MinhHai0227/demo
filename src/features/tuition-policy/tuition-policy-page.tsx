@@ -1,0 +1,289 @@
+import { startTransition, useEffect, useMemo, useState } from "react"
+
+import TuitionPolicyDeleteDialog from "@/features/tuition-policy/components/tuition-policy-delete-dialog"
+import TuitionPolicyFormDialog from "@/features/tuition-policy/components/tuition-policy-form-dialog"
+import TuitionPolicyTable from "@/features/tuition-policy/components/tuition-policy-table"
+import TuitionPolicyToolbar from "@/features/tuition-policy/components/tuition-policy-toolbar"
+import useTuitionPolicy from "@/hooks/use-tuition-policy"
+import type { TuitionPolicyFormValues } from "@/schemas/tuition-policy-schema"
+import type {
+  FeeType,
+  TuitionPolicy,
+  TuitionPolicyListParams,
+} from "@/types/tuition-policy-type"
+
+const PAGE_SIZE = 4
+
+const TuitionPolicyPage = () => {
+  const [yearInput, setYearInput] = useState("")
+  const [appliedYear, setAppliedYear] = useState<number | undefined>(undefined)
+  const [majorFilter, setMajorFilter] = useState("ALL")
+  const [feeTypeFilter, setFeeTypeFilter] = useState<FeeType | "ALL">("ALL")
+  const [offset, setOffset] = useState(0)
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogMode, setDialogMode] = useState<"create" | "edit">("create")
+  const [selectedPolicy, setSelectedPolicy] = useState<TuitionPolicy | null>(null)
+  const [dialogError, setDialogError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [policyToDelete, setPolicyToDelete] = useState<TuitionPolicy | null>(null)
+  const [togglingPolicyId, setTogglingPolicyId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      startTransition(() => {
+        setOffset(0)
+        const trimmedYear = yearInput.trim()
+        if (!trimmedYear) {
+          setAppliedYear(undefined)
+          return
+        }
+
+        const nextYear = Number(trimmedYear)
+        setAppliedYear(Number.isInteger(nextYear) ? nextYear : undefined)
+      })
+    }, 1000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [yearInput])
+
+  const params: TuitionPolicyListParams = {
+    limit: PAGE_SIZE,
+    offset,
+    year: appliedYear,
+    major_id: majorFilter === "ALL" ? undefined : majorFilter,
+    fee_type: feeTypeFilter === "ALL" ? undefined : feeTypeFilter,
+  }
+
+  const {
+    tuitionPolicyList,
+    tuitionPolicyListPending,
+    tuitionPolicyListFetching,
+    majorOptions,
+    majorOptionsPending,
+    createTuitionPolicy: createTuitionPolicyAction,
+    createTuitionPolicyPending,
+    updateTuitionPolicy: updateTuitionPolicyAction,
+    updateTuitionPolicyPending,
+    updateTuitionPolicyStatus: updateTuitionPolicyStatusAction,
+    deleteTuitionPolicy: deleteTuitionPolicyAction,
+    deleteTuitionPolicyPending,
+  } = useTuitionPolicy(params)
+
+  const total = tuitionPolicyList?.total ?? 0
+  const items = tuitionPolicyList?.items ?? []
+
+  const majorNameById = useMemo(
+    () =>
+      Object.fromEntries(
+        majorOptions.map((major) => [major.id, `${major.code} - ${major.name}`])
+      ) as Record<string, string>,
+    [majorOptions]
+  )
+
+  const handleCreateClick = () => {
+    setDialogMode("create")
+    setSelectedPolicy(null)
+    setDialogError(null)
+    setActionSuccess(null)
+    setDialogOpen(true)
+  }
+
+  const handleEditClick = (policy: TuitionPolicy) => {
+    setDialogMode("edit")
+    setSelectedPolicy(policy)
+    setDialogError(null)
+    setActionSuccess(null)
+    setDialogOpen(true)
+  }
+
+  const handleDialogSubmit = async (values: TuitionPolicyFormValues) => {
+    setDialogError(null)
+
+    const payload = {
+      major_id: values.major_id,
+      year: values.year,
+      fee_type: values.fee_type,
+      base_fee: values.base_fee,
+    }
+
+    try {
+      if (dialogMode === "create") {
+        await createTuitionPolicyAction({
+          ...payload,
+          is_active: true,
+        })
+        setDialogOpen(false)
+        setActionSuccess("Tuition policy created successfully.")
+        return
+      }
+
+      if (!selectedPolicy) {
+        return
+      }
+
+      await updateTuitionPolicyAction({
+        policyId: selectedPolicy.id,
+        values: payload,
+      })
+      setDialogOpen(false)
+      setSelectedPolicy(null)
+      setActionSuccess("Tuition policy updated successfully.")
+    } catch (error) {
+      setDialogError(
+        error instanceof Error ? error.message : "Something went wrong. Please try again."
+      )
+    }
+  }
+
+  const handleToggleStatus = async (policy: TuitionPolicy) => {
+    setTogglingPolicyId(policy.id)
+    setActionError(null)
+    setActionSuccess(null)
+
+    try {
+      await updateTuitionPolicyStatusAction({
+        policyId: policy.id,
+        is_active: !policy.is_active,
+      })
+      setActionSuccess(
+        `Tuition policy ${!policy.is_active ? "activated" : "deactivated"} successfully.`
+      )
+    } catch (error) {
+      setActionError(
+        error instanceof Error ? error.message : "Something went wrong. Please try again."
+      )
+    } finally {
+      setTogglingPolicyId(null)
+    }
+  }
+
+  const handleDeleteClick = (policy: TuitionPolicy) => {
+    setPolicyToDelete(policy)
+    setActionSuccess(null)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!policyToDelete) {
+      return
+    }
+
+    try {
+      await deleteTuitionPolicyAction(policyToDelete.id)
+      if (items.length === 1 && offset > 0) {
+        setOffset(Math.max(0, offset - PAGE_SIZE))
+      }
+      setDeleteDialogOpen(false)
+      setPolicyToDelete(null)
+      setActionError(null)
+      setActionSuccess("Tuition policy deleted successfully.")
+    } catch (error) {
+      setActionError(
+        error instanceof Error ? error.message : "Something went wrong. Please try again."
+      )
+    }
+  }
+
+  const handleClearFilters = () => {
+    setYearInput("")
+    setAppliedYear(undefined)
+    setMajorFilter("ALL")
+    setFeeTypeFilter("ALL")
+    setOffset(0)
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-lg font-semibold text-slate-900">Tuition Policies</h1>
+        <p className="text-sm text-slate-500">
+          Control tuition pricing rules for each major, year, and billing model.
+        </p>
+      </div>
+
+      <TuitionPolicyToolbar
+        yearInput={yearInput}
+        appliedYear={appliedYear}
+        majorFilter={majorFilter}
+        feeTypeFilter={feeTypeFilter}
+        majorOptions={majorOptions}
+        onYearInputChange={setYearInput}
+        onMajorFilterChange={(value) => {
+          setMajorFilter(value)
+          setOffset(0)
+        }}
+        onFeeTypeFilterChange={(value) => {
+          setFeeTypeFilter(value)
+          setOffset(0)
+        }}
+        onCreateClick={handleCreateClick}
+        onClearFilters={handleClearFilters}
+      />
+
+      {actionError ? (
+        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {actionError}
+        </div>
+      ) : null}
+
+      {actionSuccess ? (
+        <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {actionSuccess}
+        </div>
+      ) : null}
+
+      <TuitionPolicyTable
+        items={items}
+        total={total}
+        limit={PAGE_SIZE}
+        offset={offset}
+        majorNameById={majorNameById}
+        isLoading={tuitionPolicyListPending}
+        isFetching={tuitionPolicyListFetching}
+        togglingPolicyId={togglingPolicyId}
+        onPageChange={(page) => setOffset((page - 1) * PAGE_SIZE)}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+        onToggleStatus={handleToggleStatus}
+      />
+
+      <TuitionPolicyFormDialog
+        open={dialogOpen}
+        mode={dialogMode}
+        policy={selectedPolicy}
+        majorOptions={majorOptions}
+        majorOptionsPending={majorOptionsPending}
+        errorMessage={dialogError}
+        isSubmitting={createTuitionPolicyPending || updateTuitionPolicyPending}
+        onOpenChange={(open) => {
+          setDialogOpen(open)
+          if (!open) {
+            setDialogError(null)
+            setSelectedPolicy(null)
+          }
+        }}
+        onSubmit={handleDialogSubmit}
+      />
+
+      <TuitionPolicyDeleteDialog
+        open={deleteDialogOpen}
+        policy={policyToDelete}
+        majorName={policyToDelete ? majorNameById[policyToDelete.major_id] : undefined}
+        isDeleting={deleteTuitionPolicyPending}
+        onOpenChange={(open) => {
+          setDeleteDialogOpen(open)
+          if (!open) {
+            setPolicyToDelete(null)
+          }
+        }}
+        onConfirm={handleConfirmDelete}
+      />
+    </div>
+  )
+}
+
+export default TuitionPolicyPage
