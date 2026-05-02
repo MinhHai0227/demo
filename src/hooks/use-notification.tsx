@@ -6,7 +6,12 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from "@/api/notification-api"
-import type { NotificationTarget } from "@/types/notification-type"
+import type {
+  NotificationItem,
+  NotificationListResponse,
+  NotificationTarget,
+  UnreadNotificationCountResponse,
+} from "@/types/notification-type"
 
 type UseNotificationOptions = {
   enabled?: boolean
@@ -23,6 +28,77 @@ const useNotification = ({
 }: UseNotificationOptions) => {
   const queryClient = useQueryClient()
 
+  const syncReadNotificationInCache = (notification: NotificationItem) => {
+    queryClient
+      .getQueryCache()
+      .findAll({ queryKey: ["notifications"] })
+      .forEach((query) => {
+        queryClient.setQueryData<NotificationListResponse>(
+          query.queryKey,
+          (data) =>
+            data
+              ? {
+                  ...data,
+                  items: data.items.map((item) =>
+                    item.id === notification.id ? notification : item
+                  ),
+                }
+              : data
+        )
+      })
+
+    queryClient
+      .getQueryCache()
+      .findAll({ queryKey: ["notifications-unread-count"] })
+      .forEach((query) => {
+        queryClient.setQueryData<UnreadNotificationCountResponse>(
+          query.queryKey,
+          (data) =>
+            data
+              ? {
+                  unread_count: Math.max(0, data.unread_count - 1),
+                }
+              : data
+        )
+      })
+  }
+
+  const syncReadAllNotificationsInCache = () => {
+    queryClient
+      .getQueryCache()
+      .findAll({ queryKey: ["notifications"] })
+      .forEach((query) => {
+        queryClient.setQueryData<NotificationListResponse>(
+          query.queryKey,
+          (data) =>
+            data
+              ? {
+                  ...data,
+                  items: data.items.map((item) => ({
+                    ...item,
+                    is_read: true,
+                  })),
+                }
+              : data
+        )
+      })
+
+    queryClient
+      .getQueryCache()
+      .findAll({ queryKey: ["notifications-unread-count"] })
+      .forEach((query) => {
+        queryClient.setQueryData<UnreadNotificationCountResponse>(
+          query.queryKey,
+          (data) =>
+            data
+              ? {
+                  unread_count: 0,
+                }
+              : data
+        )
+      })
+  }
+
   const notificationsQuery = useQuery({
     queryKey: ["notifications", staffId, target, limit],
     queryFn: () =>
@@ -33,7 +109,6 @@ const useNotification = ({
         target,
       }),
     enabled,
-    refetchInterval: 15000,
   })
 
   const unreadCountQuery = useQuery({
@@ -44,22 +119,12 @@ const useNotification = ({
         target,
       }),
     enabled,
-    refetchInterval: 15000,
   })
-
-  const invalidateNotifications = async () => {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["notifications"] }),
-      queryClient.invalidateQueries({
-        queryKey: ["notifications-unread-count"],
-      }),
-    ])
-  }
 
   const markNotificationReadMutation = useMutation({
     mutationFn: (notificationId: string) =>
       markNotificationRead(notificationId),
-    onSuccess: invalidateNotifications,
+    onSuccess: syncReadNotificationInCache,
   })
 
   const markAllNotificationsReadMutation = useMutation({
@@ -68,7 +133,7 @@ const useNotification = ({
         staff_id: staffId,
         target,
       }),
-    onSuccess: invalidateNotifications,
+    onSuccess: syncReadAllNotificationsInCache,
   })
 
   return {

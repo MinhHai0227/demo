@@ -15,6 +15,7 @@ import type {
 import type {
   NotificationItem,
   NotificationListResponse,
+  UnreadNotificationCountResponse,
 } from "@/types/notification-type"
 
 type RealtimePayload = {
@@ -22,6 +23,8 @@ type RealtimePayload = {
   conversation?: ChatConversation
   messages?: ChatMessage[]
   notification?: NotificationItem
+  staff_id?: string | null
+  target?: NotificationItem["target"]
   read_all?: boolean
 }
 
@@ -155,12 +158,12 @@ const handleNotificationEvent = (
   }
 
   if (payload.read_all) {
-    markNotificationListsRead(queryClient)
+    markNotificationListsRead(queryClient, payload)
   }
 
-  void queryClient.invalidateQueries({
-    queryKey: ["notifications-unread-count"],
-  })
+  if (payload.notification) {
+    syncNotificationUnreadCount(queryClient, payload.notification)
+  }
 }
 
 const appendMessage = (queryClient: QueryClient, message: ChatMessage) => {
@@ -216,14 +219,14 @@ const syncConversation = (
     .getQueryCache()
     .findAll({ queryKey: ["admin-message-conversations"] })
     .forEach((query) => {
-      queryClient.setQueryData<InfiniteData<ChatConversationsPage, string | null>>(
-        query.queryKey,
-        (data) =>
-          syncConversationInPages(
-            data,
-            conversation,
-            shouldConversationStayInQuery(conversation, query.queryKey)
-          )
+      queryClient.setQueryData<
+        InfiniteData<ChatConversationsPage, string | null>
+      >(query.queryKey, (data) =>
+        syncConversationInPages(
+          data,
+          conversation,
+          shouldConversationStayInQuery(conversation, query.queryKey)
+        )
       )
     })
 }
@@ -342,6 +345,10 @@ const syncNotification = (
     .getQueryCache()
     .findAll({ queryKey: ["notifications"] })
     .forEach((query) => {
+      if (!matchesNotificationListQuery(query.queryKey, notification)) {
+        return
+      }
+
       queryClient.setQueryData<NotificationListResponse>(
         query.queryKey,
         (data) => syncNotificationInList(data, notification)
@@ -374,11 +381,18 @@ const syncNotificationInList = (
   }
 }
 
-const markNotificationListsRead = (queryClient: QueryClient) => {
+const markNotificationListsRead = (
+  queryClient: QueryClient,
+  payload: RealtimePayload
+) => {
   queryClient
     .getQueryCache()
     .findAll({ queryKey: ["notifications"] })
     .forEach((query) => {
+      if (!matchesNotificationListQuery(query.queryKey, payload)) {
+        return
+      }
+
       queryClient.setQueryData<NotificationListResponse>(
         query.queryKey,
         (data) =>
@@ -393,6 +407,93 @@ const markNotificationListsRead = (queryClient: QueryClient) => {
             : data
       )
     })
+
+  queryClient
+    .getQueryCache()
+    .findAll({ queryKey: ["notifications-unread-count"] })
+    .forEach((query) => {
+      if (!matchesUnreadCountQuery(query.queryKey, payload)) {
+        return
+      }
+
+      queryClient.setQueryData<UnreadNotificationCountResponse>(
+        query.queryKey,
+        (data) =>
+          data
+            ? {
+                unread_count: 0,
+              }
+            : data
+      )
+    })
+}
+
+const matchesNotificationListQuery = (
+  queryKey: readonly unknown[],
+  source:
+    | Pick<RealtimePayload, "staff_id" | "target">
+    | Pick<NotificationItem, "staff_id" | "target">
+) => {
+  const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
+  const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined
+
+  if (staffId && source.staff_id !== staffId) {
+    return false
+  }
+
+  if (target && source.target !== target) {
+    return false
+  }
+
+  return true
+}
+
+const syncNotificationUnreadCount = (
+  queryClient: QueryClient,
+  notification: NotificationItem
+) => {
+  queryClient
+    .getQueryCache()
+    .findAll({ queryKey: ["notifications-unread-count"] })
+    .forEach((query) => {
+      if (!matchesUnreadCountQuery(query.queryKey, notification)) {
+        return
+      }
+
+      queryClient.setQueryData<UnreadNotificationCountResponse>(
+        query.queryKey,
+        (data) => {
+          if (!data) {
+            return data
+          }
+
+          const delta = notification.is_read ? -1 : 1
+          return {
+            unread_count: Math.max(0, data.unread_count + delta),
+          }
+        }
+      )
+    })
+}
+
+const matchesUnreadCountQuery = (
+  queryKey: readonly unknown[],
+  source:
+    | Pick<RealtimePayload, "staff_id" | "target">
+    | Pick<NotificationItem, "staff_id" | "target">
+) => {
+  const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
+  const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined
+
+  if (staffId && source.staff_id !== staffId) {
+    return false
+  }
+
+  if (target && source.target !== target) {
+    return false
+  }
+
+  return true
 }
 
 const fallbackInvalidateChat = (
