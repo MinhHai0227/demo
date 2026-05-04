@@ -173,7 +173,7 @@ const ChatPage = () => {
         content,
       })
     } catch (error) {
-      setActionError(getErrorMessage(error, "Khong gui duoc tin nhan."))
+      setActionError(getErrorMessage(error, "Không gửi được tin nhắn."))
     }
   }
 
@@ -192,7 +192,7 @@ const ChatPage = () => {
         status,
       })
     } catch (error) {
-      setActionError(getErrorMessage(error, "Khong cap nhat duoc trang thai."))
+      setActionError(getErrorMessage(error, "Không cập nhật được trạng thái."))
     }
   }
 
@@ -265,7 +265,7 @@ const ChatPage = () => {
           updateLeadMutation.error
             ? getErrorMessage(
                 updateLeadMutation.error,
-                "Khong the cap nhat lead luc nay."
+                "Không thể cập nhật lead lúc này."
               )
             : null
         }

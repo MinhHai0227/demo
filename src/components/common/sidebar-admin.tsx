@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom"
 import {
   BookOpenText,
   CreditCard,
-  FileText,
   Globe2,
   GraduationCap,
   LayoutDashboard,
@@ -39,7 +38,7 @@ type NavSection = {
 
 const navSections: NavSection[] = [
   {
-    title: "Tong quan",
+    title: "Tổng quan",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
       {
@@ -48,11 +47,11 @@ const navSections: NavSection[] = [
         href: "/admin/hot-questions",
       },
       { label: "Leads", icon: Users, href: "/admin/leads" },
-      { label: "Applications", icon: FileText, href: "/admin/applications" },
+      // { label: "Applications", icon: FileText, href: "/admin/applications" },
     ],
   },
   {
-    title: "Van hanh tuyen sinh",
+    title: "Vận hành tuyển sinh",
     items: [
       {
         label: "Web Crawler",
@@ -73,7 +72,7 @@ const navSections: NavSection[] = [
     ],
   },
   {
-    title: "Noi dung va chinh sach",
+    title: "Nội dung và chính sách",
     items: [
       { label: "Majors", icon: GraduationCap, href: "/admin/majors" },
       {
@@ -84,7 +83,7 @@ const navSections: NavSection[] = [
     ],
   },
   {
-    title: "Quan tri he thong",
+    title: "Quản trị hệ thống",
     items: [{ label: "Staffs", icon: ShieldCheck, href: "/admin/staffs" }],
   },
   {
@@ -113,7 +112,7 @@ const AppSidebar = () => {
               Admissions Admin
             </p>
             <p className="truncate text-xs text-slate-500">
-              Quan ly tuyen sinh
+              Quản lý tuyển sinh
             </p>
           </div>
         </Link>

@@ -47,24 +47,25 @@ const LeadFormDialog = ({
 }: LeadFormDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-6xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="max-h-[calc(100vh-1.5rem)] max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-xl ring-1 ring-slate-100 sm:max-w-6xl">
+        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm ring-1 ring-slate-900/10">
               <FileSearch className="size-4" />
             </div>
-            <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {lead?.full_name || "Lead details"}
+            <div className="min-w-0">
+              <DialogTitle className="truncate text-base font-semibold text-slate-950">
+                {lead?.full_name || "Chi tiết lead"}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Review profile, status, interests, and applications for this lead.
+              <DialogDescription className="mt-1 text-xs leading-5 text-slate-500">
+                Kiểm tra hồ sơ, trạng thái, ngành quan tâm và hồ sơ ứng tuyển
+                của lead này.
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="max-h-[calc(100vh-11rem)] overflow-y-auto px-6 py-5">
+        <div className="max-h-[calc(100vh-11rem)] overflow-y-auto bg-slate-50/40 px-6 py-5">
           <LeadDetailPanel
             key={lead ? `${lead.id}-${lead.updated_at ?? ""}` : "lead-empty"}
             lead={lead}
@@ -80,21 +81,21 @@ const LeadFormDialog = ({
           />
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+        <div className="flex items-center justify-end gap-2 border-t border-slate-100 bg-white px-6 py-4">
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="rounded-xl border-slate-200 text-sm text-slate-600"
+            className="rounded-xl border-slate-200 bg-white text-sm text-slate-600 shadow-xs transition-colors hover:bg-slate-100 hover:text-slate-950"
             disabled={savePending}
             onClick={() => onOpenChange(false)}
           >
-            Close
+            Đóng
           </Button>
           {savePending && (
-            <div className="inline-flex items-center gap-2 text-xs text-slate-500">
+            <div className="inline-flex items-center gap-2 rounded-lg bg-slate-50 px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200">
               <Loader2 className="size-3.5 animate-spin" />
-              Saving changes...
+              Đang lưu thay đổi...
             </div>
           )}
         </div>

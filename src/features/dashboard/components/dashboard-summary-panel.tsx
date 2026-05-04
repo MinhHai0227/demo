@@ -20,30 +20,26 @@ type SummaryMetricCardProps = {
 
 const TONE_STYLES: Record<
   NonNullable<SummaryMetricCardProps["tone"]>,
-  {
-    card: string
-    icon: string
-    label: string
-  }
+  { accent: string; icon: string; label: string }
 > = {
   slate: {
-    card: "border-slate-200 bg-gradient-to-br from-slate-50 to-white",
-    icon: "bg-slate-100 text-slate-600",
+    accent: "from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30",
+    icon: "bg-slate-100 text-slate-700",
     label: "text-slate-500",
   },
   emerald: {
-    card: "border-emerald-200 bg-gradient-to-br from-emerald-50 to-white",
-    icon: "bg-emerald-100 text-emerald-700",
+    accent: "from-emerald-400 via-emerald-300 to-emerald-200/40",
+    icon: "bg-emerald-50 text-emerald-700",
     label: "text-emerald-600",
   },
   amber: {
-    card: "border-amber-200 bg-gradient-to-br from-amber-50 to-white",
-    icon: "bg-amber-100 text-amber-700",
+    accent: "from-amber-400 via-amber-300 to-amber-200/40",
+    icon: "bg-amber-50 text-amber-700",
     label: "text-amber-600",
   },
   rose: {
-    card: "border-rose-200 bg-gradient-to-br from-rose-50 to-white",
-    icon: "bg-rose-100 text-rose-600",
+    accent: "from-rose-400 via-rose-300 to-rose-200/40",
+    icon: "bg-rose-50 text-rose-600",
     label: "text-rose-500",
   },
 }
@@ -58,31 +54,41 @@ const SummaryMetricCard = ({
   const styles = TONE_STYLES[tone]
 
   return (
-    <div className={cn("rounded-2xl border p-4 shadow-sm", styles.card)}>
-      <div className="flex items-start justify-between gap-2">
-        <div
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+      <div
+        className={cn(
+          "absolute inset-x-0 top-0 h-[2.5px] bg-linear-to-r",
+          styles.accent
+        )}
+      />
+      <div className="p-4 pt-5">
+        <div className="flex items-start justify-between gap-2">
+          <div
+            className={cn(
+              "flex size-8 items-center justify-center rounded-xl",
+              styles.icon
+            )}
+          >
+            <Icon className="size-4" />
+          </div>
+          {isFetching && (
+            <span className={cn("text-[10px] font-medium", styles.label)}>
+              đang cập nhật
+            </span>
+          )}
+        </div>
+        <p
           className={cn(
-            "flex size-8 items-center justify-center rounded-xl",
-            styles.icon
+            "mt-3 text-[10px] font-semibold tracking-[0.15em] uppercase",
+            styles.label
           )}
         >
-          <Icon className="size-4" />
-        </div>
-        {isFetching && (
-          <span className={cn("text-[10px] font-medium", styles.label)}>
-            updating
-          </span>
-        )}
+          {label}
+        </p>
+        <p className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+          {value}
+        </p>
       </div>
-      <p
-        className={cn(
-          "mt-3 text-[11px] font-medium tracking-wider uppercase",
-          styles.label
-        )}
-      >
-        {label}
-      </p>
-      <p className="mt-1 text-2xl font-semibold text-slate-900">{value}</p>
     </div>
   )
 }
@@ -105,25 +111,25 @@ const DashboardSummaryPanel = ({
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <SummaryMetricCard
-        label="Total chats"
+        label="Tổng hội thoại"
         value={`${summary?.total_chats ?? 0}`}
         icon={MessageSquare}
         tone="slate"
       />
       <SummaryMetricCard
-        label="New leads"
+        label="Lead mới"
         value={`${summary?.new_leads ?? 0}`}
         icon={UserPlus}
         tone="emerald"
       />
       <SummaryMetricCard
-        label="Fallbacks"
+        label="Fallback"
         value={`${summary?.fallbacks ?? 0}`}
         icon={Zap}
         tone="amber"
       />
       <SummaryMetricCard
-        label="Fallback rate"
+        label="Tỉ lệ fallback"
         value={`${((summary?.fallback_rate ?? 0) * 100).toFixed(1)}%`}
         icon={TrendingDown}
         tone="rose"

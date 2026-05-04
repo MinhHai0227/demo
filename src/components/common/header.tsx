@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils"
 import useAuthStore from "@/stores/auth-store"
 
 const sections = [
-  { label: "Trang chu", href: "/" },
-  { label: "Chuong trinh dao tao", href: "/programs" },
-  { label: "Co hoi hoc bong", href: "/scholarship" },
-  { label: "Dieu kien tuyen sinh", href: "/admission-conditions" },
-  { label: "Quy trinh tuyen sinh", href: "/admission-process" },
+  { label: "Trang chủ", href: "/" },
+  { label: "Chương trình đào tạo", href: "/programs" },
+  { label: "Cơ hội học bổng", href: "/scholarship" },
+  { label: "Điều kiện tuyển sinh", href: "/admission-conditions" },
+  { label: "Quy trình tuyển sinh", href: "/admission-process" },
 ]
 
 const getInitials = (name?: string | null) => {
@@ -87,7 +87,7 @@ const Header = () => {
           ) : (
             <Link to="/login" className="hidden md:block">
               <Button className="cursor-pointer font-medium">
-                Dang nhap quan tri
+                Đăng nhập quản trị
               </Button>
             </Link>
           )}
@@ -143,7 +143,7 @@ const Header = () => {
             ) : (
               <Link to="/login" onClick={() => setMobileOpen(false)}>
                 <Button size="sm" className="w-full cursor-pointer font-medium">
-                  Dang nhap quan tri
+                  Đăng nhập quản trị
                 </Button>
               </Link>
             )}

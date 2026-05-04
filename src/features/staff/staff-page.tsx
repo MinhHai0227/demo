@@ -98,7 +98,9 @@ const StaffPage = () => {
       setSelectedStaff(null)
     } catch (error) {
       setDialogError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -113,7 +115,9 @@ const StaffPage = () => {
       })
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     } finally {
       setTogglingStaffId(null)
@@ -137,7 +141,9 @@ const StaffPage = () => {
       setActionError(null)
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -151,14 +157,11 @@ const StaffPage = () => {
 
   return (
     <div className="space-y-4">
-      {/* Page heading */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-900">Staffs</h1>
-          <p className="text-sm text-slate-500">
-            Manage admin and counselor accounts for the admissions team.
-          </p>
-        </div>
+      <div>
+        <h1 className="text-[18px] font-semibold text-slate-950">Nhân viên</h1>
+        <p className="text-[13px] text-slate-500">
+          Quản lý tài khoản admin và counselor trong nhóm tuyển sinh.
+        </p>
       </div>
 
       <StaffToolbar
@@ -175,9 +178,8 @@ const StaffPage = () => {
       />
 
       {actionError && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <span className="mt-0.5 shrink-0 text-red-400">⚠</span>
-          <span>{actionError}</span>
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+          {actionError}
         </div>
       )}
 

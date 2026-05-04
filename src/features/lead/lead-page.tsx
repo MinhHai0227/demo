@@ -37,9 +37,9 @@ const LeadPage = () => {
     LeadTemperature | "ALL"
   >("ALL")
   const [sortOption, setSortOption] = useState<LeadSortOption>("newest")
-  const [assignedStaffFilter, setAssignedStaffFilter] = useState<string | "ALL">(
-    "ALL"
-  )
+  const [assignedStaffFilter, setAssignedStaffFilter] = useState<
+    string | "ALL"
+  >("ALL")
   const [offset, setOffset] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [activitiesDialogOpen, setActivitiesDialogOpen] = useState(false)
@@ -74,6 +74,7 @@ const LeadPage = () => {
     label: staff.name,
     value: staff.id,
   }))
+
   const staffNameById = Object.fromEntries(
     staffItems.map((staff) => [staff.id, staff.name])
   ) as Record<string, string>
@@ -114,11 +115,18 @@ const LeadPage = () => {
     params,
     leadId: selectedLeadId,
   })
+
   const items = leadList?.items ?? []
   const total = leadList?.total ?? 0
 
   const leadActivitiesQuery = useQuery({
-    queryKey: ["lead", activityLead?.id, "activities", activityOffset, ACTIVITY_PAGE_SIZE],
+    queryKey: [
+      "lead",
+      activityLead?.id,
+      "activities",
+      activityOffset,
+      ACTIVITY_PAGE_SIZE,
+    ],
     queryFn: () =>
       getLeadActivities(activityLead?.id as string, {
         limit: ACTIVITY_PAGE_SIZE,
@@ -153,10 +161,13 @@ const LeadPage = () => {
         leadId: activeLeadId,
         values,
       })
-      setActionSuccess("Lead updated successfully.")
+      setActionSuccess("Cập nhật lead thành công.")
     } catch (error) {
       setActionError(
-        getErrorMessage(error, "Could not update lead right now.")
+        getErrorMessage(
+          error,
+          "Hiện chưa thể cập nhật lead. Vui lòng thử lại sau."
+        )
       )
     }
   }
@@ -190,9 +201,10 @@ const LeadPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Leads</h1>
+        <h1 className="text-lg font-semibold text-slate-900">Danh sách lead</h1>
         <p className="text-sm text-slate-500">
-          Review, qualify, and route admissions leads using the existing admin flow.
+          Theo dõi, đánh giá và điều phối lead tuyển sinh theo luồng quản trị
+          hiện tại.
         </p>
       </div>
 

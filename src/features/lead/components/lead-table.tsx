@@ -100,10 +100,8 @@ const LeadTable = ({
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">Lead pipeline</h2>
-          <p className="text-xs text-slate-500">
-            {total} lead{total === 1 ? "" : "s"} total
-          </p>
+          <h2 className="text-sm font-semibold text-slate-900">Phễu lead</h2>
+          <p className="text-xs text-slate-500">Tổng cộng {total} lead</p>
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-400">
@@ -111,7 +109,7 @@ const LeadTable = ({
             <Loader2 className="size-3.5 animate-spin" />
           ) : null}
           <span>
-            {items.length ? offset + 1 : 0}-{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}-{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -123,22 +121,22 @@ const LeadTable = ({
               Lead
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Status
+              Trạng thái
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Temperature
+              Mức độ quan tâm
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Score
+              Điểm
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Assigned
+              Phụ trách
             </TableHead>
             <TableHead className="pr-5 text-xs font-medium text-slate-500">
-              Updated
+              Cập nhật
             </TableHead>
             <TableHead className="pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+              Thao tác
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -187,10 +185,10 @@ const LeadTable = ({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-900">
-                      No leads found
+                      Không tìm thấy lead
                     </p>
                     <p className="mt-0.5 text-xs text-slate-500">
-                      Try adjusting the search keywords or the current filters.
+                      Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc hiện tại.
                     </p>
                   </div>
                 </div>
@@ -204,8 +202,8 @@ const LeadTable = ({
                 const status = lead.status
                 const temperature = lead.temperature
                 const assignedLabel = lead.assigned_staff_id
-                  ? staffNameById[lead.assigned_staff_id] ?? "Assigned"
-                  : "Unassigned"
+                  ? (staffNameById[lead.assigned_staff_id] ?? "Phụ trách")
+                  : "Chưa phân công"
 
                 return (
                   <TableRow
@@ -227,10 +225,10 @@ const LeadTable = ({
                             {lead.full_name}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
-                            <span>{lead.email || "No email"}</span>
+                            <span>{lead.email || "Chưa có email"}</span>
                             <span className="inline-flex items-center gap-1">
                               <Phone className="size-3" />
-                              {lead.phone || "No phone"}
+                              {lead.phone || "Chưa có số điện thoại"}
                             </span>
                           </div>
                         </div>
@@ -295,7 +293,7 @@ const LeadTable = ({
                     <TableCell className="pr-5 text-right">
                       <button
                         type="button"
-                        title="Score history"
+                        title="Lịch sử điểm"
                         className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700"
                         onClick={(event) => {
                           event.stopPropagation()
@@ -314,7 +312,7 @@ const LeadTable = ({
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+          Trang {currentPage} / {totalPages}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -322,7 +320,7 @@ const LeadTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -353,7 +351,7 @@ const LeadTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === totalPages && "pointer-events-none opacity-40"

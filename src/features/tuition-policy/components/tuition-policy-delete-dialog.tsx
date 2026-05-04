@@ -31,58 +31,58 @@ const TuitionPolicyDeleteDialog = ({
 }: TuitionPolicyDeleteDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200 p-0">
-        {/* Icon header */}
-        <div className="flex flex-col items-center gap-3 bg-red-50 px-6 py-6 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full border border-red-200 bg-white text-red-500">
+      <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200/70 p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)]">
+        <div className="h-0.75 bg-linear-to-r from-red-400 via-red-300 to-red-200/40" />
+
+        <div className="flex flex-col items-center gap-3 bg-red-50/80 px-6 py-6 text-center">
+          <div className="flex size-12 items-center justify-center rounded-full border border-red-200 bg-white text-red-500 shadow-sm">
             <AlertTriangle className="size-5" />
           </div>
 
           <AlertDialogHeader className="space-y-1 text-center">
-            <AlertDialogTitle className="text-base font-semibold text-slate-900">
-              Delete this tuition policy?
+            <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
+              Xóa chính sách học phí này?
             </AlertDialogTitle>
 
-            <AlertDialogDescription className="text-xs leading-relaxed text-slate-500">
+            <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
               {policy ? (
                 <>
-                  This will permanently remove the{" "}
+                  Thao tác này sẽ xóa vĩnh viễn chính sách{" "}
                   <span className="font-medium text-slate-700">
-                    {policy.year} {majorName ?? "selected major"}{" "}
+                    năm {policy.year} · {majorName ?? "ngành đã chọn"} ·{" "}
                     {policy.fee_type.toLowerCase()}
-                  </span>{" "}
-                  policy.
+                  </span>
+                  .
                 </>
               ) : (
-                "This action will permanently remove the selected tuition policy."
+                "Thao tác này sẽ xóa vĩnh viễn chính sách học phí đã chọn."
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
 
-        {/* Footer */}
         <AlertDialogFooter className="flex flex-row items-center justify-end gap-2 border-t border-slate-100 bg-white px-5 py-4">
           <AlertDialogCancel
             disabled={isDeleting}
-            className="h-9 rounded-xl border-slate-200 text-sm text-slate-600"
+            className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
           >
-            Cancel
+            Hủy
           </AlertDialogCancel>
 
           <AlertDialogAction
             disabled={isDeleting}
             onClick={onConfirm}
-            className="h-9 rounded-xl bg-red-600 text-sm hover:bg-red-700 focus:ring-red-500"
+            className="h-9 rounded-xl bg-red-600 text-[13px] hover:bg-red-700 focus:ring-red-500"
           >
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Deleting...
+                Đang xóa...
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Delete policy
+                Xóa chính sách
               </>
             )}
           </AlertDialogAction>

@@ -1,4 +1,7 @@
-import { GraduationCap, Sparkles } from "lucide-react"
+import { Sparkles, Send } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+const TELEGRAM_BOT_URL = "https://t.me/vinunitele_bot"
 
 type HomeHighlight = {
   label: string
@@ -8,48 +11,73 @@ type HomeHighlight = {
 
 const highlights: HomeHighlight[] = [
   {
-    label: "Phan hoi",
-    value: "~30 giay",
-    description: "Tra loi nhanh cac cau hoi tuyen sinh pho bien.",
+    label: "Phản hồi",
+    value: "~30 giây",
+    description: "Trả lời nhanh các câu hỏi tuyển sinh phổ biến.",
   },
   {
-    label: "Noi dung",
+    label: "Nội dung",
     value: "24/7",
-    description: "San sang ho tro thong tin chuong trinh, hoc phi va ho so.",
+    description: "Sẵn sàng hỗ trợ thông tin chương trình, học phí và hồ sơ.",
   },
   {
-    label: "Tu van",
+    label: "Tư vấn",
     value: "1:1",
-    description: "Goi y lo trinh hoi dap truoc khi lien he bo phan admissions.",
+    description: "Gợi ý lộ trình hỏi đáp trước khi liên hệ bộ phận admissions.",
   },
 ]
 
 const HomeHero = () => {
   return (
-    <div className="flex h-full flex-col justify-between gap-5">
-      <div className="space-y-5">
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-white/80 px-4 py-2 text-sm font-medium text-primary shadow-sm backdrop-blur-sm">
-          <Sparkles className="h-4 w-4" />
-          Tro ly tu van tuyen sinh thong minh VinUni
+    <div className="flex h-full min-h-0 flex-col justify-between gap-8 py-2 lg:gap-10 lg:py-4">
+      {/* Top content */}
+      <div className="space-y-6 lg:space-y-7">
+        {/* Badge */}
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d6ae4e]/30 bg-[#d6ae4e]/8 px-4 py-2 text-[13px] font-medium text-[#a07c24] shadow-[0_1px_3px_rgba(214,174,78,0.12)]">
+          <Sparkles className="h-3.5 w-3.5 text-[#d6ae4e]" />
+          Trợ lý tư vấn tuyển sinh thông minh VinUni
         </div>
 
-        <h1 className="max-w-xl text-2xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-          Chatbox tu van tuyen sinh san sang de ban hoi bat cu dieu gi.
-        </h1>
+        {/* Headline */}
+        <div className="space-y-4">
+          <h1 className="max-w-xl text-[2rem] leading-[1.12] font-semibold tracking-[-0.02em] text-slate-950 sm:text-[2.5rem] lg:text-[2.75rem]">
+            Chatbot tuyển sinh —{" "}
+            <span className="relative">
+              <span className="relative z-10 text-slate-950">
+                hỏi bất cứ điều gì.
+              </span>
+              <span
+                aria-hidden
+                className="absolute right-0 bottom-1 left-0 z-0 h-[0.35em] rounded-full bg-[#d6ae4e]/20"
+              />
+            </span>
+          </h1>
+          <p className="max-w-md text-[15px] leading-relaxed text-slate-500">
+            Nhận thông tin chính xác về chương trình học, học phí, học bổng và
+            quy trình nộp hồ sơ — bất kỳ lúc nào.
+          </p>
+        </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        {/* Divider */}
+        <div className="h-px w-16 bg-linear-to-r from-[#d6ae4e]/60 to-transparent" />
+
+        {/* Highlights */}
+        <div className="grid grid-cols-3 gap-3">
           {highlights.map((item) => (
             <div
               key={item.label}
-              className="rounded-2xl border border-white/70 bg-white/85 p-4 shadow-[0_18px_50px_-28px_rgba(15,23,42,0.35)] backdrop-blur-sm"
+              className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)] transition-shadow duration-200 hover:shadow-[0_4px_20px_-6px_rgba(15,23,42,0.12)] lg:p-5"
             >
-              <p className="text-xs font-semibold tracking-[0.24em] text-[#d6ae4e] uppercase">
+              {/* Subtle top accent */}
+              <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-linear-to-r from-[#d6ae4e]/60 via-[#d6ae4e]/30 to-transparent" />
+
+              <p className="text-[10px] font-semibold tracking-[0.2em] text-[#b8922e] uppercase">
                 {item.label}
               </p>
-              <p className="mt-3 text-2xl font-semibold text-slate-950">
+              <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 lg:text-3xl">
                 {item.value}
               </p>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-1.5 text-[12px] leading-normal text-slate-500">
                 {item.description}
               </p>
             </div>
@@ -57,32 +85,21 @@ const HomeHero = () => {
         </div>
       </div>
 
-      <div className="rounded-[2rem] border border-slate-200/80 bg-slate-950 p-6 text-white shadow-[0_24px_80px_-36px_rgba(15,23,42,0.7)]">
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-            <GraduationCap className="h-6 w-6" />
-          </div>
-          <div className="space-y-2">
-            <p className="text-sm font-semibold tracking-[0.22em] text-primary/90 uppercase">
-              San sang de bat dau?
-            </p>
-            <p className="text-lg font-medium text-white">
-              Ban co the hoi ve hoc bong, hoc phi, deadline va quy trinh tuyen sinh cua
-              VinUni ngay bay gio.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-2">
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80">
-                Hoc bong
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80">
-                Hoc phi
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80">
-                Deadline
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* Bottom CTA */}
+      <div className="flex items-center gap-3">
+        <Button
+          asChild
+          variant="ghost"
+          className="group h-auto gap-2.5 rounded-full border border-slate-200 bg-white/90 px-5 py-2.5 text-[13px] font-medium text-slate-600 shadow-sm hover:border-slate-300 hover:bg-white hover:text-slate-800"
+        >
+          <a href={TELEGRAM_BOT_URL} target="_blank" rel="noopener noreferrer">
+            <Send className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+            Chat trên Telegram
+          </a>
+        </Button>
+        <span className="text-[12px] text-slate-400">
+          hoặc dùng chatbox bên phải
+        </span>
       </div>
     </div>
   )

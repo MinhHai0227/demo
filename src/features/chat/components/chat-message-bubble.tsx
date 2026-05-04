@@ -31,7 +31,7 @@ const ChatMessageBubble = ({ message }: ChatMessageBubbleProps) => {
         )}
       >
         <div className="max-h-72 overflow-y-auto pr-1">
-          <p className="text-sm leading-6 break-words whitespace-pre-wrap">
+          <p className="text-sm leading-6 wrap-break-word whitespace-pre-wrap">
             {message.content}
           </p>
         </div>

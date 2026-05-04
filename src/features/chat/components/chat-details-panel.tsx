@@ -47,7 +47,7 @@ const ChatDetailsPanel = ({
       <aside className="hidden h-full min-h-0 flex-col overflow-hidden border-l border-slate-200 bg-white lg:flex">
         <div className="border-b border-slate-200 p-4">
           <p className="text-sm font-semibold text-slate-950">
-            Thong tin hoi thoai
+            Thông tin hội thoại
           </p>
         </div>
 
@@ -73,7 +73,7 @@ const ChatDetailsPanel = ({
                 onClick={onOpenLead}
               >
                 <FileSearch />
-                Mo lead details
+                Mở lead details
               </Button>
             </div>
 
@@ -85,40 +85,40 @@ const ChatDetailsPanel = ({
               />
               <InfoRow
                 icon={Phone}
-                label="Dien thoai"
+                label="Điện thoại"
                 value={conversation.lead_phone || "--"}
               />
               <InfoRow
                 icon={UserRound}
                 label="Staff"
-                value={conversation.staff_name || "Chua gan"}
+                value={conversation.staff_name || "Chưa gán"}
               />
               <InfoRow
                 icon={Clock3}
-                label="Cap nhat"
+                label="Cập nhật"
                 value={formatDateTime(conversation.updated_at)}
               />
             </div>
 
             <div className="mt-5 border-t border-slate-200 pt-4">
               <p className="mb-2 text-xs font-semibold text-slate-500 uppercase">
-                Trang thai
+                Trạng thái
               </p>
               <div className="grid gap-2">
                 <StatusButton
-                  label="Dang mo"
+                  label="Đang mở"
                   icon={Circle}
                   isActive={conversation.status === "OPEN"}
                   onClick={() => setConfirmStatus("OPEN")}
                 />
                 <StatusButton
-                  label="Can staff"
+                  label="Cần staff"
                   icon={MessageCircle}
                   isActive={conversation.status === "HANDOFF"}
                   onClick={() => setConfirmStatus("HANDOFF")}
                 />
                 <StatusButton
-                  label="Da dong"
+                  label="Đã đóng"
                   icon={CheckCircle2}
                   isActive={conversation.status === "CLOSED"}
                   onClick={() => setConfirmStatus("CLOSED")}
@@ -129,7 +129,7 @@ const ChatDetailsPanel = ({
             {conversation.summary ? (
               <div className="mt-5 border-t border-slate-200 pt-4">
                 <p className="mb-2 text-xs font-semibold text-slate-500 uppercase">
-                  Tom tat
+                  Tóm tắt
                 </p>
                 <p className="text-sm leading-6 text-slate-700">
                   {conversation.summary}
@@ -139,7 +139,7 @@ const ChatDetailsPanel = ({
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center px-6 text-center text-sm text-slate-500">
-            Chua chon hoi thoai.
+            Chưa chọn hội thoại.
           </div>
         )}
       </aside>
@@ -154,15 +154,15 @@ const ChatDetailsPanel = ({
       >
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
-            <AlertDialogTitle>Xac nhan doi trang thai</AlertDialogTitle>
+            <AlertDialogTitle>Xác nhận đổi trạng thái</AlertDialogTitle>
             <AlertDialogDescription>
               {confirmStatus
-                ? `Ban co chac muon doi trang thai hoi thoai sang "${confirmStatus}" khong?`
+                ? `Bạn có chắc muốn đổi trạng thái hội thoại sang "${confirmStatus}" không?`
                 : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Huy</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (confirmStatus) {
@@ -171,7 +171,7 @@ const ChatDetailsPanel = ({
                 setConfirmStatus(null)
               }}
             >
-              Xac nhan
+              Xác nhận
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -193,7 +193,7 @@ const InfoRow = ({
     <Icon className="mt-0.5 size-4 shrink-0 text-slate-400" />
     <div className="min-w-0">
       <p className="text-xs text-slate-500">{label}</p>
-      <p className="text-sm break-words text-slate-800">{value}</p>
+      <p className="text-sm wrap-break-word text-slate-800">{value}</p>
     </div>
   </div>
 )

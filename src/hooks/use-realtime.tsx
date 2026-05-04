@@ -219,14 +219,14 @@ const syncConversation = (
     .getQueryCache()
     .findAll({ queryKey: ["admin-message-conversations"] })
     .forEach((query) => {
-      queryClient.setQueryData<
-        InfiniteData<ChatConversationsPage, string | null>
-      >(query.queryKey, (data) =>
-        syncConversationInPages(
-          data,
-          conversation,
-          shouldConversationStayInQuery(conversation, query.queryKey)
-        )
+      queryClient.setQueryData<InfiniteData<ChatConversationsPage, string | null>>(
+        query.queryKey,
+        (data) =>
+          syncConversationInPages(
+            data,
+            conversation,
+            shouldConversationStayInQuery(conversation, query.queryKey)
+          )
       )
     })
 }
@@ -430,9 +430,7 @@ const markNotificationListsRead = (
 
 const matchesNotificationListQuery = (
   queryKey: readonly unknown[],
-  source:
-    | Pick<RealtimePayload, "staff_id" | "target">
-    | Pick<NotificationItem, "staff_id" | "target">
+  source: Pick<RealtimePayload, "staff_id" | "target"> | Pick<NotificationItem, "staff_id" | "target">
 ) => {
   const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
   const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined
@@ -478,9 +476,7 @@ const syncNotificationUnreadCount = (
 
 const matchesUnreadCountQuery = (
   queryKey: readonly unknown[],
-  source:
-    | Pick<RealtimePayload, "staff_id" | "target">
-    | Pick<NotificationItem, "staff_id" | "target">
+  source: Pick<RealtimePayload, "staff_id" | "target"> | Pick<NotificationItem, "staff_id" | "target">
 ) => {
   const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
   const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined

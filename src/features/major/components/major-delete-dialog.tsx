@@ -38,13 +38,13 @@ const MajorDeleteDialog = ({
 
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-base font-semibold text-slate-900">
-              Delete this major?
+              Xóa ngành học này?
             </AlertDialogTitle>
 
             <AlertDialogDescription className="text-xs leading-relaxed text-slate-500">
               {major
-                ? `This will permanently remove ${major.name} (${major.code}) if it is not referenced elsewhere.`
-                : "This action will permanently remove the selected major."}
+                ? `Thao tác này sẽ xóa vĩnh viễn ngành ${major.name} (${major.code}) nếu không còn được tham chiếu ở nơi khác.`
+                : "Thao tác này sẽ xóa vĩnh viễn ngành học đã chọn."}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
@@ -55,7 +55,7 @@ const MajorDeleteDialog = ({
             disabled={isDeleting}
             className="h-9 rounded-xl border-slate-200 text-sm text-slate-600"
           >
-            Cancel
+            Hủy
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -66,12 +66,12 @@ const MajorDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Deleting...
+                Đang xóa...
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Delete major
+                Xóa ngành
               </>
             )}
           </AlertDialogAction>

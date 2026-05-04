@@ -47,12 +47,9 @@ type MajorTableProps = {
 const buildPageItems = (currentPage: number, totalPages: number) => {
   if (totalPages <= 5)
     return Array.from({ length: totalPages }, (_, i) => i + 1)
-
   if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
-
   if (currentPage >= totalPages - 2)
     return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-
   return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
@@ -74,24 +71,18 @@ const MajorTable = ({
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       {/* Header */}
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Major directory
-          </h2>
-          <p className="text-xs text-slate-500">
-            {total} major{total === 1 ? "" : "s"} total
-          </p>
+          <h2 className="text-[14px] font-semibold text-slate-900">Danh mục ngành học</h2>
+          <p className="text-[12px] text-slate-500">Tổng cộng {total} ngành</p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-400">
-          {isFetching && !isLoading && (
-            <Loader2 className="size-3.5 animate-spin" />
-          )}
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
+          {isFetching && !isLoading && <Loader2 className="size-3.5 animate-spin" />}
           <span>
-            {items.length ? offset + 1 : 0}–{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}–{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -99,40 +90,21 @@ const MajorTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Major
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Type
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Degree
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Credits
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Duration
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
-            </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Updated
-            </TableHead>
-            <TableHead className="w-20 pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
-            </TableHead>
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">Ngành học</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Loại ngành</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Bậc đào tạo</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Tín chỉ</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Thời lượng</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Trạng thái</TableHead>
+            <TableHead className="text-[11px] font-medium text-slate-500">Cập nhật</TableHead>
+            <TableHead className="w-20 pr-5 text-right text-[11px] font-medium text-slate-500">Thao tác</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {isLoading &&
             Array.from({ length: 6 }).map((_, i) => (
-              <TableRow
-                key={`major-skeleton-${i}`}
-                className="border-slate-100"
-              >
+              <TableRow key={`major-skeleton-${i}`} className="border-slate-100">
                 <TableCell className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <Skeleton className="size-9 rounded-xl" />
@@ -142,52 +114,27 @@ const MajorTable = ({
                     </div>
                   </div>
                 </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-5 w-20 rounded-full" />
-                </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-3.5 w-24 rounded-full" />
-                </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-3.5 w-8 rounded-full" />
-                </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-3.5 w-8 rounded-full" />
-                </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-7 w-20 rounded-full" />
-                </TableCell>
-
-                <TableCell>
-                  <Skeleton className="h-3.5 w-20 rounded-full" />
-                </TableCell>
-
-                <TableCell className="pr-5">
-                  <Skeleton className="ml-auto size-8 rounded-lg" />
-                </TableCell>
+                <TableCell><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
+                <TableCell><Skeleton className="h-3.5 w-24 rounded-full" /></TableCell>
+                <TableCell><Skeleton className="h-3.5 w-8 rounded-full" /></TableCell>
+                <TableCell><Skeleton className="h-3.5 w-8 rounded-full" /></TableCell>
+                <TableCell><Skeleton className="h-7 w-20 rounded-full" /></TableCell>
+                <TableCell><Skeleton className="h-3.5 w-20 rounded-full" /></TableCell>
+                <TableCell className="pr-5"><Skeleton className="ml-auto size-8 rounded-lg" /></TableCell>
               </TableRow>
             ))}
 
           {!isLoading && items.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={8} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <GraduationCap className="size-5 text-slate-400" />
                   </div>
-
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No majors found
-                    </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Create a new major to start building the admissions
-                      catalog.
+                    <p className="text-[13px] font-medium text-slate-900">Chưa tìm thấy ngành học</p>
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      Tạo ngành mới để bắt đầu xây dựng danh mục tuyển sinh.
                     </p>
                   </div>
                 </div>
@@ -202,7 +149,7 @@ const MajorTable = ({
               return (
                 <TableRow
                   key={major.id}
-                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/50"
+                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60"
                   onClick={() => onEdit(major)}
                 >
                   <TableCell className="px-5 py-3.5">
@@ -210,17 +157,11 @@ const MajorTable = ({
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-100 to-orange-100 text-amber-700">
                         <GraduationCap className="size-4" />
                       </div>
-
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">
-                          {major.name}
-                        </p>
-                        <p className="text-xs tracking-[0.18em] text-slate-400 uppercase">
-                          {major.code}
-                        </p>
-
+                        <p className="truncate text-[13px] font-medium text-slate-900">{major.name}</p>
+                        <p className="text-[10px] tracking-[0.18em] text-slate-400 uppercase">{major.code}</p>
                         {major.description ? (
-                          <p className="line-clamp-1 max-w-[320px] text-xs text-slate-400">
+                          <p className="line-clamp-1 max-w-[320px] text-[12px] text-slate-400">
                             {major.description}
                           </p>
                         ) : null}
@@ -238,16 +179,10 @@ const MajorTable = ({
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="text-xs text-slate-500">
-                    {major.degree_type || "—"}
-                  </TableCell>
-
-                  <TableCell className="font-mono text-xs text-slate-500">
-                    {major.credits ?? "—"}
-                  </TableCell>
-
-                  <TableCell className="text-xs text-slate-500">
-                    {major.duration !== null ? `${major.duration}y` : "—"}
+                  <TableCell className="text-[12px] text-slate-500">{major.degree_type || "—"}</TableCell>
+                  <TableCell className="font-mono text-[12px] text-slate-500">{major.credits ?? "—"}</TableCell>
+                  <TableCell className="text-[12px] text-slate-500">
+                    {major.duration !== null ? `${major.duration} năm` : "—"}
                   </TableCell>
 
                   <TableCell>
@@ -259,7 +194,7 @@ const MajorTable = ({
                         onToggleStatus(major)
                       }}
                       className={cn(
-                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors",
+                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
                         major.is_active
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
                           : "bg-slate-100 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-200",
@@ -273,12 +208,11 @@ const MajorTable = ({
                       ) : (
                         <PowerOff className="size-3" />
                       )}
-
-                      {major.is_active ? "Active" : "Inactive"}
+                      {major.is_active ? "Đang hoạt động" : "Tạm ẩn"}
                     </button>
                   </TableCell>
 
-                  <TableCell className="text-xs text-slate-500">
+                  <TableCell className="text-[12px] text-slate-500">
                     {formatDateOnly(major.updated_at)}
                   </TableCell>
 
@@ -287,7 +221,7 @@ const MajorTable = ({
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="ml-auto size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                      className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                       onClick={(e) => {
                         e.stopPropagation()
                         onDelete(major)
@@ -304,8 +238,8 @@ const MajorTable = ({
 
       {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+        <p className="text-[12px] text-slate-500">
+          Trang {currentPage} / {totalPages}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -313,11 +247,8 @@ const MajorTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
-                className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
-                  currentPage === 1 && "pointer-events-none opacity-40"
-                )}
+                text="Trước"
+                className={cn("h-8 rounded-lg px-3 text-[12px]", currentPage === 1 && "pointer-events-none opacity-40")}
                 onClick={(e) => {
                   e.preventDefault()
                   if (currentPage > 1) onPageChange(currentPage - 1)
@@ -330,7 +261,7 @@ const MajorTable = ({
                 <PaginationLink
                   href="#"
                   isActive={page === currentPage}
-                  className="h-8 w-8 rounded-lg text-xs"
+                  className="h-8 w-8 rounded-lg text-[12px]"
                   onClick={(e) => {
                     e.preventDefault()
                     onPageChange(page)
@@ -344,11 +275,8 @@ const MajorTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
-                className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
-                  currentPage === totalPages && "pointer-events-none opacity-40"
-                )}
+                text="Sau"
+                className={cn("h-8 rounded-lg px-3 text-[12px]", currentPage === totalPages && "pointer-events-none opacity-40")}
                 onClick={(e) => {
                   e.preventDefault()
                   if (currentPage < totalPages) onPageChange(currentPage + 1)

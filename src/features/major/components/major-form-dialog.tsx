@@ -52,7 +52,7 @@ type MajorFormDialogProps = {
 }
 
 const textareaClassName =
-  "min-h-32 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 resize-none"
+  "min-h-32 w-full resize-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-3 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-slate-300 focus:bg-white"
 
 const defaultValues: MajorFormInput = {
   code: "",
@@ -99,19 +99,22 @@ const MajorFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-3xl">
+        {/* Gold accent bar */}
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
         {/* Header */}
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <GraduationCap className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {isCreate ? "New major" : "Edit major"}
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                {isCreate ? "Tạo ngành mới" : "Chỉnh sửa ngành"}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Manage academic program metadata for admissions flows.
+              <DialogDescription className="text-[12px] text-slate-500">
+                Quản lý thông tin chương trình học dùng cho luồng tuyển sinh.
               </DialogDescription>
             </div>
           </div>
@@ -129,16 +132,16 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-code"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Code
+                  Mã ngành
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="major-code"
-                    placeholder="CS"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="VD: CS"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("code")}
                   />
                   <FieldError errors={[form.formState.errors.code]} />
@@ -148,16 +151,16 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-name"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <GraduationCap className="size-3.5 text-slate-400" />
-                  Name
+                  Tên ngành
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="major-name"
-                    placeholder="Computer Science"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="VD: Khoa học Máy tính"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("name")}
                   />
                   <FieldError errors={[form.formState.errors.name]} />
@@ -170,10 +173,10 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-type"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <BookType className="size-3.5 text-slate-400" />
-                  Major type
+                  Loại ngành
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -186,9 +189,9 @@ const MajorFormDialog = ({
                       >
                         <SelectTrigger
                           id="major-type"
-                          className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                          className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0"
                         >
-                          <SelectValue placeholder="Select a major type" />
+                          <SelectValue placeholder="Chọn loại ngành" />
                         </SelectTrigger>
                         <SelectContent>
                           {majorTypeOptions.map((item) => (
@@ -207,16 +210,16 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-degree-type"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <NotebookPen className="size-3.5 text-slate-400" />
-                  Degree type
+                  Bậc đào tạo
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="major-degree-type"
-                    placeholder="Bachelor"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="VD: Bachelor"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("degree_type")}
                   />
                   <FieldError errors={[form.formState.errors.degree_type]} />
@@ -226,17 +229,17 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-credits"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Credits
+                  Tín chỉ
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="major-credits"
                     type="number"
                     placeholder="120"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("credits")}
                   />
                   <FieldError errors={[form.formState.errors.credits]} />
@@ -246,21 +249,21 @@ const MajorFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="major-duration"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <TimerReset className="size-3.5 text-slate-400" />
-                  Duration
+                  Thời lượng
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="major-duration"
                     type="number"
                     placeholder="4"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("duration")}
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
-                    Number of years.
+                    Số năm đào tạo.
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.duration]} />
                 </FieldContent>
@@ -271,15 +274,15 @@ const MajorFormDialog = ({
             <Field>
               <FieldLabel
                 htmlFor="major-description"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 <NotebookPen className="size-3.5 text-slate-400" />
-                Description
+                Mô tả
               </FieldLabel>
               <FieldContent>
                 <textarea
                   id="major-description"
-                  placeholder="Describe the program, learning outcomes, and scope..."
+                  placeholder="Mô tả chương trình, mục tiêu học tập và phạm vi đào tạo..."
                   className={textareaClassName}
                   {...form.register("description")}
                 />
@@ -288,7 +291,7 @@ const MajorFormDialog = ({
             </Field>
 
             {errorMessage && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {errorMessage}
               </div>
             )}
@@ -300,27 +303,27 @@ const MajorFormDialog = ({
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-600"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50 hover:text-slate-900"
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Hủy
             </Button>
 
             <Button
               type="submit"
               size="sm"
-              className="rounded-xl"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
               disabled={form.formState.isSubmitting || isSubmitting}
             >
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
               {isCreate
                 ? isSubmitting
-                  ? "Creating..."
-                  : "Create major"
+                  ? "Đang tạo..."
+                  : "Tạo ngành"
                 : isSubmitting
-                  ? "Saving..."
-                  : "Save changes"}
+                  ? "Đang lưu..."
+                  : "Lưu thay đổi"}
             </Button>
           </div>
         </form>

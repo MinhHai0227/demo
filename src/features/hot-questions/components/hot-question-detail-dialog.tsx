@@ -41,26 +41,28 @@ const HotQuestionDetailDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
+      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-xl sm:max-w-3xl">
         <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <MessageSquareQuote className="size-4" />
             </div>
+
             <div className="min-w-0 flex-1">
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                Sources
+              <DialogTitle className="text-base font-semibold text-slate-950">
+                Nguồn dữ liệu
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Chunks used by the latest assistant answer.
+                Các chunk được dùng cho câu trả lời gần nhất của trợ lý.
               </DialogDescription>
             </div>
+
             {isFetching ? (
               <Badge
                 variant="outline"
-                className="shrink-0 border-slate-200 text-xs text-slate-500"
+                className="shrink-0 border-slate-200 bg-white text-xs text-slate-500"
               >
-                Loading
+                Đang tải
               </Badge>
             ) : null}
           </div>
@@ -78,15 +80,15 @@ const HotQuestionDetailDialog = ({
             <div className="space-y-3">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 items-center gap-2">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm">
                     <FileSearch className="size-4" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-900">
-                      Source chunks
+                    <p className="text-sm font-semibold text-slate-950">
+                      Chunk nguồn
                     </p>
                     <p className="text-xs text-slate-500">
-                      Message id: {detail.last_assistant_message_id ?? "--"}
+                      Message ID: {detail.last_assistant_message_id ?? "--"}
                     </p>
                   </div>
                 </div>
@@ -94,25 +96,24 @@ const HotQuestionDetailDialog = ({
                 {isSourcesFetching ? (
                   <Badge
                     variant="outline"
-                    className="w-fit shrink-0 gap-1 border-slate-200 text-xs text-slate-500"
+                    className="w-fit shrink-0 gap-1 border-slate-200 bg-white text-xs text-slate-500"
                   >
                     <Loader2 className="size-3 animate-spin" />
-                    Loading
+                    Đang tải
                   </Badge>
                 ) : (
                   <Badge
                     variant="outline"
-                    className="w-fit shrink-0 border-slate-200 text-xs text-slate-500"
+                    className="w-fit shrink-0 border-slate-200 bg-white text-xs text-slate-500"
                   >
                     {sourceItems.length} chunk
-                    {sourceItems.length === 1 ? "" : "s"}
                   </Badge>
                 )}
               </div>
 
               {!hasAssistantMessage ? (
-                <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-xs text-slate-500">
-                  Chua co assistant message gan voi hot question nay.
+                <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
+                  Chưa có assistant message gắn với hot question này.
                 </div>
               ) : sourcesError ? (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
@@ -129,7 +130,7 @@ const HotQuestionDetailDialog = ({
                   {sourceItems.map((item, index) => (
                     <div
                       key={item.id}
-                      className="rounded-xl border border-slate-100 bg-white p-4 shadow-xs"
+                      className="rounded-xl border border-slate-100 bg-white p-4 shadow-xs ring-1 ring-slate-50 transition-colors hover:border-slate-200"
                     >
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0 space-y-1">
@@ -138,8 +139,9 @@ const HotQuestionDetailDialog = ({
                               variant="outline"
                               className="rounded-full border-slate-200 bg-slate-50 text-[11px] text-slate-700"
                             >
-                              Rank {item.rank ?? index + 1}
+                              Hạng {item.rank ?? index + 1}
                             </Badge>
+
                             {item.category ? (
                               <Badge
                                 variant="outline"
@@ -148,14 +150,16 @@ const HotQuestionDetailDialog = ({
                                 {item.category}
                               </Badge>
                             ) : null}
+
                             {item.score !== null ? (
                               <span className="font-mono text-[11px] text-slate-500">
-                                score {item.score.toFixed(3)}
+                                điểm {item.score.toFixed(3)}
                               </span>
                             ) : null}
                           </div>
+
                           <p className="wrap-break-word text-xs text-slate-500">
-                            {item.source ?? "Unknown source"}
+                            {item.source ?? "Nguồn không xác định"}
                           </p>
                         </div>
                       </div>
@@ -167,20 +171,20 @@ const HotQuestionDetailDialog = ({
                   ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-xs text-slate-500">
-                  Assistant message nay chua co chunk usage.
+                <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
+                  Assistant message này chưa có chunk được ghi nhận.
                 </div>
               )}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-slate-200 px-4 py-10 text-center text-xs text-slate-500">
-              Chon mot cau hoi trong bang de xem chi tiet.
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-10 text-center text-xs text-slate-500">
+              Chọn một câu hỏi trong bảng để xem chi tiết.
             </div>
           )}
         </div>
 
         <DialogFooter
-          className="border-t border-slate-100 bg-slate-50/70"
+          className="border-t border-slate-100 bg-slate-50/80"
           showCloseButton
         />
       </DialogContent>

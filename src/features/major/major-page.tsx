@@ -13,7 +13,9 @@ const PAGE_SIZE = 3
 const MajorPage = () => {
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
-  const [majorTypeFilter, setMajorTypeFilter] = useState<MajorType | "ALL">("ALL")
+  const [majorTypeFilter, setMajorTypeFilter] = useState<MajorType | "ALL">(
+    "ALL"
+  )
   const [offset, setOffset] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create")
@@ -90,29 +92,23 @@ const MajorPage = () => {
 
     try {
       if (dialogMode === "create") {
-        await createMajorAction({
-          ...payload,
-          is_active: true,
-        })
+        await createMajorAction({ ...payload, is_active: true })
         setDialogOpen(false)
-        setActionSuccess("Major created successfully.")
+        setActionSuccess("Đã tạo ngành học thành công.")
         return
       }
 
-      if (!selectedMajor) {
-        return
-      }
+      if (!selectedMajor) return
 
-      await updateMajorAction({
-        majorId: selectedMajor.id,
-        values: payload,
-      })
+      await updateMajorAction({ majorId: selectedMajor.id, values: payload })
       setDialogOpen(false)
       setSelectedMajor(null)
-      setActionSuccess("Major updated successfully.")
+      setActionSuccess("Đã cập nhật ngành học thành công.")
     } catch (error) {
       setDialogError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -127,10 +123,14 @@ const MajorPage = () => {
         majorId: major.id,
         is_active: !major.is_active,
       })
-      setActionSuccess(`Major ${!major.is_active ? "activated" : "deactivated"} successfully.`)
+      setActionSuccess(
+        `Đã ${!major.is_active ? "kích hoạt" : "tạm ẩn"} ngành học thành công.`
+      )
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     } finally {
       setTogglingMajorId(null)
@@ -144,9 +144,7 @@ const MajorPage = () => {
   }
 
   const handleConfirmDelete = async () => {
-    if (!majorToDelete) {
-      return
-    }
+    if (!majorToDelete) return
 
     try {
       await deleteMajorAction(majorToDelete.id)
@@ -156,10 +154,12 @@ const MajorPage = () => {
       setDeleteDialogOpen(false)
       setMajorToDelete(null)
       setActionError(null)
-      setActionSuccess("Major deleted successfully.")
+      setActionSuccess("Đã xóa ngành học thành công.")
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -174,9 +174,9 @@ const MajorPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Majors</h1>
-        <p className="text-sm text-slate-500">
-          Maintain academic programs that drive admissions content and policies.
+        <h1 className="text-[18px] font-semibold text-slate-950">Ngành học</h1>
+        <p className="text-[13px] text-slate-500">
+          Quản lý chương trình đào tạo phục vụ nội dung và quy trình tuyển sinh.
         </p>
       </div>
 
@@ -194,13 +194,13 @@ const MajorPage = () => {
       />
 
       {actionError ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
           {actionError}
         </div>
       ) : null}
 
       {actionSuccess ? (
-        <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
           {actionSuccess}
         </div>
       ) : null}
@@ -241,9 +241,7 @@ const MajorPage = () => {
         isDeleting={deleteMajorPending}
         onOpenChange={(open) => {
           setDeleteDialogOpen(open)
-          if (!open) {
-            setMajorToDelete(null)
-          }
+          if (!open) setMajorToDelete(null)
         }}
         onConfirm={handleConfirmDelete}
       />

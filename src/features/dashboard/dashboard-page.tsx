@@ -109,10 +109,17 @@ const DashboardPage = () => {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h1 className="text-lg font-semibold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500">
-          Theo doi daily analytics bang cung mot bo loc ngay cho `daily` va
-          `daily/summary`, kem preview top 5 hot questions.
+        <h1 className="text-[18px] font-semibold text-slate-950">Dashboard</h1>
+        <p className="text-[13px] text-slate-500">
+          Theo dõi thống kê hàng ngày với bộ lọc dùng chung cho{" "}
+          <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-600">
+            daily
+          </code>{" "}
+          và{" "}
+          <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-600">
+            daily/summary
+          </code>
+          , kèm xem nhanh top câu hỏi nổi bật.
         </p>
       </div>
 
@@ -126,7 +133,7 @@ const DashboardPage = () => {
       />
 
       {surfaceError ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
           {surfaceError}
         </div>
       ) : null}

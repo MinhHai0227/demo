@@ -47,7 +47,10 @@ const DashboardConversionFunnelPanel = ({
           </div>
         </div>
         {isFetching ? (
-          <Badge variant="outline" className="border-slate-200 text-xs text-slate-500">
+          <Badge
+            variant="outline"
+            className="border-slate-200 text-xs text-slate-500"
+          >
             Refreshing
           </Badge>
         ) : null}
@@ -63,10 +66,15 @@ const DashboardConversionFunnelPanel = ({
             const percentOfMax =
               maxCount > 0 ? Math.max(4, (stage.count / maxCount) * 100) : 0
             const label = STAGE_LABELS[stage.stage] ?? stage.stage
-            const conversionLabel = formatPercent(stage.conversion_from_previous)
+            const conversionLabel = formatPercent(
+              stage.conversion_from_previous
+            )
 
             return (
-              <div key={stage.stage} className="rounded-xl border border-slate-100 p-2.5">
+              <div
+                key={stage.stage}
+                className="rounded-xl border border-slate-100 p-2.5"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">

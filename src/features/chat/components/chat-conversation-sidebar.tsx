@@ -154,7 +154,7 @@ const ChatConversationSidebar = ({
                   <p className="mt-1 truncate text-xs text-slate-500">
                     {conversation.last_message ||
                       conversation.summary ||
-                      "Chua co tin nhan"}
+                      "Chưa có tin nhắn"}
                   </p>
 
                   <div className="mt-2 flex items-center justify-between gap-2">
@@ -177,7 +177,7 @@ const ChatConversationSidebar = ({
 
             {isFetchingMore ? (
               <div className="px-3 py-4 text-center text-xs text-slate-500">
-                Dang tai them hoi thoai...
+                Đang tải thêm hội thoại...
               </div>
             ) : null}
           </>

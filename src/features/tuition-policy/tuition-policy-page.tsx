@@ -23,13 +23,17 @@ const TuitionPolicyPage = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create")
-  const [selectedPolicy, setSelectedPolicy] = useState<TuitionPolicy | null>(null)
+  const [selectedPolicy, setSelectedPolicy] = useState<TuitionPolicy | null>(
+    null
+  )
   const [dialogError, setDialogError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [policyToDelete, setPolicyToDelete] = useState<TuitionPolicy | null>(null)
+  const [policyToDelete, setPolicyToDelete] = useState<TuitionPolicy | null>(
+    null
+  )
   const [togglingPolicyId, setTogglingPolicyId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -112,18 +116,13 @@ const TuitionPolicyPage = () => {
 
     try {
       if (dialogMode === "create") {
-        await createTuitionPolicyAction({
-          ...payload,
-          is_active: true,
-        })
+        await createTuitionPolicyAction({ ...payload, is_active: true })
         setDialogOpen(false)
-        setActionSuccess("Tuition policy created successfully.")
+        setActionSuccess("Đã tạo chính sách học phí thành công.")
         return
       }
 
-      if (!selectedPolicy) {
-        return
-      }
+      if (!selectedPolicy) return
 
       await updateTuitionPolicyAction({
         policyId: selectedPolicy.id,
@@ -131,10 +130,12 @@ const TuitionPolicyPage = () => {
       })
       setDialogOpen(false)
       setSelectedPolicy(null)
-      setActionSuccess("Tuition policy updated successfully.")
+      setActionSuccess("Đã cập nhật chính sách học phí thành công.")
     } catch (error) {
       setDialogError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -150,11 +151,13 @@ const TuitionPolicyPage = () => {
         is_active: !policy.is_active,
       })
       setActionSuccess(
-        `Tuition policy ${!policy.is_active ? "activated" : "deactivated"} successfully.`
+        `Đã ${!policy.is_active ? "kích hoạt" : "tạm ẩn"} chính sách học phí thành công.`
       )
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     } finally {
       setTogglingPolicyId(null)
@@ -168,9 +171,7 @@ const TuitionPolicyPage = () => {
   }
 
   const handleConfirmDelete = async () => {
-    if (!policyToDelete) {
-      return
-    }
+    if (!policyToDelete) return
 
     try {
       await deleteTuitionPolicyAction(policyToDelete.id)
@@ -180,10 +181,12 @@ const TuitionPolicyPage = () => {
       setDeleteDialogOpen(false)
       setPolicyToDelete(null)
       setActionError(null)
-      setActionSuccess("Tuition policy deleted successfully.")
+      setActionSuccess("Đã xóa chính sách học phí thành công.")
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra. Vui lòng thử lại."
       )
     }
   }
@@ -199,9 +202,11 @@ const TuitionPolicyPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Tuition Policies</h1>
-        <p className="text-sm text-slate-500">
-          Control tuition pricing rules for each major, year, and billing model.
+        <h1 className="text-[18px] font-semibold text-slate-950">
+          Chính sách học phí
+        </h1>
+        <p className="text-[13px] text-slate-500">
+          Quản lý quy tắc học phí theo ngành, năm học và hình thức thu phí.
         </p>
       </div>
 
@@ -225,13 +230,13 @@ const TuitionPolicyPage = () => {
       />
 
       {actionError ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
           {actionError}
         </div>
       ) : null}
 
       {actionSuccess ? (
-        <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
           {actionSuccess}
         </div>
       ) : null}
@@ -272,13 +277,13 @@ const TuitionPolicyPage = () => {
       <TuitionPolicyDeleteDialog
         open={deleteDialogOpen}
         policy={policyToDelete}
-        majorName={policyToDelete ? majorNameById[policyToDelete.major_id] : undefined}
+        majorName={
+          policyToDelete ? majorNameById[policyToDelete.major_id] : undefined
+        }
         isDeleting={deleteTuitionPolicyPending}
         onOpenChange={(open) => {
           setDeleteDialogOpen(open)
-          if (!open) {
-            setPolicyToDelete(null)
-          }
+          if (!open) setPolicyToDelete(null)
         }}
         onConfirm={handleConfirmDelete}
       />

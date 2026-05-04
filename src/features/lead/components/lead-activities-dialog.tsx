@@ -62,17 +62,17 @@ const LeadActivitiesDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm ring-1 ring-slate-900/10">
               <Activity className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {lead?.full_name || "Lead"} activities
+              <DialogTitle className="text-base font-semibold text-slate-950">
+                {lead?.full_name || "Lead"} - hoạt động
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Review score movements and interaction history for this lead.
+                Xem lịch sử tương tác và các thay đổi điểm của lead này.
               </DialogDescription>
             </div>
           </div>
@@ -80,12 +80,13 @@ const LeadActivitiesDialog = ({
 
         <div className="max-h-[calc(100vh-14rem)] overflow-y-auto px-6 py-5">
           <div className="mb-4 flex items-center justify-between text-xs text-slate-500">
-            <span>{total} activities total</span>
+            <span>Tổng cộng {total} hoạt động</span>
             <span className="inline-flex items-center gap-2">
               {isFetching && !isLoading ? (
                 <Loader2 className="size-3.5 animate-spin" />
               ) : null}
-              {activities.length ? offset + 1 : 0}-{offset + activities.length} of {total}
+              {activities.length ? offset + 1 : 0}-{offset + activities.length}{" "}
+              trên {total}
             </span>
           </div>
 
@@ -97,12 +98,12 @@ const LeadActivitiesDialog = ({
               : null}
 
             {!isLoading && activities.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center">
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-4 py-10 text-center">
                 <p className="text-sm font-medium text-slate-900">
-                  No activity records yet
+                  Chưa có lịch sử hoạt động
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Score changes and lead interactions will appear here.
+                  Các thay đổi điểm và tương tác của lead sẽ hiển thị tại đây.
                 </p>
               </div>
             ) : null}
@@ -111,7 +112,7 @@ const LeadActivitiesDialog = ({
               ? activities.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -149,7 +150,7 @@ const LeadActivitiesDialog = ({
 
         <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4 md:flex-row md:items-center md:justify-between">
           <p className="text-xs text-slate-500">
-            Page {currentPage} of {totalPages}
+            Trang {currentPage} / {totalPages}
           </p>
 
           <Pagination className="mx-0 w-auto justify-end">
@@ -157,7 +158,7 @@ const LeadActivitiesDialog = ({
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
-                  text="Prev"
+                  text="Trước"
                   className={cn(
                     "h-8 rounded-lg px-3 text-xs",
                     currentPage === 1 && "pointer-events-none opacity-40"
@@ -188,10 +189,11 @@ const LeadActivitiesDialog = ({
               <PaginationItem>
                 <PaginationNext
                   href="#"
-                  text="Next"
+                  text="Sau"
                   className={cn(
                     "h-8 rounded-lg px-3 text-xs",
-                    currentPage === totalPages && "pointer-events-none opacity-40"
+                    currentPage === totalPages &&
+                      "pointer-events-none opacity-40"
                   )}
                   onClick={(event) => {
                     event.preventDefault()

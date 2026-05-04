@@ -7,10 +7,10 @@ const statusOptions: Array<{
   label: string
   value: ChatConversationStatus | "ALL"
 }> = [
-  { label: "Tat ca", value: "ALL" },
-  { label: "Dang mo", value: "OPEN" },
-  { label: "Can staff", value: "HANDOFF" },
-  { label: "Da dong", value: "CLOSED" },
+  { label: "Tất cả", value: "ALL" },
+  { label: "Đang mở", value: "OPEN" },
+  { label: "Cần staff", value: "HANDOFF" },
+  { label: "Đã đóng", value: "CLOSED" },
 ]
 
 const getInitials = (name?: string | null) => {
@@ -27,12 +27,12 @@ const getInitials = (name?: string | null) => {
 }
 
 const getDisplayName = (conversation?: ChatConversation | null) =>
-  conversation?.lead_full_name || "Khach hang moi"
+  conversation?.lead_full_name || "Khách hàng mới"
 
 const getStatusLabel = (status?: string | null) => {
-  if (status === "HANDOFF") return "Can staff"
-  if (status === "CLOSED") return "Da dong"
-  return "Dang mo"
+  if (status === "HANDOFF") return "Cần staff"
+  if (status === "CLOSED") return "Đã đóng"
+  return "Đang mở"
 }
 
 const getStatusClassName = (status?: string | null) => {

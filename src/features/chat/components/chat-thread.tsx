@@ -163,7 +163,7 @@ const ChatThread = ({
             <p className="truncate text-xs text-slate-500">
               {conversation.lead_email ||
                 conversation.lead_phone ||
-                "Khach hang tu web chat"}
+                "Khách hàng từ web chat"}
             </p>
           </div>
         </div>

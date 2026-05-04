@@ -42,23 +42,16 @@ type TuitionPolicyTableProps = {
 }
 
 const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1)
-  }
-
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, totalPages]
-  }
-
-  if (currentPage >= totalPages - 2) {
+  if (totalPages <= 5)
+    return Array.from({ length: totalPages }, (_, i) => i + 1)
+  if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
+  if (currentPage >= totalPages - 2)
     return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  }
-
   return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
     maximumFractionDigits: 0,
@@ -83,24 +76,24 @@ const TuitionPolicyTable = ({
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       {/* Header */}
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Tuition policies
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            Chính sách học phí
           </h2>
-          <p className="text-xs text-slate-500">
-            {total} polic{total === 1 ? "y" : "ies"} total
+          <p className="text-[12px] text-slate-500">
+            Tổng cộng {total} chính sách
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading && (
             <Loader2 className="size-3.5 animate-spin" />
           )}
           <span>
-            {items.length ? offset + 1 : 0}–{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}–{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -108,26 +101,26 @@ const TuitionPolicyTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Major
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
+              Ngành học
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Year
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Năm
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Fee type
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Loại phí
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Base fee
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Học phí gốc
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Trạng thái
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Updated
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Cập nhật
             </TableHead>
-            <TableHead className="w-20 pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+            <TableHead className="w-20 pr-5 text-right text-[11px] font-medium text-slate-500">
+              Thao tác
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -148,27 +141,21 @@ const TuitionPolicyTable = ({
                     </div>
                   </div>
                 </TableCell>
-
                 <TableCell>
                   <Skeleton className="h-3.5 w-14 rounded-full" />
                 </TableCell>
-
                 <TableCell>
                   <Skeleton className="h-5 w-20 rounded-full" />
                 </TableCell>
-
                 <TableCell>
                   <Skeleton className="h-3.5 w-20 rounded-full" />
                 </TableCell>
-
                 <TableCell>
                   <Skeleton className="h-7 w-20 rounded-full" />
                 </TableCell>
-
                 <TableCell>
                   <Skeleton className="h-3.5 w-20 rounded-full" />
                 </TableCell>
-
                 <TableCell className="pr-5">
                   <Skeleton className="ml-auto size-8 rounded-lg" />
                 </TableCell>
@@ -178,18 +165,17 @@ const TuitionPolicyTable = ({
           {!isLoading && items.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={7} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <CreditCard className="size-5 text-slate-400" />
                   </div>
-
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No tuition policies found
+                    <p className="text-[13px] font-medium text-slate-900">
+                      Chưa tìm thấy chính sách
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Create a tuition policy to start managing academic fee
-                      configurations.
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      Tạo chính sách học phí để bắt đầu quản lý cấu hình học
+                      phí.
                     </p>
                   </div>
                 </div>
@@ -201,12 +187,12 @@ const TuitionPolicyTable = ({
             items.map((policy) => {
               const isToggling = togglingPolicyId === policy.id
               const majorLabel =
-                majorNameById[policy.major_id] ?? "Unknown major"
+                majorNameById[policy.major_id] ?? "Ngành không xác định"
 
               return (
                 <TableRow
                   key={policy.id}
-                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/50"
+                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60"
                   onClick={() => onEdit(policy)}
                 >
                   <TableCell className="px-5 py-3.5">
@@ -214,19 +200,18 @@ const TuitionPolicyTable = ({
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-emerald-100 to-teal-100 text-emerald-700">
                         <CreditCard className="size-4" />
                       </div>
-
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">
+                        <p className="truncate text-[13px] font-medium text-slate-900">
                           {majorLabel}
                         </p>
-                        <p className="text-xs tracking-[0.18em] text-slate-400 uppercase">
+                        <p className="font-mono text-[10px] tracking-[0.12em] text-slate-400">
                           {policy.major_id.slice(0, 8)}
                         </p>
                       </div>
                     </div>
                   </TableCell>
 
-                  <TableCell className="font-mono text-xs text-slate-500">
+                  <TableCell className="font-mono text-[12px] text-slate-500">
                     {policy.year}
                   </TableCell>
 
@@ -239,7 +224,7 @@ const TuitionPolicyTable = ({
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="font-mono text-xs font-medium text-slate-600">
+                  <TableCell className="font-mono text-[12px] font-medium text-slate-700">
                     {formatCurrency(policy.base_fee)}
                   </TableCell>
 
@@ -247,12 +232,12 @@ const TuitionPolicyTable = ({
                     <button
                       type="button"
                       disabled={isToggling}
-                      onClick={(event) => {
-                        event.stopPropagation()
+                      onClick={(e) => {
+                        e.stopPropagation()
                         onToggleStatus(policy)
                       }}
                       className={cn(
-                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors",
+                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
                         policy.is_active
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
                           : "bg-slate-100 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-200",
@@ -266,12 +251,11 @@ const TuitionPolicyTable = ({
                       ) : (
                         <PowerOff className="size-3" />
                       )}
-
-                      {policy.is_active ? "Active" : "Inactive"}
+                      {policy.is_active ? "Đang hoạt động" : "Tạm ẩn"}
                     </button>
                   </TableCell>
 
-                  <TableCell className="text-xs text-slate-500">
+                  <TableCell className="text-[12px] text-slate-500">
                     {formatDateOnly(policy.updated_at)}
                   </TableCell>
 
@@ -280,9 +264,9 @@ const TuitionPolicyTable = ({
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="ml-auto size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-                      onClick={(event) => {
-                        event.stopPropagation()
+                      className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                      onClick={(e) => {
+                        e.stopPropagation()
                         onDelete(policy)
                       }}
                     >
@@ -297,8 +281,8 @@ const TuitionPolicyTable = ({
 
       {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+        <p className="text-[12px] text-slate-500">
+          Trang {currentPage} / {totalPages}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -306,17 +290,14 @@ const TuitionPolicyTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
-
-                  if (currentPage > 1) {
-                    onPageChange(currentPage - 1)
-                  }
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (currentPage > 1) onPageChange(currentPage - 1)
                 }}
               />
             </PaginationItem>
@@ -326,9 +307,9 @@ const TuitionPolicyTable = ({
                 <PaginationLink
                   href="#"
                   isActive={page === currentPage}
-                  className="h-8 w-8 rounded-lg text-xs"
-                  onClick={(event) => {
-                    event.preventDefault()
+                  className="h-8 w-8 rounded-lg text-[12px]"
+                  onClick={(e) => {
+                    e.preventDefault()
                     onPageChange(page)
                   }}
                 >
@@ -340,17 +321,14 @@ const TuitionPolicyTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
-
-                  if (currentPage < totalPages) {
-                    onPageChange(currentPage + 1)
-                  }
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (currentPage < totalPages) onPageChange(currentPage + 1)
                 }}
               />
             </PaginationItem>

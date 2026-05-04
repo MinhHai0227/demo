@@ -100,7 +100,10 @@ const HotQuestionsPage = () => {
     })
 
     return Array.from(values)
-  }, [hotQuestionsListQuery.data?.items, hotQuestionsSummaryQuery.data?.top_intents])
+  }, [
+    hotQuestionsListQuery.data?.items,
+    hotQuestionsSummaryQuery.data?.top_intents,
+  ])
 
   const surfaceError =
     getErrorMessage(hotQuestionsSummaryQuery.error, "") ||
@@ -119,10 +122,12 @@ const HotQuestionsPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Hot Questions</h1>
-        <p className="text-sm text-slate-500">
-          Review the most frequent questions, identify fallback patterns, and
-          inspect intent trends.
+        <h1 className="text-lg font-semibold tracking-tight text-slate-950">
+          Câu hỏi nổi bật
+        </h1>
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Theo dõi các câu hỏi được hỏi nhiều, nhận diện mẫu fallback và kiểm
+          tra xu hướng intent.
         </p>
       </div>
 
@@ -145,7 +150,7 @@ const HotQuestionsPage = () => {
       />
 
       {surfaceError ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700 shadow-xs">
           {surfaceError}
         </div>
       ) : null}

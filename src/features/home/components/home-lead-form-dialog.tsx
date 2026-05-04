@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { Loader2, UserRound } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -7,14 +7,13 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
+
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -29,7 +28,7 @@ type HomeLeadFormDialogProps = {
 }
 
 const inputClassName =
-  "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-primary/50"
+  "h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-[14px] text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-slate-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(15,23,42,0.06)]"
 
 const HomeLeadFormDialog = ({
   open,
@@ -37,7 +36,6 @@ const HomeLeadFormDialog = ({
   onSubmit,
   isSubmitting = false,
 }: HomeLeadFormDialogProps) => {
-  
   const form = useForm<InitLeadSchema>({
     resolver: zodResolver(initLeadSchema),
     defaultValues: {
@@ -64,42 +62,56 @@ const HomeLeadFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-0 sm:max-w-2xl">
-        <DialogHeader className="border-b border-slate-200 px-6 py-5">
-          <DialogTitle className="text-xl font-semibold text-slate-950">
-            Hoan tat thong tin truoc khi bat dau chat
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-0 shadow-[0_32px_80px_-20px_rgba(15,23,42,0.2)] sm:max-w-lg">
+        {/* Gold accent top bar */}
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/40" />
+
+        <DialogHeader className="px-6 pt-6 pb-5">
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100">
+            <UserRound className="h-5 w-5 text-slate-600" />
+          </div>
+          <DialogTitle className="text-[18px] font-semibold tracking-tight text-slate-950">
+            Hoàn tất thông tin để bắt đầu
           </DialogTitle>
-          <DialogDescription className="max-w-xl text-sm leading-6 text-slate-600">
-            Theo flow backend, client se goi `POST /chat/init-lead` truoc neu local
-            store chua co `lead_id`. Sau do moi tiep tuc `POST /chat/query`.
+          <DialogDescription className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+            Cần ít nhất một cách liên hệ — email hoặc số điện thoại.
           </DialogDescription>
         </DialogHeader>
 
         <form
           noValidate
-          className="px-6 py-6"
+          className="px-6 pb-6"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <FieldGroup className="gap-5">
+          <FieldGroup className="gap-4">
+            {/* Full name */}
             <Field>
-              <FieldLabel htmlFor="lead-full-name">Ho va ten</FieldLabel>
+              <FieldLabel
+                htmlFor="lead-full-name"
+                className="text-[13px] font-medium text-slate-700"
+              >
+                Họ và tên <span className="text-red-400">*</span>
+              </FieldLabel>
               <FieldContent>
                 <input
                   id="lead-full-name"
                   className={inputClassName}
-                  placeholder="Nguyen Van A"
+                  placeholder="Nguyễn Văn A"
                   {...form.register("full_name")}
                 />
-                <FieldDescription>
-                  Truong bat buoc. Se duoc gui len backend khi khoi tao lead.
-                </FieldDescription>
                 <FieldError errors={[form.formState.errors.full_name]} />
               </FieldContent>
             </Field>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            {/* Email + Phone side by side */}
+            <div className="grid gap-3 sm:grid-cols-2">
               <Field>
-                <FieldLabel htmlFor="lead-email">Email</FieldLabel>
+                <FieldLabel
+                  htmlFor="lead-email"
+                  className="text-[13px] font-medium text-slate-700"
+                >
+                  Email
+                </FieldLabel>
                 <FieldContent>
                   <input
                     id="lead-email"
@@ -108,15 +120,17 @@ const HomeLeadFormDialog = ({
                     placeholder="ban@email.com"
                     {...form.register("email")}
                   />
-                  <FieldDescription>
-                    Co the bo trong neu da co so dien thoai.
-                  </FieldDescription>
                   <FieldError errors={[form.formState.errors.email]} />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="lead-phone">So dien thoai</FieldLabel>
+                <FieldLabel
+                  htmlFor="lead-phone"
+                  className="text-[13px] font-medium text-slate-700"
+                >
+                  Số điện thoại
+                </FieldLabel>
                 <FieldContent>
                   <input
                     id="lead-phone"
@@ -124,43 +138,41 @@ const HomeLeadFormDialog = ({
                     placeholder="0901 234 567"
                     {...form.register("phone")}
                   />
-                  <FieldDescription>
-                    Co the bo trong neu da co email hop le.
-                  </FieldDescription>
                   <FieldError errors={[form.formState.errors.phone]} />
                 </FieldContent>
               </Field>
             </div>
 
-            <Field>
-              <FieldContent>
-                <FieldDescription>
-                  Can it nhat mot cach lien he: email hoac so dien thoai.
-                </FieldDescription>
-                <FieldError>{contactError}</FieldError>
-              </FieldContent>
-            </Field>
+            {/* Combined contact error */}
+            {contactError ? (
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-3.5 py-3 text-[12px] text-red-600">
+                {contactError}
+              </div>
+            ) : null}
           </FieldGroup>
 
-          <DialogFooter className="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50/80">
+          {/* Footer */}
+          <div className="mt-6 flex items-center justify-end gap-2.5">
             <Button
               type="button"
-              variant="outline"
-              className="cursor-pointer"
+              variant="ghost"
+              className="h-10 cursor-pointer rounded-xl px-4 text-[13px] text-slate-600 hover:bg-slate-100"
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Dong
+              Đóng
             </Button>
             <Button
               type="submit"
-              className="cursor-pointer"
+              className="h-10 cursor-pointer rounded-xl bg-slate-950 px-5 text-[13px] font-medium text-white hover:bg-slate-800 disabled:opacity-60"
               disabled={form.formState.isSubmitting || isSubmitting}
             >
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {isSubmitting ? "Dang tao lead..." : "Tiep tuc vao chat"}
+              {isSubmitting ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : null}
+              {isSubmitting ? "Đang tạo..." : "Tiếp tục vào chat"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

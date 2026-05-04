@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react"
-import { Bot, Headset, Mic, Paperclip, SendHorizonal } from "lucide-react"
+import {
+  Bot,
+  Headset,
+  Mic,
+  Paperclip,
+  SendHorizonal,
+  Sparkles,
+} from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
 
 import { requestConversationStaffContact } from "@/api/chat-api"
@@ -116,7 +123,8 @@ const HomeChatShell = () => {
     onSuccess: (updatedConversation, conversationId) => {
       setStaffContactFeedback({
         conversationId,
-        message: "Yeu cau ket noi voi co van da duoc gui. Team se phan hoi som.",
+        message:
+          "Yêu cầu kết nối với cố vấn đã được gửi. Team sẽ phản hồi sớm.",
       })
       setLatestChatLeadState({
         conversation_id: updatedConversation.id,
@@ -206,8 +214,7 @@ const HomeChatShell = () => {
     setChatError(null)
     setLeadFollowUpQuestions([])
 
-    const shouldCreateAssistantPlaceholder =
-      conversation?.status !== "HANDOFF"
+    const shouldCreateAssistantPlaceholder = conversation?.status !== "HANDOFF"
     const { userTempId, assistantTempId } = createTempMessageIds()
 
     setOptimisticMessages((current) => {
@@ -288,7 +295,7 @@ const HomeChatShell = () => {
           .filter((item): item is NonNullable<typeof item> => item !== null)
       )
     } catch {
-      setChatError("Khong the gui tin nhan luc nay. Vui long thu lai sau.")
+      setChatError("Không thể gửi tin nhắn lúc này. Vui lòng thử lại sau.")
 
       setOptimisticMessages((current) =>
         current.filter(
@@ -330,7 +337,7 @@ const HomeChatShell = () => {
       }
     } catch {
       setChatError(
-        "Khong the tao lead luc nay. Vui long kiem tra lai thong tin."
+        "Không thể tạo lead lúc này. Vui lòng kiểm tra lại thông tin."
       )
     }
   }
@@ -348,18 +355,18 @@ const HomeChatShell = () => {
       await requestCounselorMutation.mutateAsync(requestConversationId)
     } catch {
       setChatError(
-        "Khong the gui yeu cau ket noi co van luc nay. Vui long thu lai sau."
+        "Không thể gửi yêu cầu kết nối cố vấn lúc này. Vui lòng thử lại sau."
       )
     }
   }
 
   const getMessageAuthor = (message: ChatMessage) => {
     if (message.role === "USER") {
-      return leadData?.full_name || "Ban"
+      return leadData?.full_name || "Bạn"
     }
 
     if (message.intent === "staff_reply") {
-      return conversation?.staff_name || "Tu van vien"
+      return conversation?.staff_name || "Tư vấn viên"
     }
 
     return "VinUni AI"
@@ -367,66 +374,117 @@ const HomeChatShell = () => {
 
   return (
     <>
-      <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-[0_28px_90px_-38px_rgba(15,23,42,0.38)] backdrop-blur-xl">
-        <div className="flex items-center gap-3 border-b border-slate-200/80 bg-white/90 px-5 py-4 sm:px-6">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary">
-            <Bot className="h-5 w-5" />
+      <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18),0_0_0_1px_rgba(255,255,255,0.8)_inset]">
+        {/* ── Header ── */}
+        <div className="relative flex items-center gap-3.5 border-b border-slate-100 bg-white px-5 py-4 sm:px-6">
+          {/* Gold accent line */}
+          <div className="absolute inset-x-0 top-0 h-[2.5px] rounded-t-[2rem] bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
+            <Bot className="h-4.5 w-4.5" />
+            {/* Online indicator */}
+            <span className="absolute -right-0.5 -bottom-0.5 flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white" />
+            </span>
           </div>
 
-          <div>
-            <h2 className="text-lg font-semibold text-slate-950">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[15px] font-semibold tracking-tight text-slate-950">
               VinUni Admissions Assistant
             </h2>
+            <p className="text-xs text-slate-400">Luôn sẵn sàng hỗ trợ</p>
+          </div>
 
-            <div className="flex items-center gap-2">
-              <p className="size-2.5 rounded-full bg-green-500" />
-              <span className="text-sm text-slate-500">online</span>
-            </div>
+          <div className="flex h-7 items-center gap-1.5 rounded-full border border-slate-100 bg-slate-50 px-3">
+            <Sparkles className="h-3 w-3 text-[#d6ae4e]" />
+            <span className="text-[11px] font-medium text-slate-500">AI</span>
           </div>
         </div>
 
+        {/* ── Messages ── */}
         <div
           ref={messagesContainerRef}
           onScroll={handleMessagesScroll}
-          className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6"
+          className="flex-1 space-y-4 overflow-y-auto px-5 py-5 sm:px-6"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#e2e8f0 transparent",
+          }}
         >
+          {/* Conversation banner */}
           {leadData?.conversation_id ? (
-            <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-4">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500 uppercase">
-                <span>
-                  {conversationPending
-                    ? "Dang tai conversation..."
-                    : "Conversation da luu"}
-                </span>
-
-                {conversation?.status ? (
-                  <span className="rounded-full bg-white px-2 py-1 text-slate-600 normal-case">
-                    {conversation.status}
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/80">
+              <div className="border-b border-slate-100 px-4 py-3">
+                <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">
+                  <span>
+                    {conversationPending
+                      ? "Đang tải conversation..."
+                      : "Conversation đã lưu"}
                   </span>
-                ) : null}
 
-                {typeof conversation?.message_count === "number" ? (
-                  <span className="rounded-full bg-white px-2 py-1 text-slate-600 normal-case">
-                    {conversation.message_count} messages
-                  </span>
-                ) : null}
+                  {conversation?.status ? (
+                    <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500 normal-case ring-1 ring-slate-200">
+                      {conversation.status}
+                    </span>
+                  ) : null}
+
+                  {typeof conversation?.message_count === "number" ? (
+                    <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500 normal-case ring-1 ring-slate-200">
+                      {conversation.message_count} tin nhắn
+                    </span>
+                  ) : null}
+                </div>
               </div>
 
               {conversation?.summary ? (
-                <p className="mt-3 text-sm leading-6 text-slate-700">
+                <p className="px-4 py-3 text-[13px] leading-relaxed text-slate-600">
                   {conversation.summary}
                 </p>
               ) : null}
 
               {counselorRequestSent || scopedStaffContactFeedback ? (
-                <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50/80 px-4 py-3 text-sm leading-6 text-emerald-800">
+                <div className="m-3 mt-0 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-[13px] leading-relaxed text-emerald-700">
                   {scopedStaffContactFeedback ||
-                    "Yeu cau ket noi voi co van da duoc ghi nhan. Team se phan hoi som."}
+                    "Yêu cầu kết nối với cố vấn đã được ghi nhận. Team sẽ phản hồi sớm."}
                 </div>
               ) : null}
             </div>
           ) : null}
 
+          {/* Welcome message */}
+          {!leadData?.conversation_id && !displayMessages.length ? (
+            <div className="flex justify-start">
+              <div className="max-w-[85%] sm:max-w-[72%]">
+                <div className="mb-1.5 flex items-center gap-2 pl-1">
+                  <span className="text-[11px] font-semibold text-slate-900">
+                    VinUni AI
+                  </span>
+                  <span className="text-[11px] text-slate-400">
+                    Sẵn sàng trả lời
+                  </span>
+                </div>
+                <div className="rounded-2xl rounded-tl-sm border border-slate-200/80 bg-white px-4 py-3 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)]">
+                  <p className="text-[14px] leading-relaxed text-slate-700">
+                    Xin chào! Tôi có thể hỗ trợ thông tin về{" "}
+                    <span className="font-medium text-slate-900">
+                      tuyển sinh
+                    </span>
+                    ,{" "}
+                    <span className="font-medium text-slate-900">học phí</span>,{" "}
+                    <span className="font-medium text-slate-900">học bổng</span>{" "}
+                    và{" "}
+                    <span className="font-medium text-slate-900">
+                      quy trình nộp hồ sơ
+                    </span>
+                    .
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Message list */}
           {displayMessages.map((message) => {
             const isAssistant = message.role === "ASSISTANT"
             const isStaffReply = message.intent === "staff_reply"
@@ -437,87 +495,80 @@ const HomeChatShell = () => {
                 className={`flex ${isAssistant ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`max-w-[88%] rounded-[1.5rem] px-4 py-3 shadow-sm sm:max-w-[75%] ${
-                    isAssistant
-                      ? isStaffReply
-                        ? "rounded-bl-md border border-emerald-200 bg-emerald-50 text-slate-800"
-                        : "rounded-bl-md border border-slate-200 bg-white text-slate-700"
-                      : "rounded-br-md bg-slate-950 text-white"
-                  }`}
+                  className={`max-w-[85%] sm:max-w-[72%] ${isAssistant ? "" : ""}`}
                 >
-                  <div className="mb-2 flex items-center gap-2 text-xs">
+                  {/* Author + time */}
+                  <div
+                    className={`mb-1.5 flex items-center gap-2 ${isAssistant ? "pl-1" : "justify-end pr-1"}`}
+                  >
                     <span
-                      className={
-                        isAssistant
-                          ? "font-semibold text-slate-900"
-                          : "font-semibold text-white/90"
-                      }
+                      className={`text-[11px] font-semibold ${isAssistant ? "text-slate-900" : "text-slate-500"}`}
                     >
                       {getMessageAuthor(message)}
                     </span>
-
                     {message.created_at ? (
-                      <span
-                        className={
-                          isAssistant ? "text-slate-400" : "text-white/60"
-                        }
-                      >
+                      <span className="text-[11px] text-slate-400">
                         {formatDateTime(message.created_at)}
                       </span>
                     ) : null}
                   </div>
 
-                  <p className="text-sm leading-6">
-                    {message.content || (isAssistant ? "Dang suy nghi..." : "")}
-                  </p>
+                  {/* Bubble */}
+                  <div
+                    className={`px-4 py-3 text-[14px] leading-relaxed ${
+                      isAssistant
+                        ? isStaffReply
+                          ? "rounded-2xl rounded-tl-sm border border-emerald-200/80 bg-emerald-50 text-emerald-900 shadow-[0_2px_8px_-2px_rgba(16,185,129,0.08)]"
+                          : "rounded-2xl rounded-tl-sm border border-slate-200/80 bg-white text-slate-700 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)]"
+                        : "rounded-2xl rounded-tr-sm bg-slate-950 text-white shadow-[0_4px_12px_-4px_rgba(15,23,42,0.3)]"
+                    }`}
+                  >
+                    {message.content ||
+                      (isAssistant ? (
+                        <span className="flex items-center gap-1.5 text-slate-400">
+                          <span className="flex gap-1">
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:0ms]" />
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:150ms]" />
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:300ms]" />
+                          </span>
+                          Đang suy nghĩ
+                        </span>
+                      ) : (
+                        ""
+                      ))}
+                  </div>
                 </div>
               </div>
             )
           })}
 
-          {!leadData?.conversation_id && !displayMessages.length ? (
-            <div className="flex justify-start">
-              <div className="max-w-[88%] rounded-[1.5rem] rounded-bl-md border border-slate-200 bg-white px-4 py-3 shadow-sm sm:max-w-[75%]">
-                <div className="mb-2 flex items-center gap-2 text-xs">
-                  <span className="font-semibold text-slate-900">
-                    VinUni AI
-                  </span>
-                  <span className="text-slate-400">San sang tra loi</span>
-                </div>
-
-                <p className="text-sm leading-6 text-slate-700">
-                  Xin chao, toi co the ho tro thong tin tuyen sinh, hoc phi, hoc
-                  bong va quy trinh nop ho so.
-                </p>
-              </div>
-            </div>
-          ) : null}
-
+          {/* Loading states */}
           {olderConversationMessagesPending ? (
             <div className="flex justify-center">
               <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-slate-500 shadow-sm">
-                Dang tai them tin nhan cu...
+                Đang tải thêm tin nhắn cũ...
               </div>
             </div>
           ) : null}
 
           {conversationMessagesPending ? (
             <div className="flex justify-start">
-              <div className="rounded-[1.5rem] rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
-                Dang tai lich su chat...
+              <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-4 py-3 text-[13px] text-slate-400 shadow-sm">
+                Đang tải lịch sử chat...
               </div>
             </div>
           ) : null}
 
+          {/* Follow-up suggestions */}
           {leadFollowUpQuestions.length ? (
-            <div className="rounded-lg border border-primary/10 bg-primary/5 px-2 py-1.5">
-              <div className="space-y-1">
+            <div className="rounded-xl border border-[#d6ae4e]/20 bg-[#fdf9ef] px-3 py-2.5">
+              <div className="space-y-1.5">
                 {leadFollowUpQuestions.map((question, index) => (
                   <div
                     key={question}
-                    className="rounded-md bg-white/80 px-2 py-1 text-[11px] leading-4 text-slate-600"
+                    className="rounded-lg bg-white px-3 py-1.5 text-[12px] leading-snug text-slate-600 ring-1 ring-slate-200/80"
                   >
-                    <span className="mr-1.5 font-semibold text-primary">
+                    <span className="mr-2 font-semibold text-[#d6ae4e]">
                       {index + 1}.
                     </span>
                     {question}
@@ -530,12 +581,13 @@ const HomeChatShell = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="border-t border-slate-200 bg-white px-5 py-5 sm:px-6">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-3 shadow-[0_16px_40px_-28px_rgba(15,23,42,0.4)]">
+        {/* ── Input area ── */}
+        <div className="border-t border-slate-100 bg-white/95 px-4 py-4 sm:px-5">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_4px_16px_-6px_rgba(15,23,42,0.1),0_0_0_1px_rgba(255,255,255,0.9)_inset] transition-shadow focus-within:border-slate-300 focus-within:shadow-[0_6px_20px_-6px_rgba(15,23,42,0.14)]">
             <textarea
-              rows={1}
+              rows={2}
               value={draftMessage}
-              placeholder="Nhap cau hoi cua ban tai day..."
+              placeholder="Nhập câu hỏi của bạn tại đây..."
               onChange={(event) => setDraftMessage(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
@@ -543,72 +595,72 @@ const HomeChatShell = () => {
                   void handleSend()
                 }
               }}
-              className="w-full resize-none border-0 bg-transparent px-1 py-1 text-sm leading-6 text-slate-700 outline-none placeholder:text-slate-400"
+              className="w-full resize-none border-0 bg-transparent px-4 pt-3 pb-2 text-[14px] leading-relaxed text-slate-800 outline-none placeholder:text-slate-400"
             />
 
-            <div className="mt-3 flex flex-col gap-3 border-t border-slate-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 border-t border-slate-100 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+              {/* Left actions */}
+              <div className="flex items-center gap-1">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className="rounded-full"
+                  className="h-8 w-8 rounded-xl text-slate-400 hover:text-slate-600"
                 >
-                  <Paperclip className="h-4 w-4" />
+                  <Paperclip className="h-3.5 w-3.5" />
                 </Button>
-
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className="rounded-full"
+                  className="h-8 w-8 rounded-xl text-slate-400 hover:text-slate-600"
                 >
-                  <Mic className="h-4 w-4" />
+                  <Mic className="h-3.5 w-3.5" />
                 </Button>
-
-                <p className="text-xs text-slate-400">
-                  Chua co `lead_id` se mo form, co roi se goi API chat.
-                </p>
+                <span className="hidden text-[11px] text-slate-400 sm:block">
+                  Enter để gửi · Shift+Enter xuống dòng
+                </span>
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              {/* Right actions */}
+              <div className="flex items-center gap-2">
                 {canRequestCounselor ? (
                   <Button
                     type="button"
                     variant="outline"
-                    size="lg"
-                    className="w-full cursor-pointer rounded-full border-amber-300 bg-amber-50 px-5 text-amber-900 hover:bg-amber-100 sm:w-auto"
+                    size="sm"
+                    className="h-8 cursor-pointer rounded-xl border-amber-200 bg-amber-50 px-3 text-[12px] font-medium text-amber-800 hover:bg-amber-100"
                     disabled={requestCounselorMutation.isPending}
                     onClick={() => {
                       void handleRequestCounselor()
                     }}
                   >
-                    <Headset className="h-4 w-4" />
+                    <Headset className="h-3.5 w-3.5" />
                     {requestCounselorMutation.isPending
-                      ? "Dang gui..."
-                      : "Chat voi co van"}
+                      ? "Đang gửi..."
+                      : "Chat với cố vấn"}
                   </Button>
                 ) : null}
 
                 <Button
                   type="button"
-                  size="lg"
-                  className="w-full cursor-pointer rounded-full px-5 sm:w-auto"
+                  size="sm"
+                  className="h-8 cursor-pointer rounded-xl bg-slate-950 px-4 text-[12px] font-medium text-white hover:bg-slate-800 disabled:opacity-50"
                   disabled={chatPending || initLeadPending}
                   onClick={() => {
                     void handleSend()
                   }}
                 >
-                  {chatPending ? "Dang gui..." : "Gui tin nhan"}
-                  <SendHorizonal className="h-4 w-4" />
+                  {chatPending ? "Đang gửi..." : "Gửi"}
+                  <SendHorizonal className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
-
-            {chatError ? (
-              <p className="mt-3 text-sm text-destructive">{chatError}</p>
-            ) : null}
           </div>
+
+          {chatError ? (
+            <p className="mt-2 px-1 text-[12px] text-red-500">{chatError}</p>
+          ) : null}
         </div>
       </div>
 

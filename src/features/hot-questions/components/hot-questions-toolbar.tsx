@@ -39,25 +39,25 @@ const HotQuestionsToolbar = ({
   const isDebouncing = searchInput.trim() !== appliedSearch
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-3 px-4 py-4 xl:flex-row xl:items-center">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
+      <div className="flex flex-col gap-3 bg-linear-to-r from-slate-50 to-white px-4 py-4 xl:flex-row xl:items-center">
         <div className="grid flex-1 gap-2 md:grid-cols-2 xl:grid-cols-[minmax(0,1.8fr)_180px_180px]">
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
             <Input
               value={searchInput}
-              placeholder="Search by question, normalized text, intent..."
-              className="h-10 rounded-xl border-slate-200 bg-slate-50 pl-9 text-sm shadow-none placeholder:text-slate-400"
+              placeholder="Tìm theo câu hỏi, nội dung chuẩn hóa, intent..."
+              className="h-10 rounded-xl border-slate-200 bg-white pl-9 text-sm shadow-xs transition-colors placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-slate-200"
               onChange={(event) => onSearchInputChange(event.target.value)}
             />
           </div>
 
           <Select value={intentFilter} onValueChange={onIntentFilterChange}>
-            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-              <SelectValue placeholder="All intents" />
+            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+              <SelectValue placeholder="Tất cả intent" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All intents</SelectItem>
+              <SelectItem value="ALL">Tất cả intent</SelectItem>
               {intentOptions.map((intent) => (
                 <SelectItem key={intent} value={intent}>
                   {intent}
@@ -72,13 +72,13 @@ const HotQuestionsToolbar = ({
               onFallbackFilterChange(value as "ALL" | "TRUE" | "FALSE")
             }
           >
-            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-              <SelectValue placeholder="All fallback states" />
+            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+              <SelectValue placeholder="Tất cả trạng thái" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All questions</SelectItem>
-              <SelectItem value="TRUE">Fallback only</SelectItem>
-              <SelectItem value="FALSE">Answered only</SelectItem>
+              <SelectItem value="ALL">Tất cả câu hỏi</SelectItem>
+              <SelectItem value="TRUE">Chỉ fallback</SelectItem>
+              <SelectItem value="FALSE">Đã trả lời</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -89,8 +89,9 @@ const HotQuestionsToolbar = ({
               type="button"
               variant="ghost"
               size="icon"
-              className="h-10 w-10 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-900"
+              className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-500 shadow-xs transition-colors hover:bg-slate-100 hover:text-slate-950"
               onClick={onClearFilters}
+              aria-label="Xóa bộ lọc"
             >
               <X className="size-4" />
             </Button>
@@ -101,23 +102,23 @@ const HotQuestionsToolbar = ({
       {(isDebouncing || hasFilters) && (
         <div className="flex items-center gap-2 border-t border-slate-100 bg-slate-50 px-4 py-2">
           {isDebouncing ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-amber-200 ring-inset">
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-200 ring-inset">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
               </span>
-              Waiting...
+              Đang chờ nhập xong...
             </span>
           ) : null}
 
           {hasFilters ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
-              Filters active
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
+              Đang áp dụng bộ lọc
             </span>
           ) : null}
 
           <span className="ml-auto text-xs text-slate-400">
-            Results update 1s after you stop typing
+            Kết quả sẽ cập nhật sau 1 giây khi bạn ngừng nhập
           </span>
         </div>
       )}

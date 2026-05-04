@@ -33,17 +33,17 @@ type DetailStatProps = {
 const DetailStat = ({ label, value, highlight = false }: DetailStatProps) => (
   <div
     className={cn(
-      "rounded-xl border p-3",
-      highlight ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50"
+      "relative overflow-hidden rounded-xl border p-3",
+      highlight ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50/80"
     )}
   >
-    <p className="text-[10px] font-medium tracking-wider text-slate-500 uppercase">
+    <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
       {label}
     </p>
     <p
       className={cn(
-        "mt-1.5 text-xl font-semibold",
-        highlight ? "text-red-600" : "text-slate-900"
+        "mt-1.5 text-xl font-semibold tracking-tight",
+        highlight ? "text-red-600" : "text-slate-950"
       )}
     >
       {value}
@@ -64,18 +64,21 @@ const DashboardDailyDetailDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-2xl">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-2xl">
+        {/* Gold accent bar */}
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
         {/* Header */}
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <CalendarDays className="size-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                Daily analytics detail
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                Chi tiết phân tích ngày
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
+              <DialogDescription className="text-[12px] text-slate-500">
                 {targetDate ? formatDateOnly(targetDate) : "Chưa chọn ngày"}
                 {targetDate && (
                   <span className="ml-2 font-mono text-[10px] text-slate-400">
@@ -87,9 +90,9 @@ const DashboardDailyDetailDialog = ({
             {isFetching && (
               <Badge
                 variant="outline"
-                className="shrink-0 border-slate-200 text-xs text-slate-500"
+                className="shrink-0 border-slate-200 text-[11px] text-slate-500"
               >
-                Loading
+                Đang tải
               </Badge>
             )}
           </div>
@@ -108,13 +111,13 @@ const DashboardDailyDetailDialog = ({
             </>
           ) : detail ? (
             <>
-              {/* Stats */}
+              {/* Stats grid */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <DetailStat label="Chats" value={`${detail.total_chats}`} />
-                <DetailStat label="New leads" value={`${detail.new_leads}`} />
-                <DetailStat label="Fallbacks" value={`${detail.fallbacks}`} />
+                <DetailStat label="Hội thoại" value={`${detail.total_chats}`} />
+                <DetailStat label="Lead mới" value={`${detail.new_leads}`} />
+                <DetailStat label="Fallback" value={`${detail.fallbacks}`} />
                 <DetailStat
-                  label="Fallback rate"
+                  label="Tỉ lệ fallback"
                   value={`${fallbackRate.toFixed(1)}%`}
                   highlight={isHighFallback}
                 />
@@ -125,12 +128,12 @@ const DashboardDailyDetailDialog = ({
               {/* Top intents */}
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                  <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
                     Top intents
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-400">
-                    Dữ liệu chi tiết của riêng ngày{" "}
-                    <span className="font-mono">{detail.date}</span>.
+                  <p className="mt-0.5 text-[11px] text-slate-400">
+                    Dữ liệu chi tiết của ngày{" "}
+                    <span className="font-mono">{detail.date}</span>
                   </p>
                 </div>
 
@@ -141,22 +144,22 @@ const DashboardDailyDetailDialog = ({
                       .map(([intent, count], i) => (
                         <div
                           key={intent}
-                          className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2"
+                          className="flex items-center gap-2.5 rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2"
                         >
-                          <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-slate-200 text-[10px] font-semibold text-slate-600">
+                          <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-slate-900 text-[10px] font-semibold text-white">
                             {i + 1}
                           </span>
-                          <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700">
+                          <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
                             {intent}
                           </span>
-                          <span className="shrink-0 rounded-md bg-white px-2 py-0.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
+                          <span className="shrink-0 rounded-md bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-700 ring-1 ring-slate-200">
                             {count}
                           </span>
                         </div>
                       ))}
                   </div>
                 ) : (
-                  <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-xs text-slate-400">
+                  <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-[12px] text-slate-400">
                     Ngày này chưa có top intents.
                   </div>
                 )}
@@ -167,7 +170,7 @@ const DashboardDailyDetailDialog = ({
               <div className="flex size-10 items-center justify-center rounded-xl bg-slate-100">
                 <CalendarDays className="size-4 text-slate-400" />
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-[12px] text-slate-500">
                 Chọn một ngày trong bảng để xem chi tiết.
               </p>
             </div>

@@ -15,7 +15,13 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatDateOnly, formatDateTime } from "@/lib/date"
@@ -70,7 +76,7 @@ type DetailFormState = {
 }
 
 const textareaClassName =
-  "min-h-28 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 resize-y"
+  "min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 shadow-xs outline-none transition-colors placeholder:text-slate-400 focus:border-slate-300 focus-visible:ring-3 focus-visible:ring-slate-200"
 
 const emptyFormState: DetailFormState = {
   full_name: "",
@@ -193,7 +199,7 @@ const LeadDetailPanel = ({
           | Record<string, unknown>
           | unknown[]
       } catch {
-        setLocalError("Extracurriculars must be valid JSON before saving.")
+        setLocalError("Hoạt động ngoại khóa phải là JSON hợp lệ trước khi lưu.")
         return
       }
     }
@@ -207,7 +213,8 @@ const LeadDetailPanel = ({
       high_school: normalizeText(formState.high_school),
       province: normalizeText(formState.province),
       status: statusDraft,
-      temperature: formState.temperature === "NONE" ? null : formState.temperature,
+      temperature:
+        formState.temperature === "NONE" ? null : formState.temperature,
       gpa: normalizeNumber(formState.gpa),
       ielts: normalizeNumber(formState.ielts),
       sat: normalizeNumber(formState.sat),
@@ -227,7 +234,7 @@ const LeadDetailPanel = ({
   if (leadPending) {
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
           <div className="space-y-3">
             <Skeleton className="h-6 w-48 rounded-full" />
             <Skeleton className="h-4 w-64 rounded-full" />
@@ -238,7 +245,7 @@ const LeadDetailPanel = ({
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
           <div className="grid gap-3 sm:grid-cols-2">
             {Array.from({ length: 8 }).map((_, index) => (
               <Skeleton key={index} className="h-16 rounded-2xl" />
@@ -255,7 +262,7 @@ const LeadDetailPanel = ({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
         <div className="border-b border-slate-100 bg-linear-to-r from-amber-50 via-white to-sky-50 px-5 py-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div className="min-w-0">
@@ -271,15 +278,15 @@ const LeadDetailPanel = ({
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <Mail className="size-3.5 text-slate-400" />
-                  {lead.email || "No email"}
+                  {lead.email || "Chưa có email"}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Phone className="size-3.5 text-slate-400" />
-                  {lead.phone || "No phone"}
+                  {lead.phone || "Chưa có số điện thoại"}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="size-3.5 text-slate-400" />
-                  {lead.province || "No province"}
+                  {lead.province || "Chưa có tỉnh/thành"}
                 </span>
               </div>
             </div>
@@ -315,27 +322,29 @@ const LeadDetailPanel = ({
                 className="rounded-full border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700"
               >
                 <Sparkles className="size-3" />
-                Score {lead.score ?? 0}
+                Điểm {lead.score ?? 0}
               </Badge>
             </div>
           </div>
         </div>
 
         <div className="grid gap-3 px-5 py-4 sm:grid-cols-2 xl:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-xs font-medium text-slate-500">Last interaction</p>
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
+            <p className="text-xs font-medium text-slate-500">
+              Tương tác gần nhất
+            </p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.last_interaction_at)}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-xs font-medium text-slate-500">Created</p>
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
+            <p className="text-xs font-medium text-slate-500">Ngày tạo</p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.created_at)}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-xs font-medium text-slate-500">Updated</p>
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
+            <p className="text-xs font-medium text-slate-500">Cập nhật</p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.updated_at)}
             </p>
@@ -343,14 +352,12 @@ const LeadDetailPanel = ({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">
-              Lead profile
-            </h3>
+            <h3 className="text-sm font-semibold text-slate-900">Hồ sơ lead</h3>
             <p className="text-xs text-slate-500">
-              Update profile and scoring fields from the existing lead flow.
+              Cập nhật thông tin hồ sơ và các chỉ số chấm điểm của lead.
             </p>
           </div>
 
@@ -361,7 +368,7 @@ const LeadDetailPanel = ({
             onClick={handleSave}
           >
             {savePending ? <Loader2 className="size-3.5 animate-spin" /> : null}
-            Save lead
+            Lưu lead
           </Button>
         </div>
 
@@ -374,54 +381,64 @@ const LeadDetailPanel = ({
         <div className="mt-5 space-y-5">
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Contact information
+              Thông tin liên hệ
             </h4>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Full name</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Họ và tên
+                </p>
                 <Input
                   value={formState.full_name}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("full_name", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Email</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Email
+                </p>
                 <Input
                   value={formState.email}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("email", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Phone</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Số điện thoại
+                </p>
                 <Input
                   value={formState.phone}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("phone", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Province</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Tỉnh/thành
+                </p>
                 <Input
                   value={formState.province}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("province", event.target.value)
                   }
                 />
               </div>
               <div className="md:col-span-2">
-                <p className="mb-1.5 text-xs font-medium text-slate-500">High school</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Trường THPT
+                </p>
                 <Input
                   value={formState.high_school}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("high_school", event.target.value)
                   }
@@ -434,16 +451,18 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Lead status
+              Trạng thái lead
             </h4>
             <div className="mt-3 max-w-xs">
-              <p className="mb-1.5 text-xs font-medium text-slate-500">Status</p>
+              <p className="mb-1.5 text-xs font-medium text-slate-500">
+                Trạng thái
+              </p>
               <Select
                 value={statusDraft}
                 onValueChange={(value) => setStatusDraft(value as LeadStatus)}
               >
-                <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                  <SelectValue placeholder="Select status" />
+                <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+                  <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
                   {leadStatusOptions.map((item) => (
@@ -454,7 +473,7 @@ const LeadDetailPanel = ({
                 </SelectContent>
               </Select>
               <p className="mt-2 text-xs text-slate-400">
-                Saved together with the rest of the lead profile.
+                Trạng thái sẽ được lưu cùng các thông tin còn lại của lead.
               </p>
             </div>
           </div>
@@ -463,22 +482,29 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Academic signals
+              Tín hiệu học thuật
             </h4>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Temperature</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Mức độ quan tâm
+                </p>
                 <Select
                   value={formState.temperature}
                   onValueChange={(value) =>
-                    handleFieldChange("temperature", value as LeadTemperature | "NONE")
+                    handleFieldChange(
+                      "temperature",
+                      value as LeadTemperature | "NONE"
+                    )
                   }
                 >
-                  <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                    <SelectValue placeholder="No temperature" />
+                  <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+                    <SelectValue placeholder="Chưa có mức độ quan tâm" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="NONE">No temperature</SelectItem>
+                    <SelectItem value="NONE">
+                      Chưa có mức độ quan tâm
+                    </SelectItem>
                     {leadTemperatureOptions.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
@@ -493,18 +519,24 @@ const LeadDetailPanel = ({
                   value={formState.gpa}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
-                  onChange={(event) => handleFieldChange("gpa", event.target.value)}
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  onChange={(event) =>
+                    handleFieldChange("gpa", event.target.value)
+                  }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">IELTS</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  IELTS
+                </p>
                 <Input
                   value={formState.ielts}
                   type="number"
                   step="0.1"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
-                  onChange={(event) => handleFieldChange("ielts", event.target.value)}
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  onChange={(event) =>
+                    handleFieldChange("ielts", event.target.value)
+                  }
                 />
               </div>
               <div>
@@ -512,8 +544,10 @@ const LeadDetailPanel = ({
                 <Input
                   value={formState.sat}
                   type="number"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
-                  onChange={(event) => handleFieldChange("sat", event.target.value)}
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  onChange={(event) =>
+                    handleFieldChange("sat", event.target.value)
+                  }
                 />
               </div>
               <div>
@@ -521,8 +555,10 @@ const LeadDetailPanel = ({
                 <Input
                   value={formState.act}
                   type="number"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
-                  onChange={(event) => handleFieldChange("act", event.target.value)}
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  onChange={(event) =>
+                    handleFieldChange("act", event.target.value)
+                  }
                 />
               </div>
             </div>
@@ -532,34 +568,40 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Documents and portfolio
+              Hồ sơ và tài liệu
             </h4>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">CV URL</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  CV URL
+                </p>
                 <Input
                   value={formState.cv_url}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("cv_url", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Essay URL</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  URL bài luận
+                </p>
                 <Input
                   value={formState.essay_url}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("essay_url", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Transcript URL</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  URL bảng điểm
+                </p>
                 <Input
                   value={formState.transcript_url}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("transcript_url", event.target.value)
                   }
@@ -572,64 +614,74 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Scoring inputs
+              Chỉ số chấm điểm
             </h4>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Ability</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Năng lực
+                </p>
                 <Input
                   value={formState.ability_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("ability_score", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Aspiration</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Khát vọng
+                </p>
                 <Input
                   value={formState.aspiration_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("aspiration_score", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Creativity</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Sáng tạo
+                </p>
                 <Input
                   value={formState.creativity_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("creativity_score", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Commitment</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Cam kết
+                </p>
                 <Input
                   value={formState.commitment_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("commitment_score", event.target.value)
                   }
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-500">Fit</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">
+                  Độ phù hợp
+                </p>
                 <Input
                   value={formState.fit_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50"
+                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
                   onChange={(event) =>
                     handleFieldChange("fit_score", event.target.value)
                   }
@@ -642,11 +694,11 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Extracurriculars JSON
+              Hoạt động ngoại khóa JSON
             </h4>
             <textarea
               value={formState.extracurriculars}
-              placeholder='Example: [{"club":"Debate","role":"Leader"}]'
+              placeholder='Ví dụ: [{"club":"Debate","role":"Leader"}]'
               className={cn(textareaClassName, "mt-3")}
               onChange={(event) =>
                 handleFieldChange("extracurriculars", event.target.value)
@@ -657,10 +709,12 @@ const LeadDetailPanel = ({
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
           <div className="flex items-center gap-2">
             <GraduationCap className="size-4 text-slate-500" />
-            <h3 className="text-sm font-semibold text-slate-900">Major interests</h3>
+            <h3 className="text-sm font-semibold text-slate-900">
+              Ngành quan tâm
+            </h3>
           </div>
 
           <div className="mt-4 space-y-3">
@@ -671,19 +725,21 @@ const LeadDetailPanel = ({
               : null}
 
             {!interestsPending && interests.length === 0 ? (
-              <p className="text-sm text-slate-500">No interests captured yet.</p>
+              <p className="text-sm text-slate-500">
+                Chưa ghi nhận ngành quan tâm.
+              </p>
             ) : null}
 
             {!interestsPending
               ? interests.map((item) => (
                   <div
                     key={`${item.lead_id}-${item.major_id}`}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-slate-900">
-                          {item.major_name || "Unknown major"}
+                          {item.major_name || "Chưa rõ ngành"}
                         </p>
                         <p className="mt-1 text-xs tracking-[0.18em] text-slate-400 uppercase">
                           {item.major_code || item.major_id}
@@ -693,7 +749,7 @@ const LeadDetailPanel = ({
                         variant="outline"
                         className="rounded-full border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700"
                       >
-                        Priority {item.priority ?? 0}
+                        Ưu tiên {item.priority ?? 0}
                       </Badge>
                     </div>
                   </div>
@@ -702,10 +758,12 @@ const LeadDetailPanel = ({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
           <div className="flex items-center gap-2">
             <FileText className="size-4 text-slate-500" />
-            <h3 className="text-sm font-semibold text-slate-900">Applications</h3>
+            <h3 className="text-sm font-semibold text-slate-900">
+              Hồ sơ ứng tuyển
+            </h3>
           </div>
 
           <div className="mt-4 space-y-3">
@@ -716,14 +774,16 @@ const LeadDetailPanel = ({
               : null}
 
             {!applicationsPending && applications.length === 0 ? (
-              <p className="text-sm text-slate-500">No applications linked to this lead.</p>
+              <p className="text-sm text-slate-500">
+                Chưa có hồ sơ ứng tuyển gắn với lead này.
+              </p>
             ) : null}
 
             {!applicationsPending
               ? applications.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -731,7 +791,7 @@ const LeadDetailPanel = ({
                           {admissionStageLabelMap[item.stage]}
                         </p>
                         <p className="mt-1 text-xs text-slate-500">
-                          Admission year {item.admission_year}
+                          Năm tuyển sinh {item.admission_year}
                         </p>
                       </div>
                       <Badge
@@ -739,17 +799,17 @@ const LeadDetailPanel = ({
                         className="rounded-full border-slate-200 bg-white px-2.5 py-0.5 text-[11px] font-medium text-slate-700"
                       >
                         <Trophy className="size-3" />
-                        {item.round_name || "Default round"}
+                        {item.round_name || "Vòng mặc định"}
                       </Badge>
                     </div>
 
                     <div className="mt-3 space-y-1.5 text-xs text-slate-500">
                       <p className="inline-flex items-center gap-1.5">
                         <ArrowUpRight className="size-3.5" />
-                        {item.source_channel || "No source channel"}
+                        {item.source_channel || "Chưa có kênh nguồn"}
                       </p>
-                      <p>Major ID: {item.major_id}</p>
-                      <p>Updated: {formatDateOnly(item.updated_at)}</p>
+                      <p>Mã ngành: {item.major_id}</p>
+                      <p>Cập nhật: {formatDateOnly(item.updated_at)}</p>
                     </div>
 
                     {item.note ? (

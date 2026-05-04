@@ -19,25 +19,34 @@ const DashboardHotQuestionsPreview = ({
   isFetching,
 }: DashboardHotQuestionsPreviewProps) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-3.5 py-2.5">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+      <div className="absolute inset-x-0 top-0 h-[2.5px] bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3.5 pt-5">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Top hot questions
+          <h2 className="text-[13px] font-semibold text-slate-900">
+            Câu hỏi nổi bật
           </h2>
-          <p className="text-xs text-slate-500">
-            Top 5 cau hoi duoc hoi nhieu nhat de admin xem nhanh tren dashboard.
+          <p className="text-[11px] text-slate-500">
+            Top 5 câu hỏi được hỏi nhiều nhất
           </p>
         </div>
-        <Button asChild variant="outline" size="sm" className="h-7 rounded-lg px-2">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="h-7 gap-1 rounded-lg px-2.5 text-[12px]"
+        >
           <Link to="/admin/hot-questions">
-            View all
-            <ArrowRight />
+            Xem tất cả
+            <ArrowRight className="size-3" />
           </Link>
         </Button>
       </div>
 
-      <div className="space-y-2 px-3.5 py-2.5">
+      {/* List */}
+      <div className="space-y-2 px-4 py-3.5">
         {isLoading ? (
           Array.from({ length: 5 }).map((_, index) => (
             <Skeleton key={index} className="h-14 rounded-xl" />
@@ -47,39 +56,36 @@ const DashboardHotQuestionsPreview = ({
             <Link
               key={item.id}
               to="/admin/hot-questions"
-              className="block rounded-xl border border-slate-100 bg-slate-50/60 p-2.5 transition-colors hover:bg-slate-50"
+              className="group block rounded-xl border border-slate-100 bg-slate-50/60 p-2.5 transition-colors hover:border-slate-200 hover:bg-slate-50"
             >
-              <div className="flex items-start gap-2">
-                <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-slate-900 text-[10px] font-semibold text-white">
+              <div className="flex items-start gap-2.5">
+                {/* Rank badge */}
+                <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-slate-950 text-[10px] font-semibold text-white">
                   {index + 1}
                 </div>
+
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="line-clamp-2 text-xs font-medium leading-4.5 text-slate-900">
+                    <p className="line-clamp-2 text-[12px] leading-normal font-medium text-slate-900">
                       {item.question}
                     </p>
                     {isFetching ? (
                       <Badge
                         variant="outline"
-                        className="h-4.5 border-slate-200 px-1.5 text-[8px] text-slate-500"
+                        className="shrink-0 border-slate-200 text-[9px] text-slate-400"
                       >
-                        updating
+                        đang cập nhật
                       </Badge>
                     ) : null}
                   </div>
+
                   <div className="mt-1.5 flex flex-wrap items-center gap-1">
-                    <Badge
-                      variant="outline"
-                      className="h-4.5 border-slate-200 bg-white px-1.5 text-[9px] text-slate-700"
-                    >
-                      {item.intent ?? "No intent"}
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="h-4.5 border-slate-200 bg-white px-1.5 text-[9px] text-slate-700"
-                    >
-                      {item.count} asks
-                    </Badge>
+                    <span className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-medium text-slate-600">
+                      {item.intent ?? "Không có intent"}
+                    </span>
+                    <span className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-medium text-slate-600">
+                      {item.count} lượt hỏi
+                    </span>
                     <span
                       className={cn(
                         "rounded-md px-1.5 py-0.5 text-[9px] font-medium",
@@ -88,7 +94,7 @@ const DashboardHotQuestionsPreview = ({
                           : "bg-emerald-50 text-emerald-700"
                       )}
                     >
-                      {item.is_fallback ? "Fallback" : "Answered"}
+                      {item.is_fallback ? "Fallback" : "Đã trả lời"}
                     </span>
                   </div>
                 </div>
@@ -96,12 +102,12 @@ const DashboardHotQuestionsPreview = ({
             </Link>
           ))
         ) : (
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-200 px-4 py-7 text-center">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-slate-100">
+          <div className="flex flex-col items-center gap-2.5 rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-100">
               <MessageSquareQuote className="size-4 text-slate-400" />
             </div>
-            <p className="text-xs text-slate-500">
-              Chua co du lieu hot questions de hien thi tren dashboard.
+            <p className="text-[12px] text-slate-500">
+              Chưa có câu hỏi nổi bật để hiển thị.
             </p>
           </div>
         )}

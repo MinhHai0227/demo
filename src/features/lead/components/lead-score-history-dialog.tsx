@@ -38,8 +38,7 @@ const buildPolylinePoints = (scores: number[]) => {
     .map((score, index) => {
       const x = scores.length === 1 ? 50 : (index / (scores.length - 1)) * width
       const y =
-        CHART_PADDING +
-        (1 - (score - minScore) / scoreRange) * usableHeight
+        CHART_PADDING + (1 - (score - minScore) / scoreRange) * usableHeight
 
       return `${x},${y}`
     })
@@ -62,17 +61,17 @@ const LeadScoreHistoryDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-4xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700 shadow-sm ring-1 ring-amber-200">
               <LineChart className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {lead?.full_name || "Lead"} score history
+              <DialogTitle className="text-base font-semibold text-slate-950">
+                {lead?.full_name || "Lead"} - lịch sử điểm
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Visualize score movement from recorded lead activities.
+                Theo dõi biến động điểm dựa trên các hoạt động đã ghi nhận.
               </DialogDescription>
             </div>
           </div>
@@ -88,25 +87,25 @@ const LeadScoreHistoryDialog = ({
           ) : (
             <div className="space-y-5">
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Current score
+                    Điểm hiện tại
                   </p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">
                     {currentScore}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Temperature
+                    Mức độ quan tâm
                   </p>
                   <p className="mt-2 text-sm font-semibold text-slate-900">
                     {history?.temperature ?? lead?.temperature ?? "-"}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Score events
+                    Sự kiện điểm
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-900">
                     {history?.total ?? items.length}
@@ -117,18 +116,18 @@ const LeadScoreHistoryDialog = ({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-100">
                 <div className="mb-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-slate-900">
-                      Running activity score
+                      Diễn biến điểm hoạt động
                     </p>
                     <p className="text-xs text-slate-500">
-                      Calculated from score deltas in chronological order.
+                      Được tính từ các thay đổi điểm theo thứ tự thời gian.
                     </p>
                   </div>
                   <Badge variant="outline" className="border-slate-200 text-xs">
-                    {items.length} points
+                    {items.length} điểm dữ liệu
                   </Badge>
                 </div>
 
@@ -181,10 +180,11 @@ const LeadScoreHistoryDialog = ({
                   <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-12 text-center">
                     <Activity className="size-5 text-slate-400" />
                     <p className="text-sm font-medium text-slate-900">
-                      No score history yet
+                      Chưa có lịch sử điểm
                     </p>
                     <p className="text-xs text-slate-500">
-                      Score movements will appear after lead activities are recorded.
+                      Biến động điểm sẽ hiển thị sau khi hoạt động của lead được
+                      ghi nhận.
                     </p>
                   </div>
                 )}
@@ -195,7 +195,7 @@ const LeadScoreHistoryDialog = ({
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                      className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>

@@ -73,23 +73,23 @@ const StaffTable = ({
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       {/* Header */}
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Staff directory
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            Danh sách nhân viên
           </h2>
-          <p className="text-xs text-slate-500">
-            {total} member{total === 1 ? "" : "s"} total
+          <p className="text-[12px] text-slate-500">
+            Tổng cộng {total} thành viên
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading && (
             <Loader2 className="size-3.5 animate-spin" />
           )}
           <span>
-            {items.length ? offset + 1 : 0}–{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}–{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -97,23 +97,23 @@ const StaffTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Staff
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
+              Nhân viên
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               Email
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Role
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Vai trò
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Trạng thái
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Created
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Ngày tạo
             </TableHead>
-            <TableHead className="w-[120px] pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+            <TableHead className="w-30 pr-5 text-right text-[11px] font-medium text-slate-500">
+              Thao tác
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -155,16 +155,16 @@ const StaffTable = ({
           {!isLoading && items.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={6} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <UserSquare2 className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No staff found
+                    <p className="text-[13px] font-medium text-slate-900">
+                      Chưa tìm thấy nhân viên
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Try adjusting your search or filters
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      Thử điều chỉnh bộ lọc hoặc thêm nhân viên mới.
                     </p>
                   </div>
                 </div>
@@ -179,15 +179,15 @@ const StaffTable = ({
               return (
                 <TableRow
                   key={staff.id}
-                  className="border-slate-100 transition-colors hover:bg-slate-50/50"
+                  className="border-slate-100 transition-colors hover:bg-slate-50/60"
                 >
                   <TableCell className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-100 to-orange-100 text-amber-700">
                         <UserSquare2 className="size-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">
+                        <p className="truncate text-[13px] font-medium text-slate-900">
                           {staff.name}
                         </p>
                         <p className="font-mono text-[10px] tracking-wider text-slate-400 uppercase">
@@ -198,11 +198,9 @@ const StaffTable = ({
                   </TableCell>
 
                   <TableCell>
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                    <div className="flex items-center gap-2 text-[12px] text-slate-600">
                       <Mail className="size-3.5 shrink-0 text-slate-400" />
-                      <span className="max-w-[200px] truncate">
-                        {staff.email}
-                      </span>
+                      <span className="max-w-50 truncate">{staff.email}</span>
                     </div>
                   </TableCell>
 
@@ -217,7 +215,7 @@ const StaffTable = ({
                       )}
                     >
                       <ShieldCheck className="size-3" />
-                      {staff.role}
+                      {staff.role === "ADMIN" ? "Admin" : "Counselor"}
                     </Badge>
                   </TableCell>
 
@@ -227,7 +225,7 @@ const StaffTable = ({
                       disabled={isToggling}
                       onClick={() => onToggleStatus(staff)}
                       className={cn(
-                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors",
+                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
                         staff.is_active
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
                           : "bg-slate-100 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-200",
@@ -241,11 +239,11 @@ const StaffTable = ({
                       ) : (
                         <PowerOff className="size-3" />
                       )}
-                      {staff.is_active ? "Active" : "Inactive"}
+                      {staff.is_active ? "Đang hoạt động" : "Tạm ẩn"}
                     </button>
                   </TableCell>
 
-                  <TableCell className="text-xs text-slate-500">
+                  <TableCell className="text-[12px] text-slate-500">
                     {formatDateOnly(staff.created_at)}
                   </TableCell>
 
@@ -255,7 +253,7 @@ const StaffTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="size-8 rounded-lg border border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-900"
+                        className="size-8 rounded-lg border border-slate-200 bg-white text-slate-500 shadow-none hover:border-slate-300 hover:text-slate-900"
                         onClick={() => onEdit(staff)}
                       >
                         <PencilLine className="size-3.5" />
@@ -264,7 +262,7 @@ const StaffTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                        className="size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                         onClick={() => onDelete(staff)}
                       >
                         <Trash2 className="size-3.5" />
@@ -279,17 +277,17 @@ const StaffTable = ({
 
       {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+        <p className="text-[12px] text-slate-500">
+          Trang {currentPage} / {totalPages}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
                 )}
                 onClick={(e) => {
@@ -303,7 +301,7 @@ const StaffTable = ({
                 <PaginationLink
                   href="#"
                   isActive={page === currentPage}
-                  className="h-8 w-8 rounded-lg text-xs"
+                  className="h-8 w-8 rounded-lg text-[12px]"
                   onClick={(e) => {
                     e.preventDefault()
                     onPageChange(page)
@@ -316,9 +314,9 @@ const StaffTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"
                 )}
                 onClick={(e) => {

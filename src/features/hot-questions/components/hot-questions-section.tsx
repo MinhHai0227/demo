@@ -59,23 +59,21 @@ type SummaryChipProps = {
   tone?: "slate" | "amber"
 }
 
-const SummaryChip = ({
-  label,
-  value,
-  tone = "slate",
-}: SummaryChipProps) => (
+const SummaryChip = ({ label, value, tone = "slate" }: SummaryChipProps) => (
   <div
     className={cn(
-      "rounded-xl border px-3 py-2",
+      "rounded-xl border px-3 py-2.5 shadow-xs",
       tone === "amber"
-        ? "border-amber-200 bg-amber-50"
-        : "border-slate-200 bg-slate-50"
+        ? "border-amber-100 bg-linear-to-br from-amber-50 to-white"
+        : "border-slate-200 bg-linear-to-br from-slate-50 to-white"
     )}
   >
-    <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+    <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
       {label}
     </p>
-    <p className="mt-1 text-base font-semibold text-slate-900">{value}</p>
+    <p className="mt-1 text-lg font-bold tracking-tight text-slate-950">
+      {value}
+    </p>
   </div>
 )
 
@@ -103,20 +101,23 @@ const HotQuestionsSection = ({
   const canGoNext = currentPage < totalPages
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">Hot questions</h2>
-          <p className="text-xs text-slate-500">
-            Bang cau hoi nam ben trai, top intents nam ben phai.
+          <h2 className="text-sm font-semibold text-slate-950">
+            Câu hỏi nổi bật
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Bảng câu hỏi nằm bên trái, nhóm intent nổi bật nằm bên phải.
           </p>
         </div>
+
         {isFetching ? (
           <Badge
             variant="outline"
-            className="border-slate-200 text-xs text-slate-500"
+            className="border-slate-200 bg-white text-xs text-slate-500"
           >
-            Refreshing...
+            Đang làm mới...
           </Badge>
         ) : null}
       </div>
@@ -125,20 +126,20 @@ const HotQuestionsSection = ({
         <div className="flex min-w-0 flex-col border-b border-slate-100 p-5 xl:border-r xl:border-b-0">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <SummaryChip
-              label="Total questions"
+              label="Tổng số câu hỏi"
               value={`${summary?.total_questions ?? 0}`}
             />
             <SummaryChip
-              label="Total asks"
+              label="Tổng lượt hỏi"
               value={`${summary?.total_asks ?? 0}`}
             />
             <SummaryChip
-              label="Fallback questions"
+              label="Câu hỏi fallback"
               value={`${summary?.fallback_questions ?? 0}`}
               tone="amber"
             />
             <SummaryChip
-              label="Fallback asks"
+              label="Lượt hỏi fallback"
               value={`${summary?.fallback_asks ?? 0}`}
               tone="amber"
             />
@@ -147,15 +148,16 @@ const HotQuestionsSection = ({
           <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                Question table
+                Bảng câu hỏi
               </p>
               <p className="mt-0.5 text-xs text-slate-400">
-                Filter theo intent, fallback_only, q va click tung dong de goi
-                `/hot-questions/{'{question_id}'}`.
+                Lọc theo intent, trạng thái fallback, từ khóa và click từng dòng
+                để xem chi tiết.
               </p>
             </div>
-            <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-              {total} records
+
+            <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200">
+              {total} bản ghi
             </span>
           </div>
 
@@ -165,17 +167,17 @@ const HotQuestionsSection = ({
               <Input
                 value={searchValue}
                 onChange={(event) => onSearchValueChange(event.target.value)}
-                placeholder="Search question, normalized, intent..."
-                className="h-10 rounded-xl border-slate-200 bg-slate-50 pl-9 text-sm shadow-none"
+                placeholder="Tìm câu hỏi, nội dung chuẩn hóa, intent..."
+                className="h-10 rounded-xl border-slate-200 bg-white pl-9 text-sm shadow-xs placeholder:text-slate-400 focus-visible:ring-slate-200"
               />
             </div>
 
             <Select value={intentFilter} onValueChange={onIntentFilterChange}>
-              <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                <SelectValue placeholder="All intents" />
+              <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs focus:ring-slate-200">
+                <SelectValue placeholder="Tất cả intent" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All intents</SelectItem>
+                <SelectItem value="ALL">Tất cả intent</SelectItem>
                 {intentOptions.map((intent) => (
                   <SelectItem key={intent} value={intent}>
                     {intent}
@@ -190,13 +192,13 @@ const HotQuestionsSection = ({
                 onFallbackFilterChange(value as "ALL" | "TRUE" | "FALSE")
               }
             >
-              <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                <SelectValue placeholder="Fallback filter" />
+              <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs focus:ring-slate-200">
+                <SelectValue placeholder="Lọc trạng thái" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All questions</SelectItem>
-                <SelectItem value="TRUE">Fallback only</SelectItem>
-                <SelectItem value="FALSE">Non-fallback only</SelectItem>
+                <SelectItem value="ALL">Tất cả câu hỏi</SelectItem>
+                <SelectItem value="TRUE">Chỉ fallback</SelectItem>
+                <SelectItem value="FALSE">Đã trả lời</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -204,22 +206,23 @@ const HotQuestionsSection = ({
           <div className="mt-4 flex-1 overflow-hidden rounded-xl border border-slate-100">
             <Table>
               <TableHeader>
-                <TableRow className="bg-slate-50/60 hover:bg-slate-50/60">
-                  <TableHead className="text-xs font-medium text-slate-500">
-                    Question
+                <TableRow className="bg-slate-50/70 hover:bg-slate-50/70">
+                  <TableHead className="text-xs font-semibold text-slate-500">
+                    Câu hỏi
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-slate-500">
+                  <TableHead className="text-xs font-semibold text-slate-500">
                     Intent
                   </TableHead>
-                  <TableHead className="text-right text-xs font-medium text-slate-500">
-                    Count
+                  <TableHead className="text-right text-xs font-semibold text-slate-500">
+                    Lượt hỏi
                   </TableHead>
-                  <TableHead className="text-right text-xs font-medium text-slate-500">
+                  <TableHead className="text-right text-xs font-semibold text-slate-500">
                     Fallback
                   </TableHead>
-                  <TableHead className="text-right text-xs font-medium text-slate-500" />
+                  <TableHead className="text-right text-xs font-semibold text-slate-500" />
                 </TableRow>
               </TableHeader>
+
               <TableBody>
                 {isLoading ? (
                   Array.from({ length: limit }).map((_, index) => (
@@ -233,45 +236,50 @@ const HotQuestionsSection = ({
                   items.map((item) => (
                     <TableRow
                       key={item.id}
-                      className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/50"
+                      className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/70"
                       onClick={() => onSelectQuestion(item.id)}
                     >
-                      <TableCell className="max-w-[420px] py-3">
-                        <p className="line-clamp-2 text-sm font-medium text-slate-900">
+                      <TableCell className="max-w-105 py-3">
+                        <p className="line-clamp-2 text-sm font-semibold text-slate-900">
                           {item.question}
                         </p>
                         <p className="mt-1 text-[10px] text-slate-400">
-                          Last asked: {formatDateTime(item.last_asked_at)}
+                          Lần hỏi gần nhất: {formatDateTime(item.last_asked_at)}
                         </p>
                       </TableCell>
+
                       <TableCell className="text-sm text-slate-600">
                         {item.intent ?? "--"}
                       </TableCell>
+
                       <TableCell className="text-right text-sm font-semibold text-slate-900">
                         {item.count}
                       </TableCell>
+
                       <TableCell className="text-right">
                         <span
                           className={cn(
-                            "inline-block rounded-md px-2 py-0.5 text-xs font-medium",
+                            "inline-block rounded-lg px-2 py-0.5 text-xs font-medium",
                             item.is_fallback
-                              ? "bg-amber-50 text-amber-700"
-                              : "bg-emerald-50 text-emerald-700"
+                              ? "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                              : "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
                           )}
                         >
-                          {item.is_fallback ? "Yes" : "No"}
+                          {item.is_fallback ? "Có" : "Không"}
                         </span>
                       </TableCell>
+
                       <TableCell className="text-right">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="size-7 rounded-lg text-slate-400 hover:text-slate-700"
+                          className="size-7 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                           onClick={(event) => {
                             event.stopPropagation()
                             onSelectQuestion(item.id)
                           }}
+                          aria-label="Xem chi tiết câu hỏi"
                         >
                           <ChevronRight className="size-4" />
                         </Button>
@@ -282,11 +290,11 @@ const HotQuestionsSection = ({
                   <TableRow>
                     <TableCell colSpan={5} className="py-12 text-center">
                       <div className="mx-auto flex max-w-xs flex-col items-center gap-2">
-                        <div className="flex size-10 items-center justify-center rounded-xl bg-slate-100">
+                        <div className="flex size-10 items-center justify-center rounded-xl bg-slate-100 ring-1 ring-slate-200">
                           <MessagesSquare className="size-4 text-slate-400" />
                         </div>
                         <p className="text-xs text-slate-500">
-                          Khong co ket qua hot questions theo bo loc hien tai.
+                          Không có kết quả hot questions theo bộ lọc hiện tại.
                         </p>
                       </div>
                     </TableCell>
@@ -298,14 +306,15 @@ const HotQuestionsSection = ({
 
           <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-slate-500">
-              Trang {currentPage}/{totalPages} · {items.length} ban ghi
+              Trang {currentPage}/{totalPages} · {items.length} bản ghi
             </p>
+
             <Pagination className="mx-0 w-auto justify-end">
               <PaginationContent className="gap-1">
                 <PaginationItem>
                   <PaginationPrevious
                     href="#"
-                    text="Prev"
+                    text="Trước"
                     className={cn(
                       "h-8 rounded-lg px-3 text-xs",
                       !canGoPrevious && "pointer-events-none opacity-40"
@@ -316,10 +325,11 @@ const HotQuestionsSection = ({
                     }}
                   />
                 </PaginationItem>
+
                 <PaginationItem>
                   <PaginationNext
                     href="#"
-                    text="Next"
+                    text="Sau"
                     className={cn(
                       "h-8 rounded-lg px-3 text-xs",
                       !canGoNext && "pointer-events-none opacity-40"
@@ -338,10 +348,10 @@ const HotQuestionsSection = ({
         <div className="p-5">
           <div>
             <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-              Top intents
+              Intent nổi bật
             </p>
             <p className="mt-0.5 text-xs text-slate-400">
-              Nhom intent duoc hoi nhieu nhat trong hot questions summary.
+              Nhóm intent được hỏi nhiều nhất trong thống kê hot questions.
             </p>
           </div>
 
@@ -356,38 +366,38 @@ const HotQuestionsSection = ({
               summary.top_intents.map((item, index) => (
                 <div
                   key={item.intent}
-                  className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2"
+                  className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2 transition-colors hover:border-slate-200 hover:bg-white"
                 >
-                  <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-slate-200 text-[10px] font-semibold text-slate-600">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-slate-200 text-[10px] font-bold text-slate-600">
                     {index + 1}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700">
                     {item.intent}
                   </span>
-                  <span className="shrink-0 rounded-md bg-white px-2 py-0.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
+                  <span className="shrink-0 rounded-lg bg-white px-2 py-0.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
                     {item.count}
                   </span>
                 </div>
               ))
             ) : (
-              <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-xs text-slate-400">
-                Chua co top intents cho hot questions.
+              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-400">
+                Chưa có intent nổi bật cho hot questions.
               </div>
             )}
           </div>
 
-          <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+          <div className="mt-4 rounded-xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-4 shadow-xs">
             <div className="flex items-start gap-3">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-100">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 ring-1 ring-amber-200">
                 <AlertCircle className="size-4 text-amber-600" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-900">
-                  Fallback overview
+                <p className="text-xs font-semibold text-slate-950">
+                  Tổng quan fallback
                 </p>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
-                  {summary?.fallback_questions ?? 0} unique questions da bi
-                  fallback, tong cong {summary?.fallback_asks ?? 0} luot hoi.
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  {summary?.fallback_questions ?? 0} câu hỏi duy nhất đã bị
+                  fallback, tổng cộng {summary?.fallback_asks ?? 0} lượt hỏi.
                 </p>
               </div>
             </div>

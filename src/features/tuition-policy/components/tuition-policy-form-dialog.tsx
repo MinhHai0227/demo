@@ -98,20 +98,24 @@ const TuitionPolicyFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-3xl">
+        {/* Gold accent bar */}
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
         {/* Header */}
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <CreditCard className="size-4" />
             </div>
-
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {isCreate ? "New tuition policy" : "Edit tuition policy"}
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                {isCreate
+                  ? "Tạo chính sách học phí"
+                  : "Chỉnh sửa chính sách học phí"}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Configure tuition fee rules for each major and academic year.
+              <DialogDescription className="text-[12px] text-slate-500">
+                Cấu hình quy tắc học phí theo ngành và năm học.
               </DialogDescription>
             </div>
           </div>
@@ -127,11 +131,10 @@ const TuitionPolicyFormDialog = ({
             {/* Major + Year */}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <GraduationCap className="size-3.5 text-slate-400" />
-                  Major
+                  Ngành học
                 </FieldLabel>
-
                 <FieldContent>
                   <Controller
                     control={form.control}
@@ -144,10 +147,9 @@ const TuitionPolicyFormDialog = ({
                           majorOptionsPending || majorOptions.length === 0
                         }
                       >
-                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                          <SelectValue placeholder="Select a major" />
+                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                          <SelectValue placeholder="Chọn ngành học" />
                         </SelectTrigger>
-
                         <SelectContent>
                           {majorOptions.map((major) => (
                             <SelectItem key={major.id} value={major.id}>
@@ -158,31 +160,27 @@ const TuitionPolicyFormDialog = ({
                       </Select>
                     )}
                   />
-
                   <FieldDescription className="text-[11px] text-slate-400">
                     {majorOptions.length === 0
-                      ? "Create a major first before adding tuition policies."
-                      : "Choose the academic program this policy applies to."}
+                      ? "Hãy tạo ngành học trước khi thêm chính sách học phí."
+                      : "Chọn chương trình đào tạo áp dụng chính sách này."}
                   </FieldDescription>
-
                   <FieldError errors={[form.formState.errors.major_id]} />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Calendar className="size-3.5 text-slate-400" />
-                  Year
+                  Năm học
                 </FieldLabel>
-
                 <FieldContent>
                   <Input
                     type="number"
                     placeholder="2026"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("year")}
                   />
-
                   <FieldError errors={[form.formState.errors.year]} />
                 </FieldContent>
               </Field>
@@ -191,11 +189,10 @@ const TuitionPolicyFormDialog = ({
             {/* Fee type + Base fee */}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <CreditCard className="size-3.5 text-slate-400" />
-                  Fee type
+                  Loại phí
                 </FieldLabel>
-
                 <FieldContent>
                   <Controller
                     control={form.control}
@@ -205,10 +202,9 @@ const TuitionPolicyFormDialog = ({
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                          <SelectValue placeholder="Select a fee type" />
+                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                          <SelectValue placeholder="Chọn loại phí" />
                         </SelectTrigger>
-
                         <SelectContent>
                           {feeTypeOptions.map((item) => (
                             <SelectItem key={item.value} value={item.value}>
@@ -219,33 +215,30 @@ const TuitionPolicyFormDialog = ({
                       </Select>
                     )}
                   />
-
                   <FieldError errors={[form.formState.errors.fee_type]} />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <DollarSign className="size-3.5 text-slate-400" />
-                  Base fee
+                  Học phí gốc
                 </FieldLabel>
-
                 <FieldContent>
                   <Input
                     type="number"
                     step="0.01"
-                    placeholder="12000"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="12000000"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("base_fee")}
                   />
-
                   <FieldError errors={[form.formState.errors.base_fee]} />
                 </FieldContent>
               </Field>
             </div>
 
             {errorMessage && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {errorMessage}
               </div>
             )}
@@ -257,17 +250,17 @@ const TuitionPolicyFormDialog = ({
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-600"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50 hover:text-slate-900"
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Hủy
             </Button>
 
             <Button
               type="submit"
               size="sm"
-              className="rounded-xl"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
               disabled={
                 form.formState.isSubmitting ||
                 isSubmitting ||
@@ -278,11 +271,11 @@ const TuitionPolicyFormDialog = ({
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
               {isCreate
                 ? isSubmitting
-                  ? "Creating..."
-                  : "Create policy"
+                  ? "Đang tạo..."
+                  : "Tạo chính sách"
                 : isSubmitting
-                  ? "Saving..."
-                  : "Save changes"}
+                  ? "Đang lưu..."
+                  : "Lưu thay đổi"}
             </Button>
           </div>
         </form>

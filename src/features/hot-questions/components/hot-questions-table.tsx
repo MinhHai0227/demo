@@ -63,42 +63,44 @@ const HotQuestionsTable = ({
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
+      <div className="flex flex-col gap-2 border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">Hot question list</h2>
-          <p className="text-xs text-slate-500">
-            {total} question{total === 1 ? "" : "s"} total
+          <h2 className="text-sm font-semibold text-slate-950">
+            Danh sách câu hỏi nổi bật
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Tổng cộng {total} câu hỏi trong hệ thống
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200">
           {isFetching && !isLoading ? (
-            <Loader2 className="size-3.5 animate-spin" />
+            <Loader2 className="size-3.5 animate-spin text-slate-400" />
           ) : null}
           <span>
-            {items.length ? offset + 1 : 0}-{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}-{offset + items.length} trên {total}
           </span>
         </div>
       </div>
 
       <Table>
         <TableHeader>
-          <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Question
+          <TableRow className="border-slate-100 bg-slate-50/70 hover:bg-slate-50/70">
+            <TableHead className="px-5 text-xs font-semibold text-slate-500">
+              Câu hỏi
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
+            <TableHead className="text-xs font-semibold text-slate-500">
               Intent
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-xs font-semibold text-slate-500">
+              Trạng thái
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Count
+            <TableHead className="text-xs font-semibold text-slate-500">
+              Lượt hỏi
             </TableHead>
-            <TableHead className="pr-5 text-xs font-medium text-slate-500">
-              Last asked
+            <TableHead className="pr-5 text-xs font-semibold text-slate-500">
+              Lần hỏi gần nhất
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -136,15 +138,15 @@ const HotQuestionsTable = ({
             <TableRow className="hover:bg-white">
               <TableCell colSpan={5} className="py-20 text-center">
                 <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
-                  <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
+                  <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100 ring-1 ring-slate-200">
                     <MessageSquareQuote className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No hot questions found
+                    <p className="text-sm font-semibold text-slate-900">
+                      Không tìm thấy câu hỏi nổi bật
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Try adjusting the search keywords or the current filters.
+                    <p className="mt-0.5 text-xs leading-5 text-slate-500">
+                      Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc hiện tại.
                     </p>
                   </div>
                 </div>
@@ -160,23 +162,25 @@ const HotQuestionsTable = ({
                   <TableRow
                     key={item.id}
                     className={cn(
-                      "cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60",
-                      isActive && "bg-amber-50/60 hover:bg-amber-50/70"
+                      "cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/70",
+                      isActive && "bg-amber-50/70 hover:bg-amber-50/80"
                     )}
                     onClick={() => onSelect(item)}
                   >
                     <TableCell className="px-5 py-3.5">
                       <div className="flex items-start gap-3">
-                        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-100 to-orange-100 text-amber-700">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-100 to-orange-100 text-amber-700 ring-1 ring-amber-200">
                           <Sparkles className="size-4" />
                         </div>
 
                         <div className="min-w-0">
-                          <p className="line-clamp-2 text-sm font-medium text-slate-900">
+                          <p className="line-clamp-2 text-sm font-semibold text-slate-900">
                             {item.question}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
-                            <span>{item.normalized || "No normalized text"}</span>
+                            <span>
+                              {item.normalized || "Chưa có nội dung chuẩn hóa"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -187,7 +191,7 @@ const HotQuestionsTable = ({
                         variant="outline"
                         className="rounded-full border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-700"
                       >
-                        {item.intent ?? "Unknown"}
+                        {item.intent ?? "Không xác định"}
                       </Badge>
                     </TableCell>
 
@@ -201,11 +205,11 @@ const HotQuestionsTable = ({
                             : "border-emerald-200 bg-emerald-50 text-emerald-700"
                         )}
                       >
-                        {item.is_fallback ? "Fallback" : "Answered"}
+                        {item.is_fallback ? "Fallback" : "Đã trả lời"}
                       </Badge>
                     </TableCell>
 
-                    <TableCell className="font-mono text-xs text-slate-600">
+                    <TableCell className="font-mono text-xs font-semibold text-slate-700">
                       {item.count}
                     </TableCell>
 
@@ -219,9 +223,9 @@ const HotQuestionsTable = ({
         </TableBody>
       </Table>
 
-      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+          Trang {currentPage} / {totalPages}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -229,7 +233,7 @@ const HotQuestionsTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -260,7 +264,7 @@ const HotQuestionsTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === totalPages && "pointer-events-none opacity-40"
