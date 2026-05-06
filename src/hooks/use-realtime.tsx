@@ -38,6 +38,7 @@ type UseRealtimeOptions = {
   enabled?: boolean
   token?: string | null
   conversationId?: string | null
+  conversationToken?: string | null
 }
 
 const RECONNECT_DELAY_MS = 3000
@@ -46,6 +47,7 @@ const useRealtime = ({
   enabled = true,
   token,
   conversationId,
+  conversationToken,
 }: UseRealtimeOptions = {}) => {
   const queryClient = useQueryClient()
   const seenEventIdsRef = useRef<Set<string>>(new Set())
@@ -63,11 +65,17 @@ const useRealtime = ({
       const path = conversationId
         ? `realtime/conversations/${conversationId}/ws`
         : "realtime/ws"
+      const staffToken = token?.trim() ? token : undefined
 
-      if (token) {
-        setWsAuthCookie(token)
+      if (staffToken && !conversationToken) {
+        setWsAuthCookie(staffToken)
       }
-      socket = new WebSocket(buildRealtimeUrl(path))
+      socket = new WebSocket(
+        buildRealtimeUrl(path, {
+          conversation_token: conversationToken,
+          token: staffToken,
+        })
+      )
 
       socket.onmessage = (event) => {
         try {
@@ -108,7 +116,7 @@ const useRealtime = ({
       }
       socket?.close()
     }
-  }, [conversationId, enabled, queryClient, token])
+  }, [conversationId, conversationToken, enabled, queryClient, token])
 }
 
 const handleRealtimeEvent = (

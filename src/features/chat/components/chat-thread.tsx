@@ -69,10 +69,7 @@ const ChatThread = ({
 
   useEffect(() => {
     const container = messagesContainerRef.current
-
-    if (!container) {
-      return
-    }
+    if (!container) return
 
     if (
       shouldPreserveScrollRef.current &&
@@ -80,7 +77,6 @@ const ChatThread = ({
     ) {
       const scrollDelta =
         container.scrollHeight - previousScrollHeightRef.current
-
       container.scrollTop = container.scrollTop + scrollDelta
       shouldPreserveScrollRef.current = false
       previousScrollHeightRef.current = null
@@ -88,19 +84,13 @@ const ChatThread = ({
     }
 
     if (!hasInitializedScrollRef.current) {
-      if (activeConversationId && messagesQuery.isLoading) {
-        return
-      }
-
+      if (activeConversationId && messagesQuery.isLoading) return
       container.scrollTop = container.scrollHeight
       hasInitializedScrollRef.current = true
       return
     }
 
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    })
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
   }, [
     activeConversationId,
     isSending,
@@ -110,10 +100,7 @@ const ChatThread = ({
 
   const handleMessagesScroll = () => {
     const container = messagesContainerRef.current
-
-    if (!container) {
-      return
-    }
+    if (!container) return
 
     if (
       container.scrollTop <= 80 &&
@@ -133,14 +120,14 @@ const ChatThread = ({
 
   if (!conversation) {
     return (
-      <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#eef3f8]">
+      <section className="flex h-full min-h-0 flex-col overflow-hidden bg-slate-50/80">
         <div className="flex h-full flex-col items-center justify-center text-center">
-          <MessageCircle className="mb-3 size-12 text-slate-300" />
-          <p className="text-sm font-medium text-slate-700">
-            Chon mot hoi thoai
+          <MessageCircle className="mb-3 size-12 text-slate-200" />
+          <p className="text-[13px] font-medium text-slate-600">
+            Chọn một hội thoại
           </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Noi dung chat se hien thi tai day.
+          <p className="mt-1 text-[11px] text-slate-400">
+            Nội dung chat sẽ hiển thị tại đây.
           </p>
         </div>
       </section>
@@ -148,19 +135,20 @@ const ChatThread = ({
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#eef3f8]">
-      <div className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden bg-slate-50/80">
+      {/* Thread header */}
+      <div className="flex h-14.25 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white px-4">
         <div className="flex min-w-0 items-center gap-3">
-          <Avatar className="size-10">
-            <AvatarFallback className="bg-sky-600 text-white">
+          <Avatar className="size-9">
+            <AvatarFallback className="bg-slate-950 text-[11px] font-semibold text-white">
               {getInitials(getDisplayName(conversation))}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-950">
+            <p className="truncate text-[13px] font-semibold text-slate-950">
               {getDisplayName(conversation)}
             </p>
-            <p className="truncate text-xs text-slate-500">
+            <p className="truncate text-[11px] text-slate-500">
               {conversation.lead_email ||
                 conversation.lead_phone ||
                 "Khách hàng từ web chat"}
@@ -171,7 +159,7 @@ const ChatThread = ({
         <Badge
           variant="outline"
           className={cn(
-            "rounded-full",
+            "rounded-full text-[10px]",
             getStatusClassName(conversation.status)
           )}
         >
@@ -179,28 +167,33 @@ const ChatThread = ({
         </Badge>
       </div>
 
+      {/* Messages */}
       <div
         ref={messagesContainerRef}
         onScroll={handleMessagesScroll}
-        className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6"
+        className="flex-1 space-y-4 overflow-y-auto px-5 py-5 sm:px-6"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#e2e8f0 transparent",
+        }}
       >
         {messagesQuery.isFetchingNextPage ? (
           <div className="flex justify-center">
-            <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-slate-500 shadow-sm">
-              Dang tai them tin nhan cu...
+            <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[11px] text-slate-500 shadow-sm">
+              Đang tải thêm tin nhắn cũ...
             </div>
           </div>
         ) : null}
 
         {messagesQuery.isLoading ? (
           <div className="flex justify-start">
-            <div className="rounded-[1.5rem] rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
-              Dang tai lich su chat...
+            <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-4 py-3 text-[13px] text-slate-400 shadow-sm">
+              Đang tải lịch sử chat...
             </div>
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-sm text-slate-500">
-            Hoi thoai nay chua co tin nhan.
+          <div className="flex h-full items-center justify-center text-[13px] text-slate-400">
+            Hội thoại này chưa có tin nhắn.
           </div>
         ) : (
           messages.map((message) => (
@@ -211,15 +204,17 @@ const ChatThread = ({
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Action error */}
       {actionError ? (
-        <div className="border-t border-red-100 bg-red-50 px-4 py-2 text-sm text-red-700">
+        <div className="border-t border-red-100 bg-red-50/80 px-4 py-2 text-[12px] text-red-600">
           {actionError}
         </div>
       ) : null}
 
+      {/* Input */}
       <form
         onSubmit={handleSubmit}
-        className="border-t border-slate-200 bg-white p-3"
+        className="border-t border-slate-200/80 bg-white p-3"
       >
         <div className="flex items-end gap-2">
           <textarea
@@ -231,22 +226,22 @@ const ChatThread = ({
                 event.currentTarget.form?.requestSubmit()
               }
             }}
-            placeholder="Nhap tin nhan..."
+            placeholder="Nhập tin nhắn..."
             rows={1}
             disabled={conversation.status === "CLOSED" || isSending}
-            className="max-h-32 min-h-10 flex-1 resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition outline-none focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="max-h-32 min-h-10 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 text-[13px] transition outline-none focus:border-slate-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
           />
           <Button
             type="submit"
-            size="icon-lg"
+            size="icon"
             disabled={
               !messageInput.trim() ||
               conversation.status === "CLOSED" ||
               isSending
             }
-            className="rounded-full bg-sky-600 hover:bg-sky-700"
+            className="size-10 shrink-0 rounded-xl bg-slate-950 hover:bg-slate-800 disabled:opacity-50"
           >
-            <Send />
+            <Send className="size-4" />
           </Button>
         </div>
       </form>

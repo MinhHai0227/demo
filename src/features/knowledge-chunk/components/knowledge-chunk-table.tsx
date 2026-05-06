@@ -80,23 +80,20 @@ const KnowledgeChunkTable = ({
   )
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      {/* Header */}
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Knowledge chunk library
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            Thư viện knowledge chunk
           </h2>
-          <p className="text-xs text-slate-500">
-            {total} chunk{total === 1 ? "" : "s"} total
-          </p>
+          <p className="text-[12px] text-slate-500">Tổng cộng {total} chunk</p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading && (
             <Loader2 className="size-3.5 animate-spin" />
           )}
           <span>
-            {items.length ? offset + 1 : 0}–{offset + items.length} of {total}
+            {items.length ? offset + 1 : 0}–{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -104,29 +101,29 @@ const KnowledgeChunkTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
               Chunk
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Category
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Danh mục
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Source
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Nguồn
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               Ver.
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Trạng thái
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               Embedding
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Updated
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Cập nhật
             </TableHead>
-            <TableHead className="w-20 pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+            <TableHead className="w-20 pr-5 text-right text-[11px] font-medium text-slate-500">
+              Thao tác
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -171,16 +168,16 @@ const KnowledgeChunkTable = ({
           {!isLoading && items.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={8} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <BookOpenText className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No chunks found
+                    <p className="text-[13px] font-medium text-slate-900">
+                      Chưa tìm thấy chunk nào
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Try adjusting your filters or create a new chunk.
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      Thử điều chỉnh bộ lọc hoặc tạo chunk mới.
                     </p>
                   </div>
                 </div>
@@ -191,11 +188,10 @@ const KnowledgeChunkTable = ({
           {!isLoading &&
             items.map((chunk) => {
               const isToggling = togglingChunkId === chunk.id
-
               return (
                 <TableRow
                   key={chunk.id}
-                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/50"
+                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60"
                   onClick={() => onEdit(chunk)}
                 >
                   <TableCell className="px-5 py-3.5">
@@ -204,11 +200,11 @@ const KnowledgeChunkTable = ({
                         <BookOpenText className="size-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">
+                        <p className="truncate text-[13px] font-medium text-slate-900">
                           {chunk.title ||
                             admissionCategoryLabelMap[chunk.category]}
                         </p>
-                        <p className="line-clamp-1 max-w-[320px] text-xs text-slate-400">
+                        <p className="line-clamp-1 max-w-[320px] text-[12px] text-slate-400">
                           {stripMarkdown(chunk.content)}
                         </p>
                       </div>
@@ -224,11 +220,10 @@ const KnowledgeChunkTable = ({
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="max-w-40 truncate text-xs text-slate-500">
+                  <TableCell className="max-w-40 truncate text-[12px] text-slate-500">
                     {chunk.source || "—"}
                   </TableCell>
-
-                  <TableCell className="font-mono text-xs text-slate-500">
+                  <TableCell className="font-mono text-[12px] text-slate-500">
                     v{chunk.version}
                   </TableCell>
 
@@ -241,7 +236,7 @@ const KnowledgeChunkTable = ({
                         onToggleStatus(chunk)
                       }}
                       className={cn(
-                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors",
+                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
                         chunk.is_active
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
                           : "bg-slate-100 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-200",
@@ -255,7 +250,7 @@ const KnowledgeChunkTable = ({
                       ) : (
                         <PowerOff className="size-3" />
                       )}
-                      {chunk.is_active ? "Active" : "Inactive"}
+                      {chunk.is_active ? "Đang hoạt động" : "Tạm ẩn"}
                     </button>
                   </TableCell>
 
@@ -274,11 +269,11 @@ const KnowledgeChunkTable = ({
                       ) : (
                         <CheckCircle2 className="size-3" />
                       )}
-                      {chunk.needs_embedding ? "Missing" : "Ready"}
+                      {chunk.needs_embedding ? "Thiếu" : "Sẵn sàng"}
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="text-xs text-slate-500">
+                  <TableCell className="text-[12px] text-slate-500">
                     {formatDateOnly(chunk.updated_at)}
                   </TableCell>
 
@@ -287,7 +282,7 @@ const KnowledgeChunkTable = ({
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="ml-auto size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                      className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                       onClick={(e) => {
                         e.stopPropagation()
                         onDelete(chunk)
@@ -302,19 +297,18 @@ const KnowledgeChunkTable = ({
         </TableBody>
       </Table>
 
-      {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Page {currentPage} of {totalPages}
+        <p className="text-[12px] text-slate-500">
+          Trang {currentPage} / {totalPages}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
                 )}
                 onClick={(e) => {
@@ -328,7 +322,7 @@ const KnowledgeChunkTable = ({
                 <PaginationLink
                   href="#"
                   isActive={page === currentPage}
-                  className="h-8 w-8 rounded-lg text-xs"
+                  className="h-8 w-8 rounded-lg text-[12px]"
                   onClick={(e) => {
                     e.preventDefault()
                     onPageChange(page)
@@ -341,9 +335,9 @@ const KnowledgeChunkTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"
                 )}
                 onClick={(e) => {

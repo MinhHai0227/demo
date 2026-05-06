@@ -69,7 +69,6 @@ const QuickProcessingPage = () => {
     setActionError(null)
     setActionSuccess(null)
     setPreviewDialogOpen(true)
-
     try {
       const content = await getOcrJobContentAction(job.job_id)
       setMarkdownContent(content)
@@ -78,7 +77,7 @@ const QuickProcessingPage = () => {
       setPreviewError(
         error instanceof Error
           ? error.message
-          : "Failed to load markdown content."
+          : "Không tải được nội dung markdown."
       )
     }
   }
@@ -95,11 +94,9 @@ const QuickProcessingPage = () => {
 
   const handleSaveMarkdown = async () => {
     if (!selectedJob) return
-
     setPreviewError(null)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       const updatedJob = await updateOcrJobContentAction({
         jobId: selectedJob.job_id,
@@ -107,29 +104,25 @@ const QuickProcessingPage = () => {
       })
       setSelectedJob(updatedJob)
       setMarkdownContent(draftContent)
-      setActionSuccess("Markdown saved successfully.")
+      setActionSuccess("Đã lưu markdown thành công.")
     } catch (error) {
       setPreviewError(
-        error instanceof Error ? error.message : "Failed to save markdown."
+        error instanceof Error ? error.message : "Không lưu được markdown."
       )
     }
   }
 
   const handleSendToKb = async () => {
     if (!selectedJob) return
-
     const normalizedChunkSize = Number(chunkSize || 1200)
     const normalizedChunkOverlap = Number(chunkOverlap || 100)
-
     setPreviewError(null)
     setActionError(null)
     setActionSuccess(null)
-
     if (normalizedChunkOverlap >= normalizedChunkSize) {
-      setPreviewError("Chunk overlap must be smaller than chunk size.")
+      setPreviewError("Chunk overlap phải nhỏ hơn kích thước chunk.")
       return
     }
-
     try {
       await sendOcrJobToKbAction({
         jobId: selectedJob.job_id,
@@ -141,10 +134,10 @@ const QuickProcessingPage = () => {
       setSelectedJob(null)
       setMarkdownContent("")
       setDraftContent("")
-      setActionSuccess("OCR markdown sent to Knowledge Base successfully.")
+      setActionSuccess("Đã gửi markdown OCR vào Knowledge Base thành công.")
     } catch (error) {
       setPreviewError(
-        error instanceof Error ? error.message : "Failed to send OCR to KB."
+        error instanceof Error ? error.message : "Không gửi được OCR vào KB."
       )
     }
   }
@@ -153,13 +146,14 @@ const QuickProcessingPage = () => {
     setDownloadingJobId(job.job_id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       const url = await getOcrJobDownloadUrlAction(job.job_id)
       window.open(url, "_blank", "noopener,noreferrer")
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Failed to prepare download."
+        error instanceof Error
+          ? error.message
+          : "Không chuẩn bị được link tải về."
       )
     } finally {
       setDownloadingJobId(null)
@@ -167,21 +161,17 @@ const QuickProcessingPage = () => {
   }
 
   const handleDelete = async (job: OcrJob) => {
-    if (!window.confirm("Delete this OCR job?")) return
-
+    if (!window.confirm("Xóa OCR job này?")) return
     setDeletingJobId(job.job_id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       await deleteOcrJobAction(job.job_id)
-      if (jobs.length === 1 && page > 1) {
-        setPage(page - 1)
-      }
-      setActionSuccess("OCR job deleted successfully.")
+      if (jobs.length === 1 && page > 1) setPage(page - 1)
+      setActionSuccess("Đã xóa OCR job thành công.")
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Failed to delete OCR job."
+        error instanceof Error ? error.message : "Không xóa được OCR job."
       )
     } finally {
       setDeletingJobId(null)
@@ -192,13 +182,12 @@ const QuickProcessingPage = () => {
     setRetryingJobId(job.job_id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       await retryOcrJobAction(job.job_id)
-      setActionSuccess("OCR job re-queued successfully.")
+      setActionSuccess("Đã đưa OCR job vào hàng đợi lại.")
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Failed to retry OCR job."
+        error instanceof Error ? error.message : "Không thể thử lại OCR job."
       )
     } finally {
       setRetryingJobId(null)
@@ -208,12 +197,12 @@ const QuickProcessingPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">
-          Quick Processing
+        <h1 className="text-[18px] font-semibold text-slate-950">
+          Xử lý nhanh
         </h1>
-        <p className="text-sm text-slate-500">
-          OCR uploaded documents, edit markdown output, then send approved
-          content to the knowledge base.
+        <p className="text-[13px] text-slate-500">
+          OCR tài liệu tải lên, chỉnh sửa markdown, rồi gửi nội dung đã duyệt
+          vào knowledge base.
         </p>
       </div>
 
@@ -229,16 +218,14 @@ const QuickProcessingPage = () => {
       />
 
       {actionError && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <span className="mt-0.5 shrink-0 text-red-400">!</span>
-          <span>{actionError}</span>
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+          {actionError}
         </div>
       )}
 
       {actionSuccess && (
-        <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          <span className="mt-0.5 shrink-0 text-emerald-500">OK</span>
-          <span>{actionSuccess}</span>
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
+          {actionSuccess}
         </div>
       )}
 
@@ -267,8 +254,8 @@ const QuickProcessingPage = () => {
           const response = await createOcrJobAction(payload)
           setActionSuccess(
             response.reused
-              ? "Reused an existing OCR result for this document."
-              : "OCR job created successfully."
+              ? "Đã tái sử dụng kết quả OCR có sẵn cho tài liệu này."
+              : "Đã tạo OCR job thành công."
           )
           return response
         }}

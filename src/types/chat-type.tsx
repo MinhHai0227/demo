@@ -16,6 +16,7 @@ type LeadInitResponse = {
 type ChatQueryRequest = {
   lead_id: string
   conversation_id?: string | null
+  conversation_token?: string | null
   query: string
   top_k?: number
 }
@@ -58,6 +59,7 @@ type ChatRetrievalMode =
 
 type ChatQueryResponse = {
   conversation_id: string
+  conversation_token: string | null
   lead_id: string | null
   lead_temperature: LeadTemperature | null
   lead_score: number | null
@@ -77,6 +79,7 @@ type ChatQueryResponse = {
 
 type ChatConversation = {
   id: string
+  conversation_token: string | null
   lead_id: string
   lead_full_name: string | null
   lead_email: string | null

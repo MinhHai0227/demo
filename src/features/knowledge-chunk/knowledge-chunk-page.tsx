@@ -44,8 +44,7 @@ const KnowledgeChunkPage = () => {
   const [deleteUploadedDialogOpen, setDeleteUploadedDialogOpen] =
     useState(false)
   const [uploadedFileSearchInput, setUploadedFileSearchInput] = useState("")
-  const [appliedUploadedFileSearch, setAppliedUploadedFileSearch] =
-    useState("")
+  const [appliedUploadedFileSearch, setAppliedUploadedFileSearch] = useState("")
   const [uploadedFileOffset, setUploadedFileOffset] = useState(0)
   const [rebuildDialogOpen, setRebuildDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -66,7 +65,6 @@ const KnowledgeChunkPage = () => {
 
   useEffect(() => {
     if (!deleteUploadedDialogOpen) return
-
     const timeoutId = window.setTimeout(() => {
       startTransition(() => {
         setUploadedFileOffset(0)
@@ -163,9 +161,7 @@ const KnowledgeChunkPage = () => {
       setDialogOpen(false)
       setSelectedChunk(null)
     } catch (error) {
-      setDialogError(
-        error instanceof Error ? error.message : "Something went wrong."
-      )
+      setDialogError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
     }
   }
 
@@ -179,9 +175,7 @@ const KnowledgeChunkPage = () => {
         is_active: !chunk.is_active,
       })
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : "Something went wrong."
-      )
+      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
     } finally {
       setTogglingChunkId(null)
     }
@@ -202,11 +196,9 @@ const KnowledgeChunkPage = () => {
       setDeleteDialogOpen(false)
       setChunkToDelete(null)
       setActionError(null)
-      setActionSuccess("Knowledge chunk deleted successfully.")
+      setActionSuccess("Đã xóa knowledge chunk thành công.")
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : "Something went wrong."
-      )
+      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
     }
   }
 
@@ -226,24 +218,22 @@ const KnowledgeChunkPage = () => {
       const response = await rebuildMissingEmbeddingsAction(100)
       setRebuildDialogOpen(false)
       setActionSuccess(
-        `Rebuild completed. Processed ${response.processed}, embedded ${response.embedded}, failed ${response.failed}.`
+        `Rebuild hoàn tất. Đã xử lý ${response.processed}, embed thành công ${response.embedded}, thất bại ${response.failed}.`
       )
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : "Something went wrong."
-      )
+      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
     }
   }
 
   return (
     <div className="space-y-4">
-      {/* Page heading */}
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">
+        <h1 className="text-[18px] font-semibold text-slate-950">
           Knowledge Chunks
         </h1>
-        <p className="text-sm text-slate-500">
-          Manage structured content for AI admissions retrieval.
+        <p className="text-[13px] text-slate-500">
+          Quản lý nội dung có cấu trúc cho hệ thống truy xuất thông tin tuyển
+          sinh bằng AI.
         </p>
       </div>
 
@@ -286,16 +276,14 @@ const KnowledgeChunkPage = () => {
       />
 
       {actionError && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <span className="mt-0.5 shrink-0 text-red-400">⚠</span>
-          <span>{actionError}</span>
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+          {actionError}
         </div>
       )}
 
       {actionSuccess && (
-        <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          <span className="mt-0.5 shrink-0 text-emerald-500">✓</span>
-          <span>{actionSuccess}</span>
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
+          {actionSuccess}
         </div>
       )}
 

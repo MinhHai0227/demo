@@ -67,17 +67,14 @@ const QuickProcessingUploadDialog = ({
 
   const handleSubmit = async () => {
     setError(null)
-
     if (!file) {
-      setError("Please choose a PDF or image file.")
+      setError("Vui lòng chọn file PDF hoặc ảnh.")
       return
     }
-
     if (!title.trim()) {
-      setError("Please enter a title.")
+      setError("Vui lòng nhập tiêu đề.")
       return
     }
-
     try {
       await onSubmit({
         file,
@@ -91,26 +88,28 @@ const QuickProcessingUploadDialog = ({
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Upload failed. Please try again."
+          : "Tải lên thất bại. Vui lòng thử lại."
       )
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-2xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-2xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <FileUp className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                Upload OCR document
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                Tải lên tài liệu OCR
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Parse a PDF or image into editable markdown before sending it
-                to the knowledge base.
+              <DialogDescription className="text-[12px] text-slate-500">
+                Chuyển đổi PDF hoặc ảnh thành markdown có thể chỉnh sửa trước
+                khi đưa vào knowledge base.
               </DialogDescription>
             </div>
           </div>
@@ -121,7 +120,7 @@ const QuickProcessingUploadDialog = ({
             <Field>
               <FieldLabel
                 htmlFor="ocr-upload-file"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 File
               </FieldLabel>
@@ -130,13 +129,12 @@ const QuickProcessingUploadDialog = ({
                   id="ocr-upload-file"
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg,.webp,.tiff"
-                  className="block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white hover:file:bg-slate-700"
+                  className="block w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 text-[13px] text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-950 file:px-3 file:py-1.5 file:text-[11px] file:font-medium file:text-white hover:file:bg-slate-800"
                   onChange={(e) => {
                     const selectedFile = e.target.files?.[0] ?? null
                     setFile(selectedFile)
-                    if (selectedFile && !title.trim()) {
+                    if (selectedFile && !title.trim())
                       setTitle(getFileTitle(selectedFile.name))
-                    }
                   }}
                 />
               </FieldContent>
@@ -146,26 +144,26 @@ const QuickProcessingUploadDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="ocr-upload-title"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Title
+                  Tiêu đề
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="ocr-upload-title"
                     value={title}
-                    placeholder="Document title"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="Tiêu đề tài liệu"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Category
+                  Danh mục
                 </FieldLabel>
                 <FieldContent>
                   <Select
@@ -174,8 +172,8 @@ const QuickProcessingUploadDialog = ({
                       setCategory(value as AdmissionCategory)
                     }
                   >
-                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                      <SelectValue placeholder="Select a category" />
+                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                      <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -191,25 +189,25 @@ const QuickProcessingUploadDialog = ({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Hash className="size-3.5 text-slate-400" />
-                  Year
+                  Năm
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     type="number"
                     value={year}
                     placeholder="2026"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setYear(e.target.value)}
                   />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Hash className="size-3.5 text-slate-400" />
-                  Version
+                  Phiên bản
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -217,7 +215,7 @@ const QuickProcessingUploadDialog = ({
                     min={1}
                     value={versionStart}
                     placeholder="1"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setVersionStart(e.target.value)}
                   />
                 </FieldContent>
@@ -225,7 +223,7 @@ const QuickProcessingUploadDialog = ({
             </div>
 
             {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {error}
               </div>
             )}
@@ -237,25 +235,27 @@ const QuickProcessingUploadDialog = ({
             type="button"
             variant="outline"
             size="sm"
-            className="rounded-xl border-slate-200 text-sm text-slate-600"
+            className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
             onClick={() => handleOpenChange(false)}
           >
-            Close
+            Đóng
           </Button>
           <Button
             type="button"
             size="sm"
-            className="rounded-xl text-sm"
+            className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
             disabled={isSubmitting}
             onClick={() => void handleSubmit()}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="size-3.5 animate-spin" /> Uploading...
+                <Loader2 className="size-3.5 animate-spin" />
+                Đang tải lên...
               </>
             ) : (
               <>
-                <FileUp className="size-3.5" /> Upload and OCR
+                <FileUp className="size-3.5" />
+                Tải lên và OCR
               </>
             )}
           </Button>

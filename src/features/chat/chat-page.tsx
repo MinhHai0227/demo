@@ -68,6 +68,7 @@ const ChatPage = () => {
 
   const conversations =
     conversationsQuery.data?.pages.flatMap((page) => page.items) ?? []
+
   const directConversationQuery = useQuery({
     queryKey: ["admin-message-direct-conversation", requestedConversationId],
     queryFn: () => getConversation(requestedConversationId as string),
@@ -76,11 +77,13 @@ const ChatPage = () => {
       !conversations.some((item) => item.id === requestedConversationId),
     retry: false,
   })
+
   const mergedConversations =
     directConversationQuery.data &&
     !conversations.some((item) => item.id === directConversationQuery.data?.id)
       ? [directConversationQuery.data, ...conversations]
       : conversations
+
   const effectiveConversationId =
     requestedConversationId ?? selectedConversationId
   const selectedConversation =
@@ -160,13 +163,9 @@ const ChatPage = () => {
   const handleSendMessage = async () => {
     const activeConversationId = selectedConversation?.id ?? null
     const content = messageInput.trim()
-
-    if (!activeConversationId || !content) {
-      return
-    }
+    if (!activeConversationId || !content) return
 
     setActionError(null)
-
     try {
       await sendMessageMutation.mutateAsync({
         conversationId: activeConversationId,
@@ -179,13 +178,9 @@ const ChatPage = () => {
 
   const handleStatusChange = async (status: ChatConversationStatus) => {
     const activeConversationId = selectedConversation?.id ?? null
-
-    if (!activeConversationId) {
-      return
-    }
+    if (!activeConversationId) return
 
     setActionError(null)
-
     try {
       await statusMutation.mutateAsync({
         conversationId: activeConversationId,
@@ -197,18 +192,12 @@ const ChatPage = () => {
   }
 
   const handleSaveLead = async (values: UpdateLeadPayload) => {
-    if (!selectedLeadId) {
-      return
-    }
-
-    await updateLeadMutation.mutateAsync({
-      leadId: selectedLeadId,
-      values,
-    })
+    if (!selectedLeadId) return
+    await updateLeadMutation.mutateAsync({ leadId: selectedLeadId, values })
   }
 
   return (
-    <div className="grid h-full min-h-0 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:grid-cols-[21rem_minmax(0,1fr)_18rem]">
+    <div className="grid h-full min-h-0 w-full overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)] lg:grid-cols-[21rem_minmax(0,1fr)_18rem]">
       <ChatConversationSidebar
         conversations={mergedConversations}
         isLoading={conversationsQuery.isLoading}

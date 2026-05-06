@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import {
   useInfiniteQuery,
   useMutation,
@@ -24,10 +25,14 @@ import type {
 const useChat = () => {
   const { setLeadData, updateLeadData, leadData } = useLeadStore()
   const queryClient = useQueryClient()
+  const leadId = leadData?.lead_id ?? null
   const conversationId = leadData?.conversation_id ?? null
+  const conversationToken = leadData?.conversation_token ?? null
+
   useRealtime({
-    enabled: Boolean(conversationId),
+    enabled: Boolean(conversationId && conversationToken),
     conversationId,
+    conversationToken,
   })
 
   const initLeadMutation = useMutation({
@@ -37,6 +42,7 @@ const useChat = () => {
         lead_id: data.lead_id,
         full_name: data.full_name,
         conversation_id: null,
+        conversation_token: null,
       })
     },
   })
@@ -46,6 +52,7 @@ const useChat = () => {
     onSuccess: (data) => {
       updateLeadData({
         conversation_id: data.conversation_id,
+        conversation_token: data.conversation_token,
       })
       syncConversationLeadState(queryClient, data)
     },
@@ -53,7 +60,11 @@ const useChat = () => {
 
   const conversationQuery = useQuery<ChatConversation>({
     queryKey: ["chat-conversation", conversationId],
-    queryFn: () => getConversation(conversationId as string),
+    queryFn: () =>
+      getConversation(conversationId as string, {
+        leadId,
+        conversationToken,
+      }),
     enabled: Boolean(conversationId),
   })
 
@@ -63,11 +74,24 @@ const useChat = () => {
       getConversationMessages(conversationId as string, {
         before: pageParam,
         limit: 10,
+        leadId,
+        conversationToken,
       }),
     enabled: Boolean(conversationId),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.next_before ?? undefined,
   })
+
+  useEffect(() => {
+    if (
+      conversationQuery.data?.conversation_token &&
+      conversationQuery.data.conversation_token !== conversationToken
+    ) {
+      updateLeadData({
+        conversation_token: conversationQuery.data.conversation_token,
+      })
+    }
+  }, [conversationQuery.data?.conversation_token, conversationToken, updateLeadData])
 
   return {
     initLead: initLeadMutation.mutateAsync,

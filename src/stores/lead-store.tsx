@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware"
 export type LeadData = {
   lead_id: string
   conversation_id?: string | null
+  conversation_token?: string | null
   full_name: string
 }
 

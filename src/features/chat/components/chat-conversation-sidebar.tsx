@@ -51,10 +51,7 @@ const ChatConversationSidebar = ({
 
   const handleScroll = () => {
     const container = containerRef.current
-
-    if (!container || !hasMore || isFetchingMore) {
-      return
-    }
+    if (!container || !hasMore || isFetchingMore) return
 
     const distanceToBottom =
       container.scrollHeight - container.scrollTop - container.clientHeight
@@ -65,36 +62,50 @@ const ChatConversationSidebar = ({
   }
 
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
-      <div className="border-b border-slate-200 p-3">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-r border-slate-200/80 bg-white">
+      {/* Header */}
+      <div className="border-b border-slate-100 p-3">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <h1 className="text-base font-semibold text-slate-950">Tin nhan</h1>
-            <p className="text-xs text-slate-500">{total} cuoc hoi thoai</p>
+            <h1 className="text-[14px] font-semibold text-slate-950">
+              Tin nhắn
+            </h1>
+            <p className="text-[11px] text-slate-500">{total} hội thoại</p>
           </div>
-          <Button variant="ghost" size="icon-sm">
-            <MoreHorizontal />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="rounded-xl text-slate-400 hover:text-slate-700"
+          >
+            <MoreHorizontal className="size-4" />
           </Button>
         </div>
 
+        {/* Search */}
         <div className="relative">
-          <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-slate-400" />
           <Input
             value={searchInput}
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Tim ten, email, so dien thoai"
-            className="h-9 rounded-full bg-slate-100 pl-8"
+            placeholder="Tìm tên, email, số điện thoại"
+            className="h-9 rounded-full border-slate-200 bg-slate-100/80 pl-8 text-[12px] shadow-none placeholder:text-slate-400 focus:bg-white focus-visible:ring-0"
           />
         </div>
 
-        <div className="mt-3 flex gap-2 overflow-x-auto">
+        {/* Status filters */}
+        <div className="mt-3 flex gap-1.5 overflow-x-auto pb-0.5">
           {statusOptions.map((option) => (
             <Button
               key={option.value}
               type="button"
               variant={statusFilter === option.value ? "default" : "outline"}
               size="sm"
-              className="rounded-full"
+              className={cn(
+                "h-7 shrink-0 rounded-full px-3 text-[11px] font-medium",
+                statusFilter === option.value
+                  ? "bg-slate-950 text-white hover:bg-slate-800"
+                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+              )}
               onClick={() => onStatusFilterChange(option.value)}
             >
               {option.label}
@@ -103,21 +114,26 @@ const ChatConversationSidebar = ({
         </div>
       </div>
 
+      {/* Conversation list */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
         className="min-h-0 flex-1 overflow-y-auto"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#e2e8f0 transparent",
+        }}
       >
         {isLoading ? (
           <ConversationPlaceholder />
         ) : conversations.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-            <MessageCircle className="mb-3 size-10 text-slate-300" />
-            <p className="text-sm font-medium text-slate-700">
-              Chua co hoi thoai
+            <MessageCircle className="mb-3 size-10 text-slate-200" />
+            <p className="text-[13px] font-medium text-slate-700">
+              Chưa có hội thoại
             </p>
-            <p className="mt-1 text-xs text-slate-500">
-              Thu doi bo loc hoac tim tu khoa khac.
+            <p className="mt-1 text-[11px] text-slate-500">
+              Thử đổi bộ lọc hoặc từ khóa tìm kiếm khác.
             </p>
           </div>
         ) : (
@@ -128,46 +144,46 @@ const ChatConversationSidebar = ({
                 type="button"
                 onClick={() => onSelectConversation(conversation.id)}
                 className={cn(
-                  "flex w-full gap-3 border-b border-slate-100 px-3 py-3 text-left transition hover:bg-slate-50",
+                  "flex w-full gap-3 border-b border-slate-100 px-3 py-3 text-left transition-colors hover:bg-slate-50/80",
                   selectedConversationId === conversation.id &&
-                    "bg-sky-50 hover:bg-sky-50"
+                    "bg-slate-100 hover:bg-slate-100"
                 )}
               >
-                <Avatar className="size-11 shrink-0">
-                  <AvatarFallback className="bg-sky-600 text-white">
+                <Avatar className="size-10 shrink-0">
+                  <AvatarFallback className="bg-slate-950 text-[12px] font-semibold text-white">
                     {getInitials(getDisplayName(conversation))}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-sm font-semibold text-slate-950">
+                    <p className="truncate text-[13px] font-semibold text-slate-950">
                       {getDisplayName(conversation)}
                     </p>
-                    <span className="shrink-0 text-xs text-slate-400">
+                    <span className="shrink-0 text-[10px] text-slate-400">
                       {formatTime(
                         conversation.last_message_at || conversation.updated_at
                       )}
                     </span>
                   </div>
 
-                  <p className="mt-1 truncate text-xs text-slate-500">
+                  <p className="mt-0.5 truncate text-[11px] text-slate-500">
                     {conversation.last_message ||
                       conversation.summary ||
                       "Chưa có tin nhắn"}
                   </p>
 
-                  <div className="mt-2 flex items-center justify-between gap-2">
+                  <div className="mt-1.5 flex items-center justify-between gap-2">
                     <Badge
                       variant="outline"
                       className={cn(
-                        "rounded-full",
+                        "rounded-full text-[10px]",
                         getStatusClassName(conversation.status)
                       )}
                     >
                       {getStatusLabel(conversation.status)}
                     </Badge>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-[10px] text-slate-400">
                       {conversation.message_count} tin
                     </span>
                   </div>
@@ -176,7 +192,7 @@ const ChatConversationSidebar = ({
             ))}
 
             {isFetchingMore ? (
-              <div className="px-3 py-4 text-center text-xs text-slate-500">
+              <div className="px-3 py-4 text-center text-[11px] text-slate-400">
                 Đang tải thêm hội thoại...
               </div>
             ) : null}
@@ -190,11 +206,11 @@ const ChatConversationSidebar = ({
 const ConversationPlaceholder = () => (
   <div className="space-y-1 p-2">
     {Array.from({ length: 6 }).map((_, index) => (
-      <div key={index} className="flex gap-3 rounded-lg p-3">
-        <div className="size-11 rounded-full bg-slate-100" />
-        <div className="flex-1 space-y-2">
-          <div className="h-3 w-2/3 rounded bg-slate-100" />
-          <div className="h-3 w-full rounded bg-slate-100" />
+      <div key={index} className="flex gap-3 rounded-xl p-3">
+        <div className="size-10 shrink-0 rounded-full bg-slate-100" />
+        <div className="flex-1 space-y-2 pt-1">
+          <div className="h-3 w-2/3 rounded-full bg-slate-100" />
+          <div className="h-3 w-full rounded-full bg-slate-100" />
         </div>
       </div>
     ))}

@@ -68,63 +68,64 @@ const KnowledgeChunkToolbar = ({
   const isDebouncing = searchInput.trim() !== appliedSearch
 
   return (
-    <div className="space-y-3 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      {/* Main row: Search + Actions */}
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+      {/* Main row */}
       <div className="flex flex-col gap-3 px-4 pt-4 xl:flex-row xl:items-center xl:justify-between">
-        {/* Search */}
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             value={searchInput}
-            placeholder="Search title, content, source..."
-            className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 pl-9 text-sm shadow-none placeholder:text-slate-400"
+            placeholder="Tìm tiêu đề, nội dung, nguồn..."
+            className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 pl-9 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
             onChange={(e) => onSearchInputChange(e.target.value)}
           />
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           {hasFilters && (
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-10 w-10 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-900"
+              className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-500 shadow-none hover:bg-slate-50 hover:text-slate-900"
               onClick={onClearFilters}
             >
               <X className="size-4" />
             </Button>
           )}
 
-          <Separator orientation="vertical" className="mx-1 hidden h-6 xl:block" />
+          <Separator
+            orientation="vertical"
+            className="mx-1 hidden h-6 xl:block"
+          />
 
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl border-slate-200 px-3 text-sm text-slate-600"
+            className="h-10 rounded-xl border-slate-200 bg-white px-3 text-[13px] text-slate-600 shadow-none hover:bg-slate-50"
             onClick={onUploadFileClick}
           >
             <Upload className="size-4" />
-            Upload
+            Tải lên
           </Button>
 
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl border-red-100 px-3 text-sm text-red-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+            className="h-10 rounded-xl border-red-100 bg-white px-3 text-[13px] text-red-500 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
             onClick={onDeleteUploadedFileClick}
           >
             <Trash2 className="size-4" />
-            Delete file
+            Xóa file
           </Button>
 
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl border-amber-200 px-3 text-sm text-amber-700 hover:bg-amber-50"
+            className="h-10 rounded-xl border-amber-200 bg-white px-3 text-[13px] text-amber-700 shadow-none hover:bg-amber-50"
             onClick={onRebuildClick}
           >
             <RefreshCcw className="size-4" />
@@ -134,30 +135,32 @@ const KnowledgeChunkToolbar = ({
           <Button
             type="button"
             size="sm"
-            className="h-10 rounded-xl px-4 text-sm font-medium"
+            className="h-10 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
             onClick={onCreateClick}
           >
             <BookOpenText className="size-4" />
-            New chunk
+            Tạo chunk
           </Button>
         </div>
       </div>
 
-      {/* Category tabs row */}
-      <div className="flex flex-col gap-2 border-t border-slate-100 px-4 pb-3 sm:flex-row sm:items-center">
-        <span className="shrink-0 text-xs font-medium text-slate-500">Category:</span>
+      {/* Category tabs */}
+      <div className="flex flex-col gap-2 border-t border-slate-100 px-4 py-3 sm:flex-row sm:items-center">
+        <span className="shrink-0 text-[11px] font-medium text-slate-500">
+          Danh mục:
+        </span>
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             type="button"
             onClick={() => onCategoryFilterChange("ALL")}
             className={cn(
-              "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium",
+              "inline-flex items-center rounded-full px-3 py-1 text-[11px] font-medium transition-colors",
               categoryFilter === "ALL"
-                ? "bg-red-600 text-white shadow-sm"
+                ? "bg-slate-950 text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             )}
           >
-            All
+            Tất cả
           </button>
           {admissionCategoryOptions.map((cat) => (
             <button
@@ -165,9 +168,9 @@ const KnowledgeChunkToolbar = ({
               type="button"
               onClick={() => onCategoryFilterChange(cat.value)}
               className={cn(
-                "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium",
+                "inline-flex items-center rounded-full px-3 py-1 text-[11px] font-medium transition-colors",
                 categoryFilter === cat.value
-                  ? "bg-red-600 text-white shadow-sm"
+                  ? "bg-slate-950 text-white shadow-sm"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               )}
             >
@@ -177,48 +180,52 @@ const KnowledgeChunkToolbar = ({
         </div>
       </div>
 
-      {/* Secondary filters row */}
+      {/* Secondary filters */}
       <div className="flex flex-col gap-2 border-t border-slate-100 px-4 pb-4 sm:flex-row sm:items-center">
-        <span className="shrink-0 text-xs font-medium text-slate-500">Status:</span>
+        <span className="shrink-0 text-[11px] font-medium text-slate-500">
+          Lọc thêm:
+        </span>
         <div className="flex flex-wrap items-center gap-2">
           <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-            <SelectTrigger className="h-8 w-32 rounded-lg border-slate-200 bg-slate-50 text-xs shadow-none">
-              <SelectValue placeholder="All status" />
+            <SelectTrigger className="h-8 w-36 rounded-lg border-slate-200 bg-slate-50/80 text-[12px] shadow-none focus:border-slate-300 focus:ring-0">
+              <SelectValue placeholder="Tất cả trạng thái" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All status</SelectItem>
-              <SelectItem value="ACTIVE">Active</SelectItem>
-              <SelectItem value="INACTIVE">Inactive</SelectItem>
+              <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
+              <SelectItem value="ACTIVE">Đang hoạt động</SelectItem>
+              <SelectItem value="INACTIVE">Tạm ẩn</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select value={embeddingFilter} onValueChange={onEmbeddingFilterChange}>
-            <SelectTrigger className="h-8 w-32 rounded-lg border-slate-200 bg-slate-50 text-xs shadow-none">
-              <SelectValue placeholder="All embeddings" />
+          <Select
+            value={embeddingFilter}
+            onValueChange={onEmbeddingFilterChange}
+          >
+            <SelectTrigger className="h-8 w-36 rounded-lg border-slate-200 bg-slate-50/80 text-[12px] shadow-none focus:border-slate-300 focus:ring-0">
+              <SelectValue placeholder="Tất cả embedding" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All embeddings</SelectItem>
-              <SelectItem value="READY">Ready</SelectItem>
-              <SelectItem value="MISSING">Missing</SelectItem>
+              <SelectItem value="ALL">Tất cả embedding</SelectItem>
+              <SelectItem value="READY">Sẵn sàng</SelectItem>
+              <SelectItem value="MISSING">Còn thiếu</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Status strip */}
         {(isDebouncing || hasFilters) && (
           <div className="ml-auto flex items-center gap-2">
             {isDebouncing && (
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-amber-200 ring-inset">
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200 ring-inset">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
                 </span>
-                Waiting...
+                Đang chờ...
               </span>
             )}
             {hasFilters && (
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
-                Filters active
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2.5 py-0.5 text-[11px] font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
+                Đang lọc
               </span>
             )}
           </div>

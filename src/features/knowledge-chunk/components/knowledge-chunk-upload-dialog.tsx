@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FileUp, Hash, Loader2, Tags, FileText, Layers3 } from "lucide-react"
+import { FileText, FileUp, Hash, Layers3, Loader2, Tags } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -78,12 +78,10 @@ const KnowledgeChunkUploadDialog = ({
   const handleSubmit = async () => {
     setError(null)
     setResult(null)
-
     if (!file) {
-      setError("Please choose a file to upload.")
+      setError("Vui lòng chọn file để tải lên.")
       return
     }
-
     try {
       const response = await onSubmit({
         file,
@@ -100,40 +98,38 @@ const KnowledgeChunkUploadDialog = ({
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Upload failed. Please try again."
+          : "Tải lên thất bại. Vui lòng thử lại."
       )
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-2xl">
-        {/* Header */}
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-2xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <FileUp className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                Upload knowledge file
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                Tải lên file knowledge
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Upload a source file and split it into multiple knowledge
-                chunks.
+              <DialogDescription className="text-[12px] text-slate-500">
+                Tải file nguồn lên và tách thành nhiều knowledge chunk.
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        {/* Body */}
         <div className="overflow-y-auto px-6 py-5">
           <FieldGroup className="gap-4">
-            {/* File picker */}
             <Field>
               <FieldLabel
                 htmlFor="knowledge-upload-file"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 File
               </FieldLabel>
@@ -141,26 +137,25 @@ const KnowledgeChunkUploadDialog = ({
                 <input
                   id="knowledge-upload-file"
                   type="file"
-                  className="block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white hover:file:bg-slate-700"
+                  className="block w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 text-[13px] text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-950 file:px-3 file:py-1.5 file:text-[11px] file:font-medium file:text-white hover:file:bg-slate-800"
                   onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                 />
               </FieldContent>
             </Field>
 
-            {/* Category + Title */}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Category
+                  Danh mục
                 </FieldLabel>
                 <FieldContent>
                   <Select
                     value={category}
                     onValueChange={(v) => setCategory(v as AdmissionCategory)}
                   >
-                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                      <SelectValue placeholder="Select a category" />
+                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                      <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -176,40 +171,39 @@ const KnowledgeChunkUploadDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-upload-title"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Title
+                  Tiêu đề
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-upload-title"
                     value={title}
-                    placeholder="Optional title override"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="Tiêu đề tuỳ chọn"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </FieldContent>
               </Field>
             </div>
 
-            {/* Numeric fields */}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 {
-                  label: "Year",
+                  label: "Năm",
                   value: year,
                   setter: setYear,
                   placeholder: "2026",
                 },
                 {
-                  label: "Version start",
+                  label: "Phiên bản bắt đầu",
                   value: versionStart,
                   setter: setVersionStart,
                   placeholder: "1",
                 },
                 {
-                  label: "Chunk size",
+                  label: "Kích thước chunk",
                   value: chunkSize,
                   setter: setChunkSize,
                   placeholder: "1200",
@@ -222,7 +216,7 @@ const KnowledgeChunkUploadDialog = ({
                 },
               ].map(({ label, value, setter, placeholder }) => (
                 <Field key={label}>
-                  <FieldLabel className="text-xs font-medium text-slate-600">
+                  <FieldLabel className="text-[12px] font-medium text-slate-600">
                     <Hash className="size-3.5 text-slate-400" />
                     {label}
                   </FieldLabel>
@@ -231,7 +225,7 @@ const KnowledgeChunkUploadDialog = ({
                       type="number"
                       value={value}
                       placeholder={placeholder}
-                      className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                      className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                       onChange={(e) => setter(e.target.value)}
                     />
                   </FieldContent>
@@ -239,11 +233,10 @@ const KnowledgeChunkUploadDialog = ({
               ))}
             </div>
 
-            {/* Major ID */}
             <Field>
               <FieldLabel
                 htmlFor="knowledge-upload-major-id"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 <Layers3 className="size-3.5 text-slate-400" />
                 Major ID
@@ -252,18 +245,18 @@ const KnowledgeChunkUploadDialog = ({
                 <Input
                   id="knowledge-upload-major-id"
                   value={majorId}
-                  placeholder="Optional major UUID"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50 font-mono text-sm shadow-none"
+                  placeholder="UUID ngành (tuỳ chọn)"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 font-mono text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(e) => setMajorId(e.target.value)}
                 />
                 <FieldDescription className="text-[11px] text-slate-400">
-                  Leave blank when the file content is shared across majors.
+                  Để trống nếu nội dung file dùng chung cho tất cả ngành.
                 </FieldDescription>
               </FieldContent>
             </Field>
 
             {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {error}
               </div>
             )}
@@ -271,21 +264,24 @@ const KnowledgeChunkUploadDialog = ({
             {result && (
               <div className="overflow-hidden rounded-xl border border-emerald-200 bg-emerald-50">
                 <div className="border-b border-emerald-200 px-4 py-2.5">
-                  <p className="truncate text-xs font-semibold text-emerald-800">
+                  <p className="truncate text-[12px] font-semibold text-emerald-800">
                     {result.file_name}
                   </p>
                 </div>
                 <div className="grid grid-cols-3 gap-x-4 gap-y-1.5 px-4 py-3">
                   {[
-                    { label: "Total chunks", value: result.total_chunks },
-                    { label: "Embedded", value: result.embedded_chunks },
-                    { label: "Failed", value: result.failed_embedding_chunks },
+                    { label: "Tổng chunk", value: result.total_chunks },
+                    { label: "Đã embed", value: result.embedded_chunks },
+                    {
+                      label: "Thất bại",
+                      value: result.failed_embedding_chunks,
+                    },
                   ].map(({ label, value }) => (
                     <div key={label}>
-                      <p className="text-[10px] tracking-wider text-emerald-600 uppercase">
+                      <p className="text-[10px] tracking-[0.15em] text-emerald-600 uppercase">
                         {label}
                       </p>
-                      <p className="text-sm font-semibold text-emerald-900">
+                      <p className="text-[14px] font-semibold text-emerald-900">
                         {value}
                       </p>
                     </div>
@@ -296,31 +292,32 @@ const KnowledgeChunkUploadDialog = ({
           </FieldGroup>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="rounded-xl border-slate-200 text-sm text-slate-600"
+            className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
             onClick={() => handleOpenChange(false)}
           >
-            Close
+            Đóng
           </Button>
           <Button
             type="button"
             size="sm"
-            className="rounded-xl text-sm"
+            className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
             disabled={isSubmitting}
             onClick={() => void handleSubmit()}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="size-3.5 animate-spin" /> Uploading...
+                <Loader2 className="size-3.5 animate-spin" />
+                Đang tải lên...
               </>
             ) : (
               <>
-                <FileUp className="size-3.5" /> Upload file
+                <FileUp className="size-3.5" />
+                Tải lên file
               </>
             )}
           </Button>

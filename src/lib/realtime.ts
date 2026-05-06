@@ -26,11 +26,20 @@ const clearWsAuthCookie = () => {
   }
 }
 
-const buildRealtimeUrl = (path: string) => {
+const buildRealtimeUrl = (
+  path: string,
+  searchParams?: Record<string, string | null | undefined>
+) => {
   const baseUrl = getApiBaseUrl().replace(/\/?$/, "/")
   const url = new URL(path.replace(/^\//, ""), baseUrl)
 
   url.protocol = url.protocol === "https:" ? "wss:" : "ws:"
+
+  Object.entries(searchParams ?? {}).forEach(([key, value]) => {
+    if (value) {
+      url.searchParams.set(key, value)
+    }
+  })
 
   return url.toString()
 }

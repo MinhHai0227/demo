@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 import { requestConversationStaffContact } from "@/api/chat-api"
 import { Button } from "@/components/ui/button"
@@ -94,32 +95,51 @@ const HomeChatShell = () => {
   const latestLeadStateMatches =
     Boolean(activeConversationId) &&
     latestChatLeadState?.conversation_id === activeConversationId
-  const effectiveLeadTemperature = latestLeadStateMatches
-    ? (latestChatLeadState?.lead_temperature ?? conversation?.lead_temperature)
-    : conversation?.lead_temperature
-  const effectiveConversationStatus = latestLeadStateMatches
-    ? (latestChatLeadState?.conversation_status ?? conversation?.status)
-    : conversation?.status
-  const effectiveConversationStaffId = latestLeadStateMatches
-    ? (latestChatLeadState?.conversation_staff_id ?? conversation?.staff_id)
-    : conversation?.staff_id
-  const canRequestCounselor =
-    effectiveLeadTemperature === "HOT" &&
-    effectiveConversationStatus === "OPEN" &&
-    !effectiveConversationStaffId
-  const counselorRequestSent =
-    effectiveLeadTemperature === "HOT" &&
-    effectiveConversationStatus === "OPEN" &&
-    Boolean(effectiveConversationStaffId)
+  const effectiveLeadTemperature =
+    conversation?.lead_temperature ??
+    (latestLeadStateMatches ? latestChatLeadState?.lead_temperature : null)
+  const effectiveConversationStatus =
+    conversation?.status ??
+    (latestLeadStateMatches ? latestChatLeadState?.conversation_status : null)
+  const isHotLead = effectiveLeadTemperature === "HOT"
+  const isCounselorChatActive = effectiveConversationStatus === "HANDOFF"
+  const hasCounselorAssigned = isCounselorChatActive
+  const isCounselorPending = false
+  const shouldShowCounselorButton =
+    Boolean(activeConversationId) &&
+    isHotLead &&
+    effectiveConversationStatus !== "CLOSED"
+  const assignedCounselorName =
+    conversation?.staff_name || "cố vấn tuyển sinh"
+  const activeChatLabel = isCounselorChatActive
+    ? `Đang chat với ${assignedCounselorName}`
+    : isCounselorPending
+      ? "AI đang hỗ trợ, cố vấn đã được mời"
+      : "Đang chat với VinUni AI"
+  const activeChatHint = isCounselorChatActive
+    ? "Tin nhắn từ cố vấn sẽ hiển thị nổi bật trong cuộc trò chuyện."
+    : isCounselorPending
+      ? "Trong lúc chờ cố vấn phản hồi, VinUni AI vẫn tiếp tục hỗ trợ bạn."
+      : "VinUni AI đang là người trực tiếp hỗ trợ cuộc trò chuyện này."
   const scopedStaffContactFeedback =
     staffContactFeedback &&
     staffContactFeedback.conversationId === conversation?.id
       ? staffContactFeedback.message
       : null
+  const counselorNotice = scopedStaffContactFeedback
+    ? scopedStaffContactFeedback
+    : isCounselorChatActive
+      ? `${assignedCounselorName} đang theo dõi và trả lời trực tiếp trong cuộc trò chuyện này.`
+      : isCounselorPending
+        ? `${assignedCounselorName} đã được mời vào cuộc trò chuyện. Trong lúc chờ phản hồi, AI vẫn có thể hỗ trợ bạn.`
+        : null
 
   const requestCounselorMutation = useMutation({
     mutationFn: (conversationId: string) =>
-      requestConversationStaffContact(conversationId),
+      requestConversationStaffContact(conversationId, {
+        leadId: leadData?.lead_id,
+        conversationToken: leadData?.conversation_token,
+      }),
     onSuccess: (updatedConversation, conversationId) => {
       setStaffContactFeedback({
         conversationId,
@@ -209,7 +229,8 @@ const HomeChatShell = () => {
   const submitChat = async (
     message: string,
     leadId: string,
-    conversationId?: string | null
+    conversationId?: string | null,
+    conversationToken?: string | null
   ) => {
     setChatError(null)
     setLeadFollowUpQuestions([])
@@ -250,6 +271,7 @@ const HomeChatShell = () => {
       const response = await queryChat({
         lead_id: leadId,
         conversation_id: conversationId,
+        conversation_token: conversationToken,
         query: message,
       })
 
@@ -319,7 +341,12 @@ const HomeChatShell = () => {
     }
 
     setDraftMessage("")
-    await submitChat(trimmedMessage, leadData.lead_id, leadData.conversation_id)
+    await submitChat(
+      trimmedMessage,
+      leadData.lead_id,
+      leadData.conversation_id,
+      leadData.conversation_token
+    )
   }
 
   const handleLeadSubmit = async (values: InitLeadSchema) => {
@@ -333,7 +360,7 @@ const HomeChatShell = () => {
 
         setPendingQuery("")
         setDraftMessage("")
-        await submitChat(queuedMessage, lead.lead_id, null)
+        await submitChat(queuedMessage, lead.lead_id, null, null)
       }
     } catch {
       setChatError(
@@ -349,14 +376,25 @@ const HomeChatShell = () => {
       return
     }
 
+    if (hasCounselorAssigned) {
+      toast.info(
+        isCounselorChatActive
+          ? `Bạn đang được ${assignedCounselorName} hỗ trợ trong cuộc trò chuyện này.`
+          : `${assignedCounselorName} đã được mời vào cuộc trò chuyện. AI vẫn hỗ trợ bạn trong lúc chờ phản hồi.`
+      )
+      return
+    }
+
     setChatError(null)
 
     try {
       await requestCounselorMutation.mutateAsync(requestConversationId)
+      toast.success("Đã gửi yêu cầu kết nối với cố vấn.")
     } catch {
       setChatError(
         "Không thể gửi yêu cầu kết nối cố vấn lúc này. Vui lòng thử lại sau."
       )
+      toast.error("Chưa thể kết nối với cố vấn lúc này. Vui lòng thử lại sau.")
     }
   }
 
@@ -396,9 +434,31 @@ const HomeChatShell = () => {
             <p className="text-xs text-slate-400">Luôn sẵn sàng hỗ trợ</p>
           </div>
 
-          <div className="flex h-7 items-center gap-1.5 rounded-full border border-slate-100 bg-slate-50 px-3">
-            <Sparkles className="h-3 w-3 text-[#d6ae4e]" />
-            <span className="text-[11px] font-medium text-slate-500">AI</span>
+          <div
+            className={`flex h-7 items-center gap-1.5 rounded-full border px-3 ${
+              isCounselorChatActive
+                ? "border-emerald-100 bg-emerald-50 text-emerald-700"
+                : isCounselorPending
+                  ? "border-amber-100 bg-amber-50 text-amber-700"
+                  : "border-slate-100 bg-slate-50 text-slate-500"
+            }`}
+          >
+            {isCounselorChatActive ? (
+              <Headset className="h-3 w-3" />
+            ) : (
+              <Sparkles
+                className={`h-3 w-3 ${
+                  isCounselorPending ? "text-amber-600" : "text-[#d6ae4e]"
+                }`}
+              />
+            )}
+            <span className="text-[11px] font-medium">
+              {isCounselorChatActive
+                ? "Cố vấn"
+                : isCounselorPending
+                  ? "AI + Cố vấn"
+                  : "AI"}
+            </span>
           </div>
         </div>
 
@@ -435,6 +495,28 @@ const HomeChatShell = () => {
                     </span>
                   ) : null}
                 </div>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${
+                      isCounselorChatActive
+                        ? "bg-emerald-100 text-emerald-700"
+                        : isCounselorPending
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-slate-900 text-white"
+                    }`}
+                  >
+                    {isCounselorChatActive ? (
+                      <Headset className="h-3 w-3" />
+                    ) : (
+                      <Sparkles className="h-3 w-3" />
+                    )}
+                    {activeChatLabel}
+                  </span>
+                  <span className="text-[12px] text-slate-500">
+                    {activeChatHint}
+                  </span>
+                </div>
               </div>
 
               {conversation?.summary ? (
@@ -443,10 +525,9 @@ const HomeChatShell = () => {
                 </p>
               ) : null}
 
-              {counselorRequestSent || scopedStaffContactFeedback ? (
+              {counselorNotice ? (
                 <div className="m-3 mt-0 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-[13px] leading-relaxed text-emerald-700">
-                  {scopedStaffContactFeedback ||
-                    "Yêu cầu kết nối với cố vấn đã được ghi nhận. Team sẽ phản hồi sớm."}
+                  {counselorNotice}
                 </div>
               ) : null}
             </div>
@@ -624,12 +705,16 @@ const HomeChatShell = () => {
 
               {/* Right actions */}
               <div className="flex items-center gap-2">
-                {canRequestCounselor ? (
+                {shouldShowCounselorButton ? (
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="h-8 cursor-pointer rounded-xl border-amber-200 bg-amber-50 px-3 text-[12px] font-medium text-amber-800 hover:bg-amber-100"
+                    className={`h-8 cursor-pointer rounded-xl px-3 text-[12px] font-medium ${
+                      isCounselorChatActive
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                        : "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
+                    }`}
                     disabled={requestCounselorMutation.isPending}
                     onClick={() => {
                       void handleRequestCounselor()
@@ -638,7 +723,11 @@ const HomeChatShell = () => {
                     <Headset className="h-3.5 w-3.5" />
                     {requestCounselorMutation.isPending
                       ? "Đang gửi..."
-                      : "Chat với cố vấn"}
+                      : isCounselorChatActive
+                        ? "Đang chat với cố vấn"
+                        : isCounselorPending
+                          ? "Đã mời cố vấn"
+                          : "Yêu cầu kết nối với cố vấn"}
                   </Button>
                 ) : null}
 

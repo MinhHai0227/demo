@@ -56,7 +56,7 @@ type KnowledgeChunkFormDialogProps = {
 }
 
 const textareaClassName =
-  "min-h-32 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 resize-none"
+  "min-h-32 w-full resize-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-3 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-slate-300 focus:bg-white"
 
 const defaultValues: KnowledgeChunkFormInput = {
   major_id: "",
@@ -108,37 +108,37 @@ const KnowledgeChunkFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
-        {/* Header */}
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-3xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <ScanSearch className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                {isCreate ? "New knowledge chunk" : "Edit knowledge chunk"}
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
+                {isCreate ? "Tạo knowledge chunk" : "Chỉnh sửa knowledge chunk"}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
-                Manage structured content for admissions retrieval.
+              <DialogDescription className="text-[12px] text-slate-500">
+                Quản lý nội dung có cấu trúc cho hệ thống truy xuất thông tin
+                tuyển sinh.
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        {/* Form */}
         <form
           noValidate
           className="overflow-y-auto px-6 py-5"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FieldGroup className="gap-4">
-            {/* Category + Title */}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Category
+                  Danh mục
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -149,8 +149,8 @@ const KnowledgeChunkFormDialog = ({
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none">
-                          <SelectValue placeholder="Select a category" />
+                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                          <SelectValue placeholder="Chọn danh mục" />
                         </SelectTrigger>
                         <SelectContent>
                           {admissionCategoryOptions.map((item) => (
@@ -169,39 +169,38 @@ const KnowledgeChunkFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-title"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Title
+                  Tiêu đề
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-title"
-                    placeholder="Scholarship policy 2026"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    placeholder="Chính sách học bổng 2026"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("title")}
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
-                    Optional but useful for search results.
+                    Không bắt buộc nhưng hữu ích cho kết quả tìm kiếm.
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.title]} />
                 </FieldContent>
               </Field>
             </div>
 
-            {/* Content */}
             <Field>
               <FieldLabel
                 htmlFor="knowledge-content"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 <ScanSearch className="size-3.5 text-slate-400" />
-                Content
+                Nội dung
               </FieldLabel>
               <FieldContent>
                 <textarea
                   id="knowledge-content"
-                  placeholder="Enter the knowledge chunk content here..."
+                  placeholder="Nhập nội dung knowledge chunk tại đây..."
                   className={textareaClassName}
                   {...form.register("content")}
                 />
@@ -209,21 +208,20 @@ const KnowledgeChunkFormDialog = ({
               </FieldContent>
             </Field>
 
-            {/* Source + Source URL + Year + Version */}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-source"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Layers3 className="size-3.5 text-slate-400" />
-                  Source
+                  Nguồn
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-source"
                     placeholder="admissions-handbook.pdf"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("source")}
                   />
                   <FieldError errors={[form.formState.errors.source]} />
@@ -233,16 +231,16 @@ const KnowledgeChunkFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-source-url"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Link2 className="size-3.5 text-slate-400" />
-                  Source URL
+                  URL nguồn
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-source-url"
                     placeholder="https://..."
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("source_url")}
                   />
                   <FieldError errors={[form.formState.errors.source_url]} />
@@ -252,17 +250,17 @@ const KnowledgeChunkFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-year"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Year
+                  Năm
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-year"
                     type="number"
                     placeholder="2026"
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("year")}
                   />
                   <FieldError errors={[form.formState.errors.year]} />
@@ -272,17 +270,17 @@ const KnowledgeChunkFormDialog = ({
               <Field>
                 <FieldLabel
                   htmlFor="knowledge-version"
-                  className="text-xs font-medium text-slate-600"
+                  className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Version
+                  Phiên bản
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-version"
                     type="number"
                     min={1}
-                    className="h-10 rounded-xl border-slate-200 bg-slate-50 text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("version")}
                   />
                   <FieldError errors={[form.formState.errors.version]} />
@@ -290,61 +288,59 @@ const KnowledgeChunkFormDialog = ({
               </Field>
             </div>
 
-            {/* Major ID */}
             <Field>
               <FieldLabel
                 htmlFor="knowledge-major-id"
-                className="text-xs font-medium text-slate-600"
+                className="text-[12px] font-medium text-slate-600"
               >
                 Major ID
               </FieldLabel>
               <FieldContent>
                 <Input
                   id="knowledge-major-id"
-                  placeholder="Optional UUID"
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50 font-mono text-sm shadow-none"
+                  placeholder="UUID ngành (tuỳ chọn)"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 font-mono text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   {...form.register("major_id")}
                 />
                 <FieldDescription className="text-[11px] text-slate-400">
-                  Leave blank when the chunk applies broadly.
+                  Để trống nếu chunk áp dụng chung cho tất cả ngành.
                 </FieldDescription>
                 <FieldError errors={[form.formState.errors.major_id]} />
               </FieldContent>
             </Field>
 
             {errorMessage && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {errorMessage}
               </div>
             )}
           </FieldGroup>
 
-          {/* Footer */}
           <div className="mt-5 flex items-center justify-end gap-2 border-t border-slate-100 pt-5">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-600"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50 hover:text-slate-900"
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Hủy
             </Button>
             <Button
               type="submit"
               size="sm"
-              className="rounded-xl"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
               disabled={form.formState.isSubmitting || isSubmitting}
             >
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
               {isCreate
                 ? isSubmitting
-                  ? "Creating..."
-                  : "Create chunk"
+                  ? "Đang tạo..."
+                  : "Tạo chunk"
                 : isSubmitting
-                  ? "Saving..."
-                  : "Save changes"}
+                  ? "Đang lưu..."
+                  : "Lưu thay đổi"}
             </Button>
           </div>
         </form>

@@ -69,7 +69,7 @@ const isProcessing = (job: OcrJob) =>
   ["queued", "started", "deferred"].includes(job.status)
 
 const getCategoryLabel = (category?: string | null) => {
-  if (!category) return "Uncategorized"
+  if (!category) return "Chưa phân loại"
   return (
     admissionCategoryLabelMap[category as AdmissionCategory] ||
     category.replaceAll("_", " ")
@@ -77,32 +77,26 @@ const getCategoryLabel = (category?: string | null) => {
 }
 
 const getStatusBadge = (job: OcrJob) => {
-  if (job.sent_to_kb) {
+  if (job.sent_to_kb)
     return {
-      label: "Sent to KB",
+      label: "Đã gửi KB",
       className: "border-emerald-200 bg-emerald-50 text-emerald-700",
       icon: CheckCircle2,
     }
-  }
-
-  if (isCompleted(job)) {
+  if (isCompleted(job))
     return {
-      label: "Ready",
+      label: "Sẵn sàng",
       className: "border-blue-200 bg-blue-50 text-blue-700",
       icon: CheckCircle2,
     }
-  }
-
-  if (isFailed(job)) {
+  if (isFailed(job))
     return {
-      label: "Failed",
+      label: "Thất bại",
       className: "border-red-200 bg-red-50 text-red-600",
       icon: XCircle,
     }
-  }
-
   return {
-    label: job.status || "Queued",
+    label: job.status || "Đang chờ",
     className: "border-amber-200 bg-amber-50 text-amber-700",
     icon: Loader2,
   }
@@ -132,23 +126,23 @@ const QuickProcessingTable = ({
   )
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Recent OCR jobs
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            OCR jobs gần đây
           </h2>
-          <p className="text-xs text-slate-500">
-            Review markdown output before sending it to KB.
+          <p className="text-[12px] text-slate-500">
+            Xem lại markdown trước khi gửi vào KB.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading && (
             <Loader2 className="size-3.5 animate-spin" />
           )}
           <span>
-            {jobs.length ? (page - 1) * pageSize + 1 : 0}-
-            {(page - 1) * pageSize + jobs.length} of {total}
+            {jobs.length ? (page - 1) * pageSize + 1 : 0}–
+            {(page - 1) * pageSize + jobs.length} / {total}
           </span>
         </div>
       </div>
@@ -156,23 +150,23 @@ const QuickProcessingTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Document
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
+              Tài liệu
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Category
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Danh mục
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Version
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Phiên bản
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Pages
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Trang
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              Trạng thái
             </TableHead>
-            <TableHead className="w-48 pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+            <TableHead className="w-48 pr-5 text-right text-[11px] font-medium text-slate-500">
+              Thao tác
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -211,16 +205,16 @@ const QuickProcessingTable = ({
           {!isLoading && jobs.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={6} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <FileText className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No OCR jobs yet
+                    <p className="text-[13px] font-medium text-slate-900">
+                      Chưa có OCR job nào
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Upload a document to start the OCR review flow.
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      Tải lên tài liệu để bắt đầu luồng OCR.
                     </p>
                   </div>
                 </div>
@@ -244,7 +238,7 @@ const QuickProcessingTable = ({
                 <TableRow
                   key={job.job_id}
                   className={cn(
-                    "border-slate-100 transition-colors hover:bg-slate-50/50",
+                    "border-slate-100 transition-colors hover:bg-slate-50/60",
                     completed && "cursor-pointer"
                   )}
                   onClick={() => {
@@ -257,10 +251,10 @@ const QuickProcessingTable = ({
                         <FileText className="size-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">
+                        <p className="truncate text-[13px] font-medium text-slate-900">
                           {job.title || job.original_filename || "OCR job"}
                         </p>
-                        <p className="line-clamp-1 max-w-[360px] text-xs text-slate-400">
+                        <p className="line-clamp-1 max-w-90 text-[12px] text-slate-400">
                           {job.original_filename || job.job_id}
                         </p>
                         {processing && (
@@ -273,7 +267,7 @@ const QuickProcessingTable = ({
                         )}
                         {job.error_message && (
                           <p
-                            className="mt-1 line-clamp-1 max-w-[360px] text-xs text-red-500"
+                            className="mt-1 line-clamp-1 max-w-90 text-[11px] text-red-500"
                             title={job.error_message}
                           >
                             {job.error_message}
@@ -292,12 +286,11 @@ const QuickProcessingTable = ({
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="font-mono text-xs text-slate-500">
+                  <TableCell className="font-mono text-[12px] text-slate-500">
                     v{job.version_start ?? 1}
                   </TableCell>
-
-                  <TableCell className="text-xs text-slate-500">
-                    {job.pages ?? "-"}
+                  <TableCell className="text-[12px] text-slate-500">
+                    {job.pages ?? "—"}
                   </TableCell>
 
                   <TableCell>
@@ -309,15 +302,12 @@ const QuickProcessingTable = ({
                       )}
                     >
                       <StatusIcon
-                        className={cn(
-                          "size-3",
-                          processing && "animate-spin"
-                        )}
+                        className={cn("size-3", processing && "animate-spin")}
                       />
                       {statusBadge.label}
                     </Badge>
                     {processing && job.stage && (
-                      <p className="mt-1 text-[11px] text-slate-400">
+                      <p className="mt-1 text-[10px] text-slate-400">
                         {job.stage}
                       </p>
                     )}
@@ -329,10 +319,10 @@ const QuickProcessingTable = ({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-lg border-slate-200 text-slate-500 hover:text-slate-900"
+                        className="size-8 rounded-lg border-slate-200 bg-white text-slate-500 shadow-none hover:text-slate-900"
                         disabled={!completed}
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onPreview(job)
                         }}
                       >
@@ -342,10 +332,10 @@ const QuickProcessingTable = ({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-lg border-slate-200 text-slate-500 hover:text-slate-900"
+                        className="size-8 rounded-lg border-slate-200 bg-white text-slate-500 shadow-none hover:text-slate-900"
                         disabled={!completed || downloading}
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onDownload(job)
                         }}
                       >
@@ -359,10 +349,10 @@ const QuickProcessingTable = ({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-lg border-amber-200 text-amber-600 hover:bg-amber-50 hover:text-amber-700"
+                        className="size-8 rounded-lg border-amber-200 bg-white text-amber-600 shadow-none hover:bg-amber-50 hover:text-amber-700"
                         disabled={!failed || retrying}
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onRetry(job)
                         }}
                       >
@@ -376,10 +366,10 @@ const QuickProcessingTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                        className="size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                         disabled={deleting}
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onDelete(job)
                         }}
                       >
@@ -398,21 +388,21 @@ const QuickProcessingTable = ({
       </Table>
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Page {page} of {normalizedTotalPages}
+        <p className="text-[12px] text-slate-500">
+          Trang {page} / {normalizedTotalPages}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text="Trước"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   page === 1 && "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
+                onClick={(e) => {
+                  e.preventDefault()
                   if (page > 1) onPageChange(page - 1)
                 }}
               />
@@ -422,9 +412,9 @@ const QuickProcessingTable = ({
                 <PaginationLink
                   href="#"
                   isActive={pageItem === page}
-                  className="h-8 w-8 rounded-lg text-xs"
-                  onClick={(event) => {
-                    event.preventDefault()
+                  className="h-8 w-8 rounded-lg text-[12px]"
+                  onClick={(e) => {
+                    e.preventDefault()
                     onPageChange(pageItem)
                   }}
                 >
@@ -435,14 +425,14 @@ const QuickProcessingTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text="Sau"
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   page === normalizedTotalPages &&
                     "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
+                onClick={(e) => {
+                  e.preventDefault()
                   if (page < normalizedTotalPages) onPageChange(page + 1)
                 }}
               />

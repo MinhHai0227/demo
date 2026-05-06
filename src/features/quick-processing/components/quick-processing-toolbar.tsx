@@ -16,14 +16,14 @@ const QuickProcessingToolbar = ({
   onRefreshClick,
 }: QuickProcessingToolbarProps) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            OCR job queue
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            Hàng đợi OCR
           </h2>
-          <p className="text-xs text-slate-500">
-            {total} job{total === 1 ? "" : "s"} available for review.
+          <p className="text-[12px] text-slate-500">
+            {total} job đang chờ xem xét.
           </p>
         </div>
 
@@ -32,23 +32,23 @@ const QuickProcessingToolbar = ({
             type="button"
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl border-slate-200 px-3 text-sm text-slate-600"
+            className="h-10 rounded-xl border-slate-200 bg-white px-3 text-[13px] text-slate-600 shadow-none hover:bg-slate-50"
             onClick={onRefreshClick}
           >
             <RefreshCcw
               className={isFetching ? "size-4 animate-spin" : "size-4"}
             />
-            Refresh
+            Làm mới
           </Button>
 
           <Button
             type="button"
             size="sm"
-            className="h-10 rounded-xl px-4 text-sm font-medium"
+            className="h-10 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
             onClick={onUploadClick}
           >
             <Upload className="size-4" />
-            Upload document
+            Tải lên tài liệu
           </Button>
         </div>
       </div>

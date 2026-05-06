@@ -76,34 +76,37 @@ const QuickProcessingPreviewDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] max-w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-5xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="flex max-h-[90vh] max-w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-5xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <FileText className="size-4" />
             </div>
             <div className="min-w-0">
-              <DialogTitle className="truncate text-base font-semibold text-slate-900">
-                {job?.title || job?.original_filename || "OCR preview"}
+              <DialogTitle className="truncate text-[15px] font-semibold text-slate-900">
+                {job?.title || job?.original_filename || "Xem trước OCR"}
               </DialogTitle>
-              <DialogDescription className="truncate text-xs text-slate-500">
-                Review and edit markdown before creating knowledge chunks.
+              <DialogDescription className="truncate text-[12px] text-slate-500">
+                Xem lại và chỉnh sửa markdown trước khi tạo knowledge chunk.
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
         <div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden">
+          {/* Controls */}
           <div className="border-b border-slate-100 bg-slate-50/60 px-6 py-4">
             <FieldGroup className="grid gap-4 md:grid-cols-[minmax(0,1fr)_8rem_8rem]">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Category
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  Danh mục
                 </FieldLabel>
                 <FieldContent>
                   <Select value={category} onValueChange={onCategoryChange}>
-                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-none">
-                      <SelectValue placeholder="Select category" />
+                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
+                      <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -117,8 +120,8 @@ const QuickProcessingPreviewDialog = ({
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Chunk size
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  Kích thước chunk
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -126,14 +129,14 @@ const QuickProcessingPreviewDialog = ({
                     min={100}
                     max={5000}
                     value={chunkSize}
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-white text-[13px] shadow-none focus:border-slate-300 focus-visible:ring-0"
                     onChange={(event) => onChunkSizeChange(event.target.value)}
                   />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
                   Overlap
                 </FieldLabel>
                 <FieldContent>
@@ -142,7 +145,7 @@ const QuickProcessingPreviewDialog = ({
                     min={0}
                     max={500}
                     value={chunkOverlap}
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
+                    className="h-10 rounded-xl border-slate-200 bg-white text-[13px] shadow-none focus:border-slate-300 focus-visible:ring-0"
                     onChange={(event) =>
                       onChunkOverlapChange(event.target.value)
                     }
@@ -152,56 +155,56 @@ const QuickProcessingPreviewDialog = ({
             </FieldGroup>
           </div>
 
+          {/* Editor */}
           <div className="min-h-0 px-6 py-4">
             {isLoading ? (
-              <div className="flex h-[min(46vh,420px)] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500">
+              <div className="flex h-[min(46vh,420px)] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 text-[13px] text-slate-500">
                 <Loader2 className="mr-2 size-4 animate-spin" />
-                Loading markdown...
+                Đang tải markdown...
               </div>
             ) : (
               <textarea
                 value={draftContent}
                 spellCheck={false}
                 disabled={isSent}
-                className="h-[min(46vh,420px)] w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm leading-6 text-slate-800 shadow-none outline-none transition focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
-                onChange={(event) =>
-                  onDraftContentChange(event.target.value)
-                }
+                className="h-[min(46vh,420px)] w-full resize-none rounded-xl border border-slate-200 bg-slate-50/80 p-4 font-mono text-[13px] leading-relaxed text-slate-800 transition outline-none focus:border-slate-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-70"
+                onChange={(event) => onDraftContentChange(event.target.value)}
               />
             )}
 
             {errorMessage && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="mt-3 rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {errorMessage}
               </div>
             )}
           </div>
         </div>
 
+        {/* Footer */}
         <div className="flex flex-col gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-xs text-slate-500">
+          <p className="text-[12px] text-slate-500">
             {isSent
-              ? "This OCR job has already been sent to the knowledge base."
+              ? "OCR job này đã được gửi vào knowledge base."
               : isDirty
-                ? "Save markdown changes before sending to KB."
-                : "Markdown is ready to send."}
-          </div>
+                ? "Lưu thay đổi markdown trước khi gửi vào KB."
+                : "Markdown đã sẵn sàng để gửi."}
+          </p>
 
           <div className="flex flex-wrap justify-end gap-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-sm text-slate-600"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
               onClick={() => onOpenChange(false)}
             >
-              Close
+              Đóng
             </Button>
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-sm text-slate-700"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-700 shadow-none hover:bg-slate-50"
               disabled={!canSave || isSaving}
               onClick={onSave}
             >
@@ -210,12 +213,12 @@ const QuickProcessingPreviewDialog = ({
               ) : (
                 <Save className="size-3.5" />
               )}
-              Save markdown
+              Lưu markdown
             </Button>
             <Button
               type="button"
               size="sm"
-              className="rounded-xl text-sm"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
               disabled={!canSend || isSending}
               onClick={onSendToKb}
             >
@@ -224,7 +227,7 @@ const QuickProcessingPreviewDialog = ({
               ) : (
                 <SendHorizontal className="size-3.5" />
               )}
-              Send to KB
+              Gửi vào KB
             </Button>
           </div>
         </div>
