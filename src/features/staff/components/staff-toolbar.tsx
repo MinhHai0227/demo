@@ -1,4 +1,5 @@
 import { Search, UserPlus2, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,6 +32,7 @@ const StaffToolbar = ({
   onCreateClick,
   onClearFilters,
 }: StaffToolbarProps) => {
+  const { t } = useTranslation("staff")
   const hasFilters = Boolean(appliedSearch || roleFilter !== "ALL")
   const isDebouncing = searchInput.trim() !== appliedSearch
 
@@ -43,7 +45,7 @@ const StaffToolbar = ({
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             value={searchInput}
-            placeholder="Tìm theo tên hoặc email..."
+            placeholder={t("searchPlaceholder")}
             className="h-10 rounded-xl border-slate-200 bg-slate-50/80 pl-9 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
             onChange={(e) => onSearchInputChange(e.target.value)}
           />
@@ -52,10 +54,10 @@ const StaffToolbar = ({
         <div className="flex items-center gap-2">
           <Select value={roleFilter} onValueChange={onRoleFilterChange}>
             <SelectTrigger className="h-10 w-40 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-              <SelectValue placeholder="Tất cả vai trò" />
+              <SelectValue placeholder={t("allRoles")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả vai trò</SelectItem>
+              <SelectItem value="ALL">{t("allRoles")}</SelectItem>
               <SelectItem value="ADMIN">Admin</SelectItem>
               <SelectItem value="COUNSELOR">Counselor</SelectItem>
             </SelectContent>
@@ -81,7 +83,7 @@ const StaffToolbar = ({
             onClick={onCreateClick}
           >
             <UserPlus2 className="size-4" />
-            Thêm nhân viên
+            {t("createStaff")}
           </Button>
         </div>
       </div>
@@ -95,16 +97,16 @@ const StaffToolbar = ({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
               </span>
-              Đang chờ nhập xong...
+              {t("debouncing")}
             </span>
           )}
           {hasFilters && (
             <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2.5 py-0.5 text-[11px] font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
-              Đang áp dụng bộ lọc
+              {t("applyingFilters")}
             </span>
           )}
           <span className="ml-auto text-[11px] text-slate-400">
-            Kết quả cập nhật sau 1 giây khi ngừng nhập
+            {t("resultsUpdateHint")}
           </span>
         </div>
       )}

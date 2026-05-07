@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   AlertTriangle,
   ExternalLink,
@@ -74,6 +75,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
   onSubmit,
   isSubmitting = false,
 }: KnowledgeChunkDeleteUploadedFileDialogProps) => {
+  const { t } = useTranslation("knowledge-chunk")
   const [fileToDelete, setFileToDelete] =
     useState<KnowledgeChunkUploadedFile | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -108,7 +110,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Xóa thất bại. Vui lòng thử lại."
+          : t("deleteFailed")
       )
     }
   }
@@ -126,11 +128,10 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               </div>
               <div className="min-w-0">
                 <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                  Xóa file đã tải lên
+                  {t("deleteUploadedFileTitle")}
                 </DialogTitle>
                 <DialogDescription className="text-[12px] text-slate-500">
-                  Chọn file để vô hiệu hóa toàn bộ chunk liên quan và xóa object
-                  R2.
+                  {t("deleteUploadedFileDescription")}
                 </DialogDescription>
               </div>
             </div>
@@ -141,17 +142,17 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
               <Input
                 value={searchInput}
-                placeholder="Tìm tiêu đề, tên file, R2 key..."
+                placeholder={t("uploadedFileSearchPlaceholder")}
                 className="h-10 rounded-xl border-slate-200 bg-slate-50/80 pl-9 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                 onChange={(event) => onSearchInputChange(event.target.value)}
               />
             </div>
             <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
-              <span>{total} nhóm file đã tải lên</span>
+              <span>{t("uploadedFileGroups", { count: total })}</span>
               {isFetching && !isLoading && (
                 <span className="inline-flex items-center gap-1">
                   <Loader2 className="size-3 animate-spin" />
-                  Đang làm mới
+                  {t("refreshing")}
                 </span>
               )}
             </div>
@@ -161,16 +162,16 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
             {isLoading ? (
               <div className="flex min-h-52 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 text-[13px] text-slate-500">
                 <Loader2 className="mr-2 size-4 animate-spin" />
-                Đang tải danh sách file...
+                {t("loadingFileList")}
               </div>
             ) : files.length === 0 ? (
               <div className="flex min-h-52 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 text-center">
                 <FileText className="size-8 text-slate-300" />
                 <p className="mt-3 text-[13px] font-medium text-slate-700">
-                  Chưa có file nào
+                  {t("noFilesUploaded")}
                 </p>
                 <p className="mt-1 max-w-sm text-[11px] text-slate-400">
-                  Tải file lên trước, hoặc thử tiêu đề khác.
+                  {t("noFilesUploadedHint")}
                 </p>
               </div>
             ) : (
@@ -190,7 +191,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
                             <p className="truncate text-[13px] font-semibold text-slate-900">
                               {file.title ||
                                 file.file_name ||
-                                "File đã tải lên"}
+                                t("uploadedFileDefaultName")}
                             </p>
                             <p className="mt-0.5 truncate font-mono text-[10px] text-slate-400">
                               {file.r2_key}
@@ -208,7 +209,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
                                 </span>
                               )}
                               <span className="rounded-full bg-slate-100 px-2 py-0.5">
-                                Cập nhật {formatDate(file.updated_at)}
+                                {t("updatedAt", { date: formatDate(file.updated_at) })}
                               </span>
                             </div>
                           </div>
@@ -242,7 +243,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
                           onClick={() => setFileToDelete(file)}
                         >
                           <Trash2 className="size-3.5" />
-                          Xóa
+                          {t("deleteFile")}
                         </Button>
                       </div>
                     </div>
@@ -266,15 +267,15 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 px-4 py-3 md:grid-cols-4">
                   {[
-                    { label: "Chunk", value: result.total_chunks },
-                    { label: "Qdrant", value: result.qdrant_deleted_chunks },
+                    { label: t("resultChunkLabel"), value: result.total_chunks },
+                    { label: t("resultQdrantLabel"), value: result.qdrant_deleted_chunks },
                     {
-                      label: "DB vô hiệu",
+                      label: t("resultDbDeactivatedLabel"),
                       value: result.db_deactivated_chunks,
                     },
                     {
-                      label: "R2 đã xóa",
-                      value: result.r2_file_deleted ? "Có" : "Không",
+                      label: t("resultR2DeletedLabel"),
+                      value: result.r2_file_deleted ? t("yes") : t("no"),
                     },
                   ].map(({ label, value }) => (
                     <div key={label}>
@@ -293,8 +294,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
 
           <div className="flex items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
             <div className="mr-auto text-[11px] text-slate-500">
-              {startItem}–{endItem} / {total} · Trang {currentPage} /{" "}
-              {totalPages}
+              {t("uploadedFilePaginationInfo", { start: startItem, end: endItem, total, current: currentPage, totalPages })}
             </div>
             <Button
               type="button"
@@ -304,7 +304,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               disabled={!canGoPrevious || isFetching}
               onClick={() => onPageChange(Math.max(0, offset - limit))}
             >
-              Trước
+              {t("prev")}
             </Button>
             <Button
               type="button"
@@ -314,7 +314,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               disabled={!canGoNext || isFetching}
               onClick={() => onPageChange(offset + limit)}
             >
-              Sau
+              {t("next")}
             </Button>
             <Button
               type="button"
@@ -323,7 +323,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               className="h-8 rounded-xl border-slate-200 bg-white text-[12px] text-slate-600 shadow-none"
               onClick={() => handleOpenChange(false)}
             >
-              Đóng
+              {t("close")}
             </Button>
           </div>
         </DialogContent>
@@ -343,14 +343,10 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
             </div>
             <AlertDialogHeader className="space-y-1 text-center">
               <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-                Xóa file đã tải lên này?
+                {t("deleteUploadedFileConfirmTitle")}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
-                Thao tác này sẽ vô hiệu hóa tất cả chunk từ{" "}
-                <span className="font-medium text-slate-700">
-                  "{fileToDelete?.title || fileToDelete?.file_name || "file"}"
-                </span>{" "}
-                và xóa file R2 nếu có thể.
+                {t("deleteUploadedFileConfirmDescription", { name: fileToDelete?.title || fileToDelete?.file_name || "file" })}
               </AlertDialogDescription>
             </AlertDialogHeader>
           </div>
@@ -359,7 +355,7 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               disabled={isSubmitting}
               className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
             >
-              Hủy
+              {t("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               disabled={isSubmitting}
@@ -372,12 +368,12 @@ const KnowledgeChunkDeleteUploadedFileDialog = ({
               {isSubmitting ? (
                 <>
                   <Loader2 className="size-3.5 animate-spin" />
-                  Đang xóa...
+                  {t("deleting")}
                 </>
               ) : (
                 <>
                   <Trash2 className="size-3.5" />
-                  Xóa file
+                  {t("deleteFile")}
                 </>
               )}
             </AlertDialogAction>

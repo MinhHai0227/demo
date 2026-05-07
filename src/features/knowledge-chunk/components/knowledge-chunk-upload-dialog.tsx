@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { FileText, FileUp, Hash, Layers3, Loader2, Tags } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -46,6 +47,8 @@ const KnowledgeChunkUploadDialog = ({
   onSubmit,
   isSubmitting = false,
 }: KnowledgeChunkUploadDialogProps) => {
+  const { t } = useTranslation("knowledge-chunk")
+
   const [file, setFile] = useState<File | null>(null)
   const [title, setTitle] = useState("")
   const [category, setCategory] = useState<AdmissionCategory>("FAQ")
@@ -79,7 +82,7 @@ const KnowledgeChunkUploadDialog = ({
     setError(null)
     setResult(null)
     if (!file) {
-      setError("Vui lòng chọn file để tải lên.")
+      setError(t("pleaseSelectFile"))
       return
     }
     try {
@@ -98,7 +101,7 @@ const KnowledgeChunkUploadDialog = ({
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Tải lên thất bại. Vui lòng thử lại."
+          : t("uploadFailed")
       )
     }
   }
@@ -115,10 +118,10 @@ const KnowledgeChunkUploadDialog = ({
             </div>
             <div>
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                Tải lên file knowledge
+                {t("uploadTitle")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                Tải file nguồn lên và tách thành nhiều knowledge chunk.
+                {t("uploadDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -131,7 +134,7 @@ const KnowledgeChunkUploadDialog = ({
                 htmlFor="knowledge-upload-file"
                 className="text-[12px] font-medium text-slate-600"
               >
-                File
+                {t("fileField")}
               </FieldLabel>
               <FieldContent>
                 <input
@@ -147,7 +150,7 @@ const KnowledgeChunkUploadDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Danh mục
+                  {t("category")}
                 </FieldLabel>
                 <FieldContent>
                   <Select
@@ -155,7 +158,7 @@ const KnowledgeChunkUploadDialog = ({
                     onValueChange={(v) => setCategory(v as AdmissionCategory)}
                   >
                     <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                      <SelectValue placeholder="Chọn danh mục" />
+                      <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -174,13 +177,13 @@ const KnowledgeChunkUploadDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Tiêu đề
+                  {t("titleField")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-upload-title"
                     value={title}
-                    placeholder="Tiêu đề tuỳ chọn"
+                    placeholder={t("titleOptionalPlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setTitle(e.target.value)}
                   />
@@ -189,36 +192,16 @@ const KnowledgeChunkUploadDialog = ({
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {[
-                {
-                  label: "Năm",
-                  value: year,
-                  setter: setYear,
-                  placeholder: "2026",
-                },
-                {
-                  label: "Phiên bản bắt đầu",
-                  value: versionStart,
-                  setter: setVersionStart,
-                  placeholder: "1",
-                },
-                {
-                  label: "Kích thước chunk",
-                  value: chunkSize,
-                  setter: setChunkSize,
-                  placeholder: "1200",
-                },
-                {
-                  label: "Chunk overlap",
-                  value: chunkOverlap,
-                  setter: setChunkOverlap,
-                  placeholder: "200",
-                },
-              ].map(({ label, value, setter, placeholder }) => (
-                <Field key={label}>
+              {([
+                { labelKey: "yearField", value: year, setter: setYear, placeholder: "2026" } as const,
+                { labelKey: "versionStart", value: versionStart, setter: setVersionStart, placeholder: "1" } as const,
+                { labelKey: "chunkSize", value: chunkSize, setter: setChunkSize, placeholder: "1200" } as const,
+                { labelKey: "chunkOverlap", value: chunkOverlap, setter: setChunkOverlap, placeholder: "200" } as const,
+              ] as const).map(({ labelKey, value, setter, placeholder }) => (
+                <Field key={labelKey}>
                   <FieldLabel className="text-[12px] font-medium text-slate-600">
                     <Hash className="size-3.5 text-slate-400" />
-                    {label}
+                    {t(labelKey)}
                   </FieldLabel>
                   <FieldContent>
                     <Input
@@ -239,18 +222,18 @@ const KnowledgeChunkUploadDialog = ({
                 className="text-[12px] font-medium text-slate-600"
               >
                 <Layers3 className="size-3.5 text-slate-400" />
-                Major ID
+                {t("majorIdField")}
               </FieldLabel>
               <FieldContent>
                 <Input
                   id="knowledge-upload-major-id"
                   value={majorId}
-                  placeholder="UUID ngành (tuỳ chọn)"
+                  placeholder={t("majorIdPlaceholder")}
                   className="h-10 rounded-xl border-slate-200 bg-slate-50/80 font-mono text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(e) => setMajorId(e.target.value)}
                 />
                 <FieldDescription className="text-[11px] text-slate-400">
-                  Để trống nếu nội dung file dùng chung cho tất cả ngành.
+                  {t("majorIdFileHint")}
                 </FieldDescription>
               </FieldContent>
             </Field>
@@ -270,12 +253,9 @@ const KnowledgeChunkUploadDialog = ({
                 </div>
                 <div className="grid grid-cols-3 gap-x-4 gap-y-1.5 px-4 py-3">
                   {[
-                    { label: "Tổng chunk", value: result.total_chunks },
-                    { label: "Đã embed", value: result.embedded_chunks },
-                    {
-                      label: "Thất bại",
-                      value: result.failed_embedding_chunks,
-                    },
+                    { label: t("uploadResultTotal"), value: result.total_chunks },
+                    { label: t("uploadResultEmbedded"), value: result.embedded_chunks },
+                    { label: t("uploadResultFailed"), value: result.failed_embedding_chunks },
                   ].map(({ label, value }) => (
                     <div key={label}>
                       <p className="text-[10px] tracking-[0.15em] text-emerald-600 uppercase">
@@ -287,6 +267,13 @@ const KnowledgeChunkUploadDialog = ({
                     </div>
                   ))}
                 </div>
+                {result.failed_embedding_chunks > 0 && (
+                  <div className="border-t border-red-200 bg-red-50 px-4 py-2.5">
+                    <p className="text-[12px] text-red-700">
+                      {t("uploadResultFailedWarning")}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </FieldGroup>
@@ -300,7 +287,7 @@ const KnowledgeChunkUploadDialog = ({
             className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
             onClick={() => handleOpenChange(false)}
           >
-            Đóng
+            {t("close")}
           </Button>
           <Button
             type="button"
@@ -312,12 +299,12 @@ const KnowledgeChunkUploadDialog = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang tải lên...
+                {t("uploading")}
               </>
             ) : (
               <>
                 <FileUp className="size-3.5" />
-                Tải lên file
+                {t("uploadFileButton")}
               </>
             )}
           </Button>

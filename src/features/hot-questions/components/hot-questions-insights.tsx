@@ -1,4 +1,5 @@
 import { AlertCircle } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -13,12 +14,14 @@ const HotQuestionsInsights = ({
   summary,
   isLoading = false,
 }: HotQuestionsInsightsProps) => {
+  const { t } = useTranslation("hot-questions")
+
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
       <div className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4">
-        <h2 className="text-sm font-semibold text-slate-950">Tổng quan</h2>
+        <h2 className="text-sm font-semibold text-slate-950">{t("overview")}</h2>
         <p className="mt-1 text-xs leading-5 text-slate-500">
-          Ảnh chụp nhanh về các câu hỏi nổi bật trong hệ thống.
+          {t("overviewHint")}
         </p>
       </div>
 
@@ -26,7 +29,7 @@ const HotQuestionsInsights = ({
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
           <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-3 py-2.5 shadow-xs">
             <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
-              Tổng số câu hỏi
+              {t("totalQuestionsLabel")}
             </p>
             <p className="mt-1 text-xl font-bold tracking-tight text-slate-950">
               {summary?.total_questions ?? 0}
@@ -35,7 +38,7 @@ const HotQuestionsInsights = ({
 
           <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-3 py-2.5 shadow-xs">
             <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
-              Tổng lượt hỏi
+              {t("totalAsksLabel")}
             </p>
             <p className="mt-1 text-xl font-bold tracking-tight text-slate-950">
               {summary?.total_asks ?? 0}
@@ -51,11 +54,10 @@ const HotQuestionsInsights = ({
 
             <div>
               <p className="text-xs font-semibold text-slate-950">
-                Tổng quan fallback
+                {t("fallbackOverview")}
               </p>
               <p className="mt-1 text-xs leading-5 text-slate-600">
-                {summary?.fallback_questions ?? 0} câu hỏi duy nhất đã bị
-                fallback, tổng cộng {summary?.fallback_asks ?? 0} lượt hỏi.
+                {t("fallbackSummary", { questions: summary?.fallback_questions ?? 0, asks: summary?.fallback_asks ?? 0 })}
               </p>
             </div>
           </div>
@@ -63,7 +65,7 @@ const HotQuestionsInsights = ({
 
         <div>
           <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-            Intent nổi bật
+            {t("topIntents")}
           </p>
           <Separator className="my-3" />
 
@@ -93,7 +95,7 @@ const HotQuestionsInsights = ({
               ))
             ) : (
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-400">
-                Chưa có intent nổi bật cho hot questions.
+                {t("noTopIntents")}
               </div>
             )}
           </div>

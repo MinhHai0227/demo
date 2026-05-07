@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { startTransition, useEffect, useState } from "react"
 
+import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
 import { getLeadActivities, getLeadScoreHistory } from "@/api/lead-api"
 import { getStaffs } from "@/api/staff-api"
 import LeadActivitiesDialog from "@/features/lead/components/lead-activities-dialog"
@@ -27,8 +29,11 @@ const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback
 
 const LeadPage = () => {
+  const { t } = useTranslation("leads")
   const currentUser = useAuthStore((state) => state.user)
   const isAdmin = currentUser?.role === "ADMIN"
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedLeadIdFromQuery = searchParams.get("leadId")
 
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
@@ -50,6 +55,19 @@ const LeadPage = () => {
   const [activityOffset, setActivityOffset] = useState(0)
   const [actionError, setActionError] = useState<string | null>(null)
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!selectedLeadIdFromQuery) {
+      return
+    }
+
+    setSelectedLeadId((current) =>
+      current === selectedLeadIdFromQuery ? current : selectedLeadIdFromQuery
+    )
+    setDialogOpen(true)
+    setActionError(null)
+    setActionSuccess(null)
+  }, [selectedLeadIdFromQuery])
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -148,6 +166,11 @@ const LeadPage = () => {
     setActionError(null)
     setActionSuccess(null)
     setDialogOpen(true)
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams)
+      nextParams.set("leadId", lead.id)
+      return nextParams
+    })
   }
 
   const handleSaveLead = async (values: UpdateLeadPayload) => {
@@ -161,12 +184,12 @@ const LeadPage = () => {
         leadId: activeLeadId,
         values,
       })
-      setActionSuccess("Cập nhật lead thành công.")
+      setActionSuccess(t("updateSuccess"))
     } catch (error) {
       setActionError(
         getErrorMessage(
           error,
-          "Hiện chưa thể cập nhật lead. Vui lòng thử lại sau."
+          t("updateError")
         )
       )
     }
@@ -201,11 +224,8 @@ const LeadPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Danh sách lead</h1>
-        <p className="text-sm text-slate-500">
-          Theo dõi, đánh giá và điều phối lead tuyển sinh theo luồng quản trị
-          hiện tại.
-        </p>
+        <h1 className="text-lg font-semibold text-slate-900">{t("title")}</h1>
+        <p className="text-sm text-slate-500">{t("description")}</p>
       </div>
 
       <LeadToolbar
@@ -278,6 +298,12 @@ const LeadPage = () => {
           setDialogOpen(open)
           if (!open) {
             setActionError(null)
+            setActionSuccess(null)
+            setSearchParams((currentParams) => {
+              const nextParams = new URLSearchParams(currentParams)
+              nextParams.delete("leadId")
+              return nextParams
+            })
           }
         }}
         onSave={handleSaveLead}

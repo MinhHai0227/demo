@@ -1,4 +1,6 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
+
 import {
   CheckCircle2,
   Download,
@@ -68,35 +70,38 @@ const isFailed = (job: OcrJob) => job.status === "failed"
 const isProcessing = (job: OcrJob) =>
   ["queued", "started", "deferred"].includes(job.status)
 
-const getCategoryLabel = (category?: string | null) => {
-  if (!category) return "Chưa phân loại"
+const getCategoryLabel = (
+  category?: string | null,
+  t?: (key: string) => string
+) => {
+  if (!category) return t?.("uncategorized") ?? "Uncategorized"
   return (
     admissionCategoryLabelMap[category as AdmissionCategory] ||
     category.replaceAll("_", " ")
   )
 }
 
-const getStatusBadge = (job: OcrJob) => {
+const getStatusBadge = (job: OcrJob, t: (key: string) => string) => {
   if (job.sent_to_kb)
     return {
-      label: "Đã gửi KB",
+      label: t("sentToKbStatus"),
       className: "border-emerald-200 bg-emerald-50 text-emerald-700",
       icon: CheckCircle2,
     }
   if (isCompleted(job))
     return {
-      label: "Sẵn sàng",
+      label: t("ready"),
       className: "border-blue-200 bg-blue-50 text-blue-700",
       icon: CheckCircle2,
     }
   if (isFailed(job))
     return {
-      label: "Thất bại",
+      label: t("failed"),
       className: "border-red-200 bg-red-50 text-red-600",
       icon: XCircle,
     }
   return {
-    label: job.status || "Đang chờ",
+    label: job.status || t("pending"),
     className: "border-amber-200 bg-amber-50 text-amber-700",
     icon: Loader2,
   }
@@ -119,6 +124,7 @@ const QuickProcessingTable = ({
   onRetry,
   onDelete,
 }: QuickProcessingTableProps) => {
+  const { t } = useTranslation("quick-processing")
   const normalizedTotalPages = Math.max(1, totalPages)
   const pageItems = useMemo(
     () => buildPageItems(page, normalizedTotalPages),
@@ -130,10 +136,10 @@ const QuickProcessingTable = ({
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-[14px] font-semibold text-slate-900">
-            OCR jobs gần đây
+            {t("recentOcrJobs")}
           </h2>
           <p className="text-[12px] text-slate-500">
-            Xem lại markdown trước khi gửi vào KB.
+            {t("reviewMarkdownHint")}
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
@@ -151,22 +157,22 @@ const QuickProcessingTable = ({
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
             <TableHead className="px-5 text-[11px] font-medium text-slate-500">
-              Tài liệu
+              {t("document")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Danh mục
+              {t("category")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Phiên bản
+              {t("version")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Trang
+              {t("pages")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Trạng thái
+              {t("status")}
             </TableHead>
             <TableHead className="w-48 pr-5 text-right text-[11px] font-medium text-slate-500">
-              Thao tác
+              {t("actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -211,10 +217,10 @@ const QuickProcessingTable = ({
                   </div>
                   <div>
                     <p className="text-[13px] font-medium text-slate-900">
-                      Chưa có OCR job nào
+                      {t("noJobs")}
                     </p>
                     <p className="mt-0.5 text-[12px] text-slate-500">
-                      Tải lên tài liệu để bắt đầu luồng OCR.
+                      {t("noJobsHint")}
                     </p>
                   </div>
                 </div>
@@ -224,7 +230,7 @@ const QuickProcessingTable = ({
 
           {!isLoading &&
             jobs.map((job) => {
-              const statusBadge = getStatusBadge(job)
+              const statusBadge = getStatusBadge(job, t)
               const StatusIcon = statusBadge.icon
               const deleting = deletingJobId === job.job_id
               const downloading = downloadingJobId === job.job_id
@@ -252,7 +258,7 @@ const QuickProcessingTable = ({
                       </div>
                       <div className="min-w-0">
                         <p className="truncate text-[13px] font-medium text-slate-900">
-                          {job.title || job.original_filename || "OCR job"}
+                          {job.title || job.original_filename || t("ocrJob")}
                         </p>
                         <p className="line-clamp-1 max-w-90 text-[12px] text-slate-400">
                           {job.original_filename || job.job_id}
@@ -282,7 +288,7 @@ const QuickProcessingTable = ({
                       variant="outline"
                       className="rounded-full border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-medium text-slate-700"
                     >
-                      {getCategoryLabel(job.category)}
+                      {getCategoryLabel(job.category, t)}
                     </Badge>
                   </TableCell>
 
@@ -389,14 +395,14 @@ const QuickProcessingTable = ({
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-[12px] text-slate-500">
-          Trang {page} / {normalizedTotalPages}
+          {t("pageInfo", { current: page, total: normalizedTotalPages })}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Trước"
+                text={t("prev")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   page === 1 && "pointer-events-none opacity-40"
@@ -425,7 +431,7 @@ const QuickProcessingTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Sau"
+                text={t("next")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   page === normalizedTotalPages &&

@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useTranslation } from "react-i18next"
 import type { KnowledgeChunk } from "@/types/knowledge-chunk-type"
 
 type KnowledgeChunkDeleteDialogProps = {
@@ -27,6 +28,7 @@ const KnowledgeChunkDeleteDialog = ({
   onOpenChange,
   onConfirm,
 }: KnowledgeChunkDeleteDialogProps) => {
+  const { t } = useTranslation("knowledge-chunk")
   const chunkLabel = chunk?.title || chunk?.category || null
 
   return (
@@ -39,21 +41,17 @@ const KnowledgeChunkDeleteDialog = ({
           </div>
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-              Xóa knowledge chunk này?
+              {t("deleteConfirmTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
               {chunkLabel ? (
                 <>
-                  Thao tác này sẽ xóa vĩnh viễn{" "}
-                  <span className="font-medium text-slate-700">
-                    "{chunkLabel}"
-                  </span>{" "}
-                  khỏi cơ sở dữ liệu.
+                  {t("deleteConfirmWithName", { name: chunkLabel })}
                 </>
               ) : (
-                "Thao tác này sẽ xóa vĩnh viễn knowledge chunk đã chọn."
+                t("deleteConfirmNoName")
               )}{" "}
-              Không thể hoàn tác sau khi xóa.
+              {t("deleteIrreversible")}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
@@ -62,7 +60,7 @@ const KnowledgeChunkDeleteDialog = ({
             disabled={isDeleting}
             className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
           >
-            Hủy
+            {t("cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={isDeleting}
@@ -72,12 +70,12 @@ const KnowledgeChunkDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang xóa...
+                {t("deleting")}
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Xóa chunk
+                {t("deleteChunkButton")}
               </>
             )}
           </AlertDialogAction>

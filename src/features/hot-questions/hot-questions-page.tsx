@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { startTransition, useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { getMessageSources } from "@/api/chat-api"
 import {
@@ -20,6 +21,7 @@ const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback
 
 const HotQuestionsPage = () => {
+  const { t } = useTranslation("hot-questions")
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
   const [offset, setOffset] = useState(0)
@@ -123,12 +125,9 @@ const HotQuestionsPage = () => {
     <div className="space-y-4">
       <div>
         <h1 className="text-lg font-semibold tracking-tight text-slate-950">
-          Câu hỏi nổi bật
+          {t("title")}
         </h1>
-        <p className="mt-1 text-sm leading-6 text-slate-500">
-          Theo dõi các câu hỏi được hỏi nhiều, nhận diện mẫu fallback và kiểm
-          tra xu hướng intent.
-        </p>
+        <p className="mt-1 text-sm leading-6 text-slate-500">{t("description")}</p>
       </div>
 
       <HotQuestionsToolbar

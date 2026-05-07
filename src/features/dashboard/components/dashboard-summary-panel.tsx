@@ -1,4 +1,5 @@
 import { MessageSquare, TrendingDown, UserPlus, Zap } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
@@ -51,6 +52,7 @@ const SummaryMetricCard = ({
   tone = "slate",
   isFetching = false,
 }: SummaryMetricCardProps) => {
+  const { t } = useTranslation("dashboard")
   const styles = TONE_STYLES[tone]
 
   return (
@@ -73,7 +75,7 @@ const SummaryMetricCard = ({
           </div>
           {isFetching && (
             <span className={cn("text-[10px] font-medium", styles.label)}>
-              đang cập nhật
+              {t("updating")}
             </span>
           )}
         </div>
@@ -98,6 +100,8 @@ const DashboardSummaryPanel = ({
   isLoading,
   isFetching,
 }: DashboardSummaryPanelProps) => {
+  const { t } = useTranslation("dashboard")
+
   if (isLoading && !summary) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -111,25 +115,25 @@ const DashboardSummaryPanel = ({
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <SummaryMetricCard
-        label="Tổng hội thoại"
+        label={t("totalConversations")}
         value={`${summary?.total_chats ?? 0}`}
         icon={MessageSquare}
         tone="slate"
       />
       <SummaryMetricCard
-        label="Lead mới"
+        label={t("newLeads")}
         value={`${summary?.new_leads ?? 0}`}
         icon={UserPlus}
         tone="emerald"
       />
       <SummaryMetricCard
-        label="Fallback"
+        label={t("fallbacks")}
         value={`${summary?.fallbacks ?? 0}`}
         icon={Zap}
         tone="amber"
       />
       <SummaryMetricCard
-        label="Tỉ lệ fallback"
+        label={t("fallbackRate")}
         value={`${((summary?.fallback_rate ?? 0) * 100).toFixed(1)}%`}
         icon={TrendingDown}
         tone="rose"

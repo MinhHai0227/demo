@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import {
   ChartNoAxesColumnIncreasing,
   Flame,
@@ -92,6 +93,7 @@ const LeadTable = ({
   onOpenActivities,
   onOpenScoreHistory,
 }: LeadTableProps) => {
+  const { t } = useTranslation("leads")
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const pageItems = buildPageItems(currentPage, totalPages)
@@ -100,8 +102,8 @@ const LeadTable = ({
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">Phễu lead</h2>
-          <p className="text-xs text-slate-500">Tổng cộng {total} lead</p>
+          <h2 className="text-sm font-semibold text-slate-900">{t("funnel")}</h2>
+          <p className="text-xs text-slate-500">{t("totalLeads", { count: total })}</p>
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-400">
@@ -118,25 +120,25 @@ const LeadTable = ({
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
             <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Lead
+              {t("lead")}
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Trạng thái
+              {t("status")}
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Mức độ quan tâm
+              {t("temperature")}
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Điểm
+              {t("score")}
             </TableHead>
             <TableHead className="text-xs font-medium text-slate-500">
-              Phụ trách
+              {t("assignedTo")}
             </TableHead>
             <TableHead className="pr-5 text-xs font-medium text-slate-500">
-              Cập nhật
+              {t("updated")}
             </TableHead>
             <TableHead className="pr-5 text-right text-xs font-medium text-slate-500">
-              Thao tác
+              {t("actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -185,10 +187,10 @@ const LeadTable = ({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-900">
-                      Không tìm thấy lead
+                      {t("notFound")}
                     </p>
                     <p className="mt-0.5 text-xs text-slate-500">
-                      Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc hiện tại.
+                      {t("notFoundHint")}
                     </p>
                   </div>
                 </div>
@@ -202,8 +204,8 @@ const LeadTable = ({
                 const status = lead.status
                 const temperature = lead.temperature
                 const assignedLabel = lead.assigned_staff_id
-                  ? (staffNameById[lead.assigned_staff_id] ?? "Phụ trách")
-                  : "Chưa phân công"
+                  ? (staffNameById[lead.assigned_staff_id] ?? t("assignedTo"))
+                  : t("unassigned")
 
                 return (
                   <TableRow
@@ -225,10 +227,10 @@ const LeadTable = ({
                             {lead.full_name}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
-                            <span>{lead.email || "Chưa có email"}</span>
+                            <span>{lead.email || t("noEmail")}</span>
                             <span className="inline-flex items-center gap-1">
                               <Phone className="size-3" />
-                              {lead.phone || "Chưa có số điện thoại"}
+                              {lead.phone || t("noPhone")}
                             </span>
                           </div>
                         </div>
@@ -293,7 +295,7 @@ const LeadTable = ({
                     <TableCell className="pr-5 text-right">
                       <button
                         type="button"
-                        title="Lịch sử điểm"
+                        title={t("scoreHistory")}
                         className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700"
                         onClick={(event) => {
                           event.stopPropagation()
@@ -312,7 +314,7 @@ const LeadTable = ({
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-xs text-slate-500">
-          Trang {currentPage} / {totalPages}
+          {t("page", { current: currentPage, total: totalPages })}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -320,7 +322,7 @@ const LeadTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Trước"
+                text={t("prev")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -351,7 +353,7 @@ const LeadTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Sau"
+                text={t("next")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === totalPages && "pointer-events-none opacity-40"

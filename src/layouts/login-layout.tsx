@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, Loader2, LockKeyhole, ShieldCheck } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { Link, Navigate, useNavigate } from "react-router-dom"
 
 import logo from "@/assets/logo.png"
@@ -18,27 +19,28 @@ import { loginSchema, type LoginSchema } from "@/schemas/auth-schema"
 const inputClassName =
   "h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-[14px] text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-slate-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(15,23,42,0.06)]"
 
-const INFO_CARDS = [
-  {
-    label: "Session",
-    value: "JWT",
-    description: "Access token trên frontend, refresh cookie từ backend.",
-  },
-  {
-    label: "Role",
-    value: "Staff",
-    description: "Hỗ trợ counselor và admin theo payload backend trả về.",
-  },
-  {
-    label: "Store",
-    value: "Memory",
-    description: "Session khôi phục sau F5 bằng refresh-token từ backend.",
-  },
-]
-
 const LoginLayout = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation("login")
   const { accessToken, user, login, loginPending, loginError } = useAuth()
+
+  const INFO_CARDS = [
+    {
+      label: t("infoCards.session.label"),
+      value: t("infoCards.session.value"),
+      description: t("infoCards.session.description"),
+    },
+    {
+      label: t("infoCards.role.label"),
+      value: t("infoCards.role.value"),
+      description: t("infoCards.role.description"),
+    },
+    {
+      label: t("infoCards.store.label"),
+      value: t("infoCards.store.value"),
+      description: t("infoCards.store.description"),
+    },
+  ]
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -85,24 +87,23 @@ const LoginLayout = () => {
               className="inline-flex items-center gap-2 text-[13px] font-medium text-slate-400 transition-colors hover:text-slate-700"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Quay lại trang chủ
+              {t("backToHome")}
             </Link>
 
             <div className="space-y-5">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#d6ae4e]/30 bg-[#d6ae4e]/8 px-4 py-2 text-[13px] font-medium text-[#a07c24]">
                 <ShieldCheck className="h-3.5 w-3.5 text-[#d6ae4e]" />
-                Khu vực quản trị nội bộ
+                {t("adminZone")}
               </div>
 
               <h1 className="text-[2.6rem] leading-[1.1] font-semibold tracking-[-0.02em] text-slate-950">
-                Quản lý lead và hội thoại admissions.
+                {t("title")}
               </h1>
 
               <div className="h-px w-12 bg-linear-to-r from-[#d6ae4e]/60 to-transparent" />
 
               <p className="text-[15px] leading-relaxed text-slate-500">
-                Hệ thống dành cho admin và counselor. Access token giữ trong
-                memory, refresh token lưu trong cookie httpOnly.
+                {t("description")}
               </p>
             </div>
 
@@ -151,10 +152,10 @@ const LoginLayout = () => {
                 {/* Title */}
                 <div className="space-y-1.5">
                   <h2 className="text-[22px] font-semibold tracking-tight text-slate-950">
-                    Đăng nhập quản trị
+                    {t("loginTitle")}
                   </h2>
                   <p className="text-[13px] leading-relaxed text-slate-500">
-                    Sử dụng email và mật khẩu được cấp để truy cập.
+                    {t("loginSubtitle")}
                   </p>
                 </div>
 
@@ -170,7 +171,7 @@ const LoginLayout = () => {
                         htmlFor="login-email"
                         className="text-[13px] font-medium text-slate-700"
                       >
-                        Email
+                        {t("emailLabel")}
                       </FieldLabel>
                       <FieldContent>
                         <input
@@ -190,7 +191,7 @@ const LoginLayout = () => {
                         htmlFor="login-password"
                         className="text-[13px] font-medium text-slate-700"
                       >
-                        Mật khẩu
+                        {t("passwordLabel")}
                       </FieldLabel>
                       <FieldContent>
                         <input
@@ -198,7 +199,7 @@ const LoginLayout = () => {
                           type="password"
                           autoComplete="current-password"
                           className={inputClassName}
-                          placeholder="Nhập mật khẩu"
+                          placeholder={t("passwordPlaceholder")}
                           {...form.register("password")}
                         />
                         <FieldError errors={[form.formState.errors.password]} />
@@ -221,7 +222,7 @@ const LoginLayout = () => {
                     {loginPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : null}
-                    {loginPending ? "Đang đăng nhập..." : "Đăng nhập"}
+                    {loginPending ? t("loggingIn") : t("loginButton")}
                   </Button>
                 </form>
 
@@ -232,7 +233,7 @@ const LoginLayout = () => {
                     className="inline-flex items-center gap-2 text-[13px] font-medium text-slate-400 transition-colors hover:text-slate-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    Quay lại trang chủ
+                    {t("backToHome")}
                   </Link>
                 </div>
               </div>

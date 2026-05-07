@@ -27,6 +27,7 @@ import {
   UserRound,
 } from "lucide-react"
 import { type ComponentType, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type ChatDetailsPanelProps = {
   conversation: ChatConversation | null
@@ -39,6 +40,7 @@ const ChatDetailsPanel = ({
   onOpenLead,
   onStatusChange,
 }: ChatDetailsPanelProps) => {
+  const { t } = useTranslation("chat")
   const [confirmStatus, setConfirmStatus] =
     useState<ChatConversationStatus | null>(null)
 
@@ -48,7 +50,7 @@ const ChatDetailsPanel = ({
         {/* Header */}
         <div className="border-b border-slate-100 px-4 py-3.5">
           <p className="text-[13px] font-semibold text-slate-950">
-            Thông tin hội thoại
+            {t("detailsTitle")}
           </p>
         </div>
 
@@ -81,7 +83,7 @@ const ChatDetailsPanel = ({
                 onClick={onOpenLead}
               >
                 <FileSearch className="size-3.5" />
-                Mở lead details
+                {t("openLeadDetails")}
               </Button>
             </div>
 
@@ -89,22 +91,22 @@ const ChatDetailsPanel = ({
             <div className="mt-5 space-y-3">
               <InfoRow
                 icon={Mail}
-                label="Email"
+                label={t("emailLabel")}
                 value={conversation.lead_email || "--"}
               />
               <InfoRow
                 icon={Phone}
-                label="Điện thoại"
+                label={t("phoneLabel")}
                 value={conversation.lead_phone || "--"}
               />
               <InfoRow
                 icon={UserRound}
-                label="Staff"
-                value={conversation.staff_name || "Chưa gán"}
+                label={t("staffLabel")}
+                value={conversation.staff_name || t("unassigned")}
               />
               <InfoRow
                 icon={Clock3}
-                label="Cập nhật"
+                label={t("updatedLabel")}
                 value={formatDateTime(conversation.updated_at)}
               />
             </div>
@@ -112,23 +114,23 @@ const ChatDetailsPanel = ({
             {/* Status buttons */}
             <div className="mt-5 border-t border-slate-100 pt-4">
               <p className="mb-2.5 text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-                Trạng thái
+                {t("statusSection")}
               </p>
               <div className="grid gap-1.5">
                 <StatusButton
-                  label="Đang mở"
+                  label={t("statusOpen")}
                   icon={Circle}
                   isActive={conversation.status === "OPEN"}
                   onClick={() => setConfirmStatus("OPEN")}
                 />
                 <StatusButton
-                  label="Cần staff"
+                  label={t("statusHandoff")}
                   icon={MessageCircle}
                   isActive={conversation.status === "HANDOFF"}
                   onClick={() => setConfirmStatus("HANDOFF")}
                 />
                 <StatusButton
-                  label="Đã đóng"
+                  label={t("statusClosed")}
                   icon={CheckCircle2}
                   isActive={conversation.status === "CLOSED"}
                   onClick={() => setConfirmStatus("CLOSED")}
@@ -140,7 +142,7 @@ const ChatDetailsPanel = ({
             {conversation.summary ? (
               <div className="mt-5 border-t border-slate-100 pt-4">
                 <p className="mb-2 text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-                  Tóm tắt
+                  {t("summarySection")}
                 </p>
                 <p className="text-[13px] leading-relaxed text-slate-600">
                   {conversation.summary}
@@ -150,7 +152,7 @@ const ChatDetailsPanel = ({
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center px-6 text-center text-[13px] text-slate-400">
-            Chưa chọn hội thoại.
+            {t("noConversationSelected")}
           </div>
         )}
       </aside>
@@ -166,17 +168,17 @@ const ChatDetailsPanel = ({
           <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
           <AlertDialogHeader className="px-6 pt-6 pb-4">
             <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-              Xác nhận đổi trạng thái
+              {t("confirmStatusChange")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[12px] text-slate-500">
               {confirmStatus
-                ? `Bạn có chắc muốn đổi trạng thái hội thoại sang "${confirmStatus}" không?`
+                ? t("confirmStatusChangeDescription", { status: confirmStatus })
                 : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex flex-row items-center justify-end gap-2 border-t border-slate-100 bg-white px-5 py-4">
             <AlertDialogCancel className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600">
-              Hủy
+              {t("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               className="h-9 rounded-xl bg-slate-950 text-[13px] hover:bg-slate-800"
@@ -185,7 +187,7 @@ const ChatDetailsPanel = ({
                 setConfirmStatus(null)
               }}
             >
-              Xác nhận
+              {t("confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

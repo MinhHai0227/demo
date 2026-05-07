@@ -15,6 +15,7 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import { MessageCircle, Send } from "lucide-react"
 import type { FormEvent } from "react"
 import { useEffect, useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 const MESSAGE_PAGE_SIZE = 30
 
@@ -35,6 +36,7 @@ const ChatThread = ({
   onMessageInputChange,
   onSendMessage,
 }: ChatThreadProps) => {
+  const { t } = useTranslation("chat")
   const messagesContainerRef = useRef<HTMLDivElement | null>(null)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const previousScrollHeightRef = useRef<number | null>(null)
@@ -124,10 +126,10 @@ const ChatThread = ({
         <div className="flex h-full flex-col items-center justify-center text-center">
           <MessageCircle className="mb-3 size-12 text-slate-200" />
           <p className="text-[13px] font-medium text-slate-600">
-            Chọn một hội thoại
+            {t("selectConversation")}
           </p>
           <p className="mt-1 text-[11px] text-slate-400">
-            Nội dung chat sẽ hiển thị tại đây.
+            {t("chatWillAppearHere")}
           </p>
         </div>
       </section>
@@ -151,7 +153,7 @@ const ChatThread = ({
             <p className="truncate text-[11px] text-slate-500">
               {conversation.lead_email ||
                 conversation.lead_phone ||
-                "Khách hàng từ web chat"}
+                t("webChatCustomer")}
             </p>
           </div>
         </div>
@@ -180,7 +182,7 @@ const ChatThread = ({
         {messagesQuery.isFetchingNextPage ? (
           <div className="flex justify-center">
             <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[11px] text-slate-500 shadow-sm">
-              Đang tải thêm tin nhắn cũ...
+              {t("loadingOlderMessages")}
             </div>
           </div>
         ) : null}
@@ -188,12 +190,12 @@ const ChatThread = ({
         {messagesQuery.isLoading ? (
           <div className="flex justify-start">
             <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-4 py-3 text-[13px] text-slate-400 shadow-sm">
-              Đang tải lịch sử chat...
+              {t("loadingChatHistory")}
             </div>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex h-full items-center justify-center text-[13px] text-slate-400">
-            Hội thoại này chưa có tin nhắn.
+            {t("noMessagesInThread")}
           </div>
         ) : (
           messages.map((message) => (
@@ -226,7 +228,7 @@ const ChatThread = ({
                 event.currentTarget.form?.requestSubmit()
               }
             }}
-            placeholder="Nhập tin nhắn..."
+            placeholder={t("typeMessage")}
             rows={1}
             disabled={conversation.status === "CLOSED" || isSending}
             className="max-h-32 min-h-10 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 text-[13px] transition outline-none focus:border-slate-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"

@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useTranslation } from "react-i18next"
 import {
   knowledgeChunkFormSchema,
   type KnowledgeChunkFormInput,
@@ -78,6 +79,7 @@ const KnowledgeChunkFormDialog = ({
   onOpenChange,
   onSubmit,
 }: KnowledgeChunkFormDialogProps) => {
+  const { t } = useTranslation("knowledge-chunk")
   const form = useForm<
     KnowledgeChunkFormInput,
     unknown,
@@ -118,11 +120,10 @@ const KnowledgeChunkFormDialog = ({
             </div>
             <div>
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                {isCreate ? "Tạo knowledge chunk" : "Chỉnh sửa knowledge chunk"}
+                {isCreate ? t("formCreateTitle") : t("formEditTitle")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                Quản lý nội dung có cấu trúc cho hệ thống truy xuất thông tin
-                tuyển sinh.
+                {t("description")}
               </DialogDescription>
             </div>
           </div>
@@ -138,7 +139,7 @@ const KnowledgeChunkFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Danh mục
+                  {t("category")}
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -150,7 +151,7 @@ const KnowledgeChunkFormDialog = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                          <SelectValue placeholder="Chọn danh mục" />
+                          <SelectValue placeholder={t("selectCategory")} />
                         </SelectTrigger>
                         <SelectContent>
                           {admissionCategoryOptions.map((item) => (
@@ -172,17 +173,17 @@ const KnowledgeChunkFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Tiêu đề
+                  {t("titleField")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-title"
-                    placeholder="Chính sách học bổng 2026"
+                    placeholder={t("titlePlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("title")}
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
-                    Không bắt buộc nhưng hữu ích cho kết quả tìm kiếm.
+                    {t("titleHint")}
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.title]} />
                 </FieldContent>
@@ -195,12 +196,12 @@ const KnowledgeChunkFormDialog = ({
                 className="text-[12px] font-medium text-slate-600"
               >
                 <ScanSearch className="size-3.5 text-slate-400" />
-                Nội dung
+                {t("contentField")}
               </FieldLabel>
               <FieldContent>
                 <textarea
                   id="knowledge-content"
-                  placeholder="Nhập nội dung knowledge chunk tại đây..."
+                  placeholder={t("contentPlaceholder")}
                   className={textareaClassName}
                   {...form.register("content")}
                 />
@@ -215,12 +216,12 @@ const KnowledgeChunkFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <Layers3 className="size-3.5 text-slate-400" />
-                  Nguồn
+                  {t("sourceField")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-source"
-                    placeholder="admissions-handbook.pdf"
+                    placeholder={t("sourcePlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("source")}
                   />
@@ -234,12 +235,12 @@ const KnowledgeChunkFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <Link2 className="size-3.5 text-slate-400" />
-                  URL nguồn
+                  {t("sourceUrl")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-source-url"
-                    placeholder="https://..."
+                    placeholder={t("sourceUrlPlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("source_url")}
                   />
@@ -253,13 +254,13 @@ const KnowledgeChunkFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Năm
+                  {t("yearField")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="knowledge-year"
                     type="number"
-                    placeholder="2026"
+                    placeholder={t("yearPlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("year")}
                   />
@@ -273,7 +274,7 @@ const KnowledgeChunkFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <Hash className="size-3.5 text-slate-400" />
-                  Phiên bản
+                  {t("versionField")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -293,17 +294,17 @@ const KnowledgeChunkFormDialog = ({
                 htmlFor="knowledge-major-id"
                 className="text-[12px] font-medium text-slate-600"
               >
-                Major ID
+                {t("majorIdField")}
               </FieldLabel>
               <FieldContent>
                 <Input
                   id="knowledge-major-id"
-                  placeholder="UUID ngành (tuỳ chọn)"
+                  placeholder={t("majorIdPlaceholder")}
                   className="h-10 rounded-xl border-slate-200 bg-slate-50/80 font-mono text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   {...form.register("major_id")}
                 />
                 <FieldDescription className="text-[11px] text-slate-400">
-                  Để trống nếu chunk áp dụng chung cho tất cả ngành.
+                  {t("majorIdHint")}
                 </FieldDescription>
                 <FieldError errors={[form.formState.errors.major_id]} />
               </FieldContent>
@@ -325,7 +326,7 @@ const KnowledgeChunkFormDialog = ({
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Hủy
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -336,11 +337,11 @@ const KnowledgeChunkFormDialog = ({
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
               {isCreate
                 ? isSubmitting
-                  ? "Đang tạo..."
-                  : "Tạo chunk"
+                  ? t("creating")
+                  : t("createChunkButton")
                 : isSubmitting
-                  ? "Đang lưu..."
-                  : "Lưu thay đổi"}
+                  ? t("saving")
+                  : t("savingChanges")}
             </Button>
           </div>
         </form>

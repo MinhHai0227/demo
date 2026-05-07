@@ -1,4 +1,5 @@
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
   AlertDialog,
@@ -29,6 +30,8 @@ const TuitionPolicyDeleteDialog = ({
   onOpenChange,
   onConfirm,
 }: TuitionPolicyDeleteDialogProps) => {
+  const { t } = useTranslation("tuition-policy")
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200/70 p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)]">
@@ -41,21 +44,20 @@ const TuitionPolicyDeleteDialog = ({
 
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-              Xóa chính sách học phí này?
+              {t("deleteTitle")}
             </AlertDialogTitle>
 
             <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
               {policy ? (
                 <>
-                  Thao tác này sẽ xóa vĩnh viễn chính sách{" "}
-                  <span className="font-medium text-slate-700">
-                    năm {policy.year} · {majorName ?? "ngành đã chọn"} ·{" "}
-                    {policy.fee_type.toLowerCase()}
-                  </span>
-                  .
+                  {t("deleteDescription", {
+                    year: policy.year,
+                    major: majorName ?? t("unknownMajor"),
+                    feeType: policy.fee_type.toLowerCase(),
+                  })}
                 </>
               ) : (
-                "Thao tác này sẽ xóa vĩnh viễn chính sách học phí đã chọn."
+                t("deleteDescriptionGeneric")
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -66,7 +68,7 @@ const TuitionPolicyDeleteDialog = ({
             disabled={isDeleting}
             className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
           >
-            Hủy
+            {t("cancel")}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -77,12 +79,12 @@ const TuitionPolicyDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang xóa...
+                {t("deleting")}
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Xóa chính sách
+                {t("deletePolicy")}
               </>
             )}
           </AlertDialogAction>

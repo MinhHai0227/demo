@@ -1,4 +1,5 @@
 import { FileSearch, Loader2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -45,6 +46,9 @@ const LeadFormDialog = ({
   onOpenChange,
   onSave,
 }: LeadFormDialogProps) => {
+  const { t } = useTranslation("leads")
+  const { t: tc } = useTranslation("common")
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[calc(100vh-1.5rem)] max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-xl ring-1 ring-slate-100 sm:max-w-6xl">
@@ -55,11 +59,10 @@ const LeadFormDialog = ({
             </div>
             <div className="min-w-0">
               <DialogTitle className="truncate text-base font-semibold text-slate-950">
-                {lead?.full_name || "Chi tiết lead"}
+                {lead?.full_name || t("detailTitle")}
               </DialogTitle>
               <DialogDescription className="mt-1 text-xs leading-5 text-slate-500">
-                Kiểm tra hồ sơ, trạng thái, ngành quan tâm và hồ sơ ứng tuyển
-                của lead này.
+                {t("detailDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -90,12 +93,12 @@ const LeadFormDialog = ({
             disabled={savePending}
             onClick={() => onOpenChange(false)}
           >
-            Đóng
+            {tc("close")}
           </Button>
           {savePending && (
             <div className="inline-flex items-center gap-2 rounded-lg bg-slate-50 px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200">
               <Loader2 className="size-3.5 animate-spin" />
-              Đang lưu thay đổi...
+              {t("savingChanges")}
             </div>
           )}
         </div>

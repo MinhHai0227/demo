@@ -1,4 +1,5 @@
 import { Search, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,6 +34,7 @@ const HotQuestionsToolbar = ({
   onFallbackFilterChange,
   onClearFilters,
 }: HotQuestionsToolbarProps) => {
+  const { t } = useTranslation("hot-questions")
   const hasFilters = Boolean(
     appliedSearch || intentFilter !== "ALL" || fallbackFilter !== "ALL"
   )
@@ -46,7 +48,7 @@ const HotQuestionsToolbar = ({
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
             <Input
               value={searchInput}
-              placeholder="Tìm theo câu hỏi, nội dung chuẩn hóa, intent..."
+              placeholder={t("searchPlaceholderExtended")}
               className="h-10 rounded-xl border-slate-200 bg-white pl-9 text-sm shadow-xs transition-colors placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-slate-200"
               onChange={(event) => onSearchInputChange(event.target.value)}
             />
@@ -54,10 +56,10 @@ const HotQuestionsToolbar = ({
 
           <Select value={intentFilter} onValueChange={onIntentFilterChange}>
             <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-              <SelectValue placeholder="Tất cả intent" />
+              <SelectValue placeholder={t("allIntents")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả intent</SelectItem>
+              <SelectItem value="ALL">{t("allIntents")}</SelectItem>
               {intentOptions.map((intent) => (
                 <SelectItem key={intent} value={intent}>
                   {intent}
@@ -73,12 +75,12 @@ const HotQuestionsToolbar = ({
             }
           >
             <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-              <SelectValue placeholder="Tất cả trạng thái" />
+              <SelectValue placeholder={t("allFallback")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả câu hỏi</SelectItem>
-              <SelectItem value="TRUE">Chỉ fallback</SelectItem>
-              <SelectItem value="FALSE">Đã trả lời</SelectItem>
+              <SelectItem value="ALL">{t("allQuestions")}</SelectItem>
+              <SelectItem value="TRUE">{t("fallbackOnly")}</SelectItem>
+              <SelectItem value="FALSE">{t("answered")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -91,7 +93,7 @@ const HotQuestionsToolbar = ({
               size="icon"
               className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-500 shadow-xs transition-colors hover:bg-slate-100 hover:text-slate-950"
               onClick={onClearFilters}
-              aria-label="Xóa bộ lọc"
+              aria-label={t("clearFiltersAriaLabel")}
             >
               <X className="size-4" />
             </Button>
@@ -107,18 +109,18 @@ const HotQuestionsToolbar = ({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
               </span>
-              Đang chờ nhập xong...
+              {t("debouncing")}
             </span>
           ) : null}
 
           {hasFilters ? (
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
-              Đang áp dụng bộ lọc
+              {t("applyingFilters")}
             </span>
           ) : null}
 
           <span className="ml-auto text-xs text-slate-400">
-            Kết quả sẽ cập nhật sau 1 giây khi bạn ngừng nhập
+            {t("resultsUpdateHint")}
           </span>
         </div>
       )}

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import QuickProcessingPreviewDialog from "@/features/quick-processing/components/quick-processing-preview-dialog"
 import QuickProcessingTable from "@/features/quick-processing/components/quick-processing-table"
@@ -20,6 +21,7 @@ const getDefaultCategory = (job: OcrJob | null): AdmissionCategory =>
   isAdmissionCategory(job?.category) ? job.category : "FAQ"
 
 const QuickProcessingPage = () => {
+  const { t } = useTranslation("quick-processing")
   const [page, setPage] = useState(1)
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -77,7 +79,7 @@ const QuickProcessingPage = () => {
       setPreviewError(
         error instanceof Error
           ? error.message
-          : "Không tải được nội dung markdown."
+          : t("contentLoadError")
       )
     }
   }
@@ -104,10 +106,10 @@ const QuickProcessingPage = () => {
       })
       setSelectedJob(updatedJob)
       setMarkdownContent(draftContent)
-      setActionSuccess("Đã lưu markdown thành công.")
+      setActionSuccess(t("saveSuccess"))
     } catch (error) {
       setPreviewError(
-        error instanceof Error ? error.message : "Không lưu được markdown."
+        error instanceof Error ? error.message : t("saveError")
       )
     }
   }
@@ -120,7 +122,7 @@ const QuickProcessingPage = () => {
     setActionError(null)
     setActionSuccess(null)
     if (normalizedChunkOverlap >= normalizedChunkSize) {
-      setPreviewError("Chunk overlap phải nhỏ hơn kích thước chunk.")
+      setPreviewError(t("chunkOverlapError"))
       return
     }
     try {
@@ -134,10 +136,10 @@ const QuickProcessingPage = () => {
       setSelectedJob(null)
       setMarkdownContent("")
       setDraftContent("")
-      setActionSuccess("Đã gửi markdown OCR vào Knowledge Base thành công.")
+      setActionSuccess(t("sentToKb"))
     } catch (error) {
       setPreviewError(
-        error instanceof Error ? error.message : "Không gửi được OCR vào KB."
+        error instanceof Error ? error.message : t("sendError")
       )
     }
   }
@@ -153,7 +155,7 @@ const QuickProcessingPage = () => {
       setActionError(
         error instanceof Error
           ? error.message
-          : "Không chuẩn bị được link tải về."
+          : t("downloadError")
       )
     } finally {
       setDownloadingJobId(null)
@@ -161,17 +163,17 @@ const QuickProcessingPage = () => {
   }
 
   const handleDelete = async (job: OcrJob) => {
-    if (!window.confirm("Xóa OCR job này?")) return
+    if (!window.confirm(t("deleteConfirm"))) return
     setDeletingJobId(job.job_id)
     setActionError(null)
     setActionSuccess(null)
     try {
       await deleteOcrJobAction(job.job_id)
       if (jobs.length === 1 && page > 1) setPage(page - 1)
-      setActionSuccess("Đã xóa OCR job thành công.")
+      setActionSuccess(t("deleteSuccess"))
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Không xóa được OCR job."
+        error instanceof Error ? error.message : t("deleteError")
       )
     } finally {
       setDeletingJobId(null)
@@ -184,10 +186,10 @@ const QuickProcessingPage = () => {
     setActionSuccess(null)
     try {
       await retryOcrJobAction(job.job_id)
-      setActionSuccess("Đã đưa OCR job vào hàng đợi lại.")
+      setActionSuccess(t("retryQueued"))
     } catch (error) {
       setActionError(
-        error instanceof Error ? error.message : "Không thể thử lại OCR job."
+        error instanceof Error ? error.message : t("retryError")
       )
     } finally {
       setRetryingJobId(null)
@@ -197,13 +199,8 @@ const QuickProcessingPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[18px] font-semibold text-slate-950">
-          Xử lý nhanh
-        </h1>
-        <p className="text-[13px] text-slate-500">
-          OCR tài liệu tải lên, chỉnh sửa markdown, rồi gửi nội dung đã duyệt
-          vào knowledge base.
-        </p>
+        <h1 className="text-[18px] font-semibold text-slate-950">{t("title")}</h1>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <QuickProcessingToolbar
@@ -254,8 +251,8 @@ const QuickProcessingPage = () => {
           const response = await createOcrJobAction(payload)
           setActionSuccess(
             response.reused
-              ? "Đã tái sử dụng kết quả OCR có sẵn cho tài liệu này."
-              : "Đã tạo OCR job thành công."
+              ? t("reusedResult")
+              : t("createdSuccess")
           )
           return response
         }}

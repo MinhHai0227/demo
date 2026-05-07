@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { FileText, FileUp, Hash, Loader2, Tags } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -44,6 +45,7 @@ const QuickProcessingUploadDialog = ({
   onSubmit,
   isSubmitting = false,
 }: QuickProcessingUploadDialogProps) => {
+  const { t } = useTranslation("quick-processing")
   const [file, setFile] = useState<File | null>(null)
   const [title, setTitle] = useState("")
   const [category, setCategory] = useState<AdmissionCategory>("FAQ")
@@ -68,11 +70,11 @@ const QuickProcessingUploadDialog = ({
   const handleSubmit = async () => {
     setError(null)
     if (!file) {
-      setError("Vui lòng chọn file PDF hoặc ảnh.")
+      setError(t("selectFileError"))
       return
     }
     if (!title.trim()) {
-      setError("Vui lòng nhập tiêu đề.")
+      setError(t("titleRequiredError"))
       return
     }
     try {
@@ -88,7 +90,7 @@ const QuickProcessingUploadDialog = ({
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Tải lên thất bại. Vui lòng thử lại."
+          : t("uploadFailed")
       )
     }
   }
@@ -105,11 +107,10 @@ const QuickProcessingUploadDialog = ({
             </div>
             <div>
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                Tải lên tài liệu OCR
+                {t("uploadTitle")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                Chuyển đổi PDF hoặc ảnh thành markdown có thể chỉnh sửa trước
-                khi đưa vào knowledge base.
+                {t("uploadDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -122,7 +123,7 @@ const QuickProcessingUploadDialog = ({
                 htmlFor="ocr-upload-file"
                 className="text-[12px] font-medium text-slate-600"
               >
-                File
+                {t("file")}
               </FieldLabel>
               <FieldContent>
                 <input
@@ -147,13 +148,13 @@ const QuickProcessingUploadDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <FileText className="size-3.5 text-slate-400" />
-                  Tiêu đề
+                  {t("title_field")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="ocr-upload-title"
                     value={title}
-                    placeholder="Tiêu đề tài liệu"
+                    placeholder={t("titlePlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     onChange={(e) => setTitle(e.target.value)}
                   />
@@ -163,7 +164,7 @@ const QuickProcessingUploadDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Tags className="size-3.5 text-slate-400" />
-                  Danh mục
+                  {t("category")}
                 </FieldLabel>
                 <FieldContent>
                   <Select
@@ -173,7 +174,7 @@ const QuickProcessingUploadDialog = ({
                     }
                   >
                     <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                      <SelectValue placeholder="Chọn danh mục" />
+                      <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -191,7 +192,7 @@ const QuickProcessingUploadDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Hash className="size-3.5 text-slate-400" />
-                  Năm
+                  {t("year")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -207,7 +208,7 @@ const QuickProcessingUploadDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Hash className="size-3.5 text-slate-400" />
-                  Phiên bản
+                  {t("version")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -238,7 +239,7 @@ const QuickProcessingUploadDialog = ({
             className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
             onClick={() => handleOpenChange(false)}
           >
-            Đóng
+            {t("close")}
           </Button>
           <Button
             type="button"
@@ -250,12 +251,12 @@ const QuickProcessingUploadDialog = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang tải lên...
+                {t("uploading")}
               </>
             ) : (
               <>
                 <FileUp className="size-3.5" />
-                Tải lên và OCR
+                {t("uploadAndOcr")}
               </>
             )}
           </Button>

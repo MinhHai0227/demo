@@ -8,6 +8,7 @@ import {
   Trash2,
   UserSquare2,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -68,6 +69,8 @@ const StaffTable = ({
   onDelete,
   onToggleStatus,
 }: StaffTableProps) => {
+  const { t } = useTranslation("staff")
+
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const pageItems = buildPageItems(currentPage, totalPages)
@@ -78,10 +81,10 @@ const StaffTable = ({
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-[14px] font-semibold text-slate-900">
-            Danh sách nhân viên
+            {t("catalog")}
           </h2>
           <p className="text-[12px] text-slate-500">
-            Tổng cộng {total} thành viên
+            {t("totalMembers", { count: total })}
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
@@ -98,22 +101,22 @@ const StaffTable = ({
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
             <TableHead className="px-5 text-[11px] font-medium text-slate-500">
-              Nhân viên
+              {t("staff")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Email
+              {t("email")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Vai trò
+              {t("role")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Trạng thái
+              {t("status")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Ngày tạo
+              {t("createdAt")}
             </TableHead>
             <TableHead className="w-30 pr-5 text-right text-[11px] font-medium text-slate-500">
-              Thao tác
+              {t("actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -161,10 +164,10 @@ const StaffTable = ({
                   </div>
                   <div>
                     <p className="text-[13px] font-medium text-slate-900">
-                      Chưa tìm thấy nhân viên
+                      {t("notFound")}
                     </p>
                     <p className="mt-0.5 text-[12px] text-slate-500">
-                      Thử điều chỉnh bộ lọc hoặc thêm nhân viên mới.
+                      {t("notFoundHint")}
                     </p>
                   </div>
                 </div>
@@ -239,7 +242,7 @@ const StaffTable = ({
                       ) : (
                         <PowerOff className="size-3" />
                       )}
-                      {staff.is_active ? "Đang hoạt động" : "Tạm ẩn"}
+                      {staff.is_active ? t("active") : t("inactive")}
                     </button>
                   </TableCell>
 
@@ -278,14 +281,14 @@ const StaffTable = ({
       {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-[12px] text-slate-500">
-          Trang {currentPage} / {totalPages}
+          {t("page", { current: currentPage, total: totalPages })}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Trước"
+                text={t("prev")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -314,7 +317,7 @@ const StaffTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Sau"
+                text={t("next")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"

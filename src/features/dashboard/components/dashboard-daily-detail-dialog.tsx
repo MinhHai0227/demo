@@ -1,4 +1,5 @@
 import { CalendarDays } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -59,6 +60,8 @@ const DashboardDailyDetailDialog = ({
   isFetching,
   onOpenChange,
 }: DashboardDailyDetailDialogProps) => {
+  const { t } = useTranslation("dashboard")
+  const { t: tc } = useTranslation("common")
   const fallbackRate = detail ? detail.fallback_rate * 100 : 0
   const isHighFallback = fallbackRate > 20
 
@@ -76,10 +79,10 @@ const DashboardDailyDetailDialog = ({
             </div>
             <div className="min-w-0 flex-1">
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                Chi tiết phân tích ngày
+                {t("dailyDetail")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                {targetDate ? formatDateOnly(targetDate) : "Chưa chọn ngày"}
+                {targetDate ? formatDateOnly(targetDate) : t("noDateSelected")}
                 {targetDate && (
                   <span className="ml-2 font-mono text-[10px] text-slate-400">
                     {targetDate}
@@ -92,7 +95,7 @@ const DashboardDailyDetailDialog = ({
                 variant="outline"
                 className="shrink-0 border-slate-200 text-[11px] text-slate-500"
               >
-                Đang tải
+                {tc("loading")}
               </Badge>
             )}
           </div>
@@ -113,11 +116,11 @@ const DashboardDailyDetailDialog = ({
             <>
               {/* Stats grid */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <DetailStat label="Hội thoại" value={`${detail.total_chats}`} />
-                <DetailStat label="Lead mới" value={`${detail.new_leads}`} />
-                <DetailStat label="Fallback" value={`${detail.fallbacks}`} />
+                <DetailStat label={t("conversations")} value={`${detail.total_chats}`} />
+                <DetailStat label={t("newLeads")} value={`${detail.new_leads}`} />
+                <DetailStat label={t("fallbacks")} value={`${detail.fallbacks}`} />
                 <DetailStat
-                  label="Tỉ lệ fallback"
+                  label={t("fallbackRate")}
                   value={`${fallbackRate.toFixed(1)}%`}
                   highlight={isHighFallback}
                 />
@@ -129,11 +132,10 @@ const DashboardDailyDetailDialog = ({
               <div className="space-y-3">
                 <div>
                   <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-                    Top intents
+                    {t("topIntents")}
                   </p>
                   <p className="mt-0.5 text-[11px] text-slate-400">
-                    Dữ liệu chi tiết của ngày{" "}
-                    <span className="font-mono">{detail.date}</span>
+                    {t("dailyDetailHint", { date: detail.date })}
                   </p>
                 </div>
 
@@ -160,7 +162,7 @@ const DashboardDailyDetailDialog = ({
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-[12px] text-slate-400">
-                    Ngày này chưa có top intents.
+                    {t("noTopIntentsForDate")}
                   </div>
                 )}
               </div>
@@ -171,7 +173,7 @@ const DashboardDailyDetailDialog = ({
                 <CalendarDays className="size-4 text-slate-400" />
               </div>
               <p className="text-[12px] text-slate-500">
-                Chọn một ngày trong bảng để xem chi tiết.
+                {t("selectDateForDetail")}
               </p>
             </div>
           )}

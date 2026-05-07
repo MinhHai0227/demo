@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+
 import { RefreshCcw, Upload } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -15,15 +17,17 @@ const QuickProcessingToolbar = ({
   onUploadClick,
   onRefreshClick,
 }: QuickProcessingToolbarProps) => {
+  const { t } = useTranslation("quick-processing")
+
   return (
     <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-[14px] font-semibold text-slate-900">
-            Hàng đợi OCR
+            {t("ocrQueue")}
           </h2>
           <p className="text-[12px] text-slate-500">
-            {total} job đang chờ xem xét.
+            {t("jobsPending", { count: total })}
           </p>
         </div>
 
@@ -38,7 +42,7 @@ const QuickProcessingToolbar = ({
             <RefreshCcw
               className={isFetching ? "size-4 animate-spin" : "size-4"}
             />
-            Làm mới
+            {t("refresh")}
           </Button>
 
           <Button
@@ -48,7 +52,7 @@ const QuickProcessingToolbar = ({
             onClick={onUploadClick}
           >
             <Upload className="size-4" />
-            Tải lên tài liệu
+            {t("uploadDocument")}
           </Button>
         </div>
       </div>

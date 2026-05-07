@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, UserRound } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -36,6 +37,8 @@ const HomeLeadFormDialog = ({
   onSubmit,
   isSubmitting = false,
 }: HomeLeadFormDialogProps) => {
+  const { t } = useTranslation("home")
+
   const form = useForm<InitLeadSchema>({
     resolver: zodResolver(initLeadSchema),
     defaultValues: {
@@ -71,10 +74,10 @@ const HomeLeadFormDialog = ({
             <UserRound className="h-5 w-5 text-slate-600" />
           </div>
           <DialogTitle className="text-[18px] font-semibold tracking-tight text-slate-950">
-            Hoàn tất thông tin để bắt đầu
+            {t("leadForm.title")}
           </DialogTitle>
           <DialogDescription className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
-            Cần ít nhất một cách liên hệ — email hoặc số điện thoại.
+            {t("leadForm.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -90,13 +93,13 @@ const HomeLeadFormDialog = ({
                 htmlFor="lead-full-name"
                 className="text-[13px] font-medium text-slate-700"
               >
-                Họ và tên <span className="text-red-400">*</span>
+                {t("leadForm.fullName")} <span className="text-red-400">*</span>
               </FieldLabel>
               <FieldContent>
                 <input
                   id="lead-full-name"
                   className={inputClassName}
-                  placeholder="Nguyễn Văn A"
+                  placeholder={t("leadForm.fullNamePlaceholder")}
                   {...form.register("full_name")}
                 />
                 <FieldError errors={[form.formState.errors.full_name]} />
@@ -110,14 +113,14 @@ const HomeLeadFormDialog = ({
                   htmlFor="lead-email"
                   className="text-[13px] font-medium text-slate-700"
                 >
-                  Email
-                </FieldLabel>
+                  {t("leadForm.email")}
+</FieldLabel>
                 <FieldContent>
                   <input
                     id="lead-email"
                     type="email"
                     className={inputClassName}
-                    placeholder="ban@email.com"
+                    placeholder={t("leadForm.emailPlaceholder")}
                     {...form.register("email")}
                   />
                   <FieldError errors={[form.formState.errors.email]} />
@@ -129,13 +132,13 @@ const HomeLeadFormDialog = ({
                   htmlFor="lead-phone"
                   className="text-[13px] font-medium text-slate-700"
                 >
-                  Số điện thoại
+                  {t("leadForm.phone")}
                 </FieldLabel>
                 <FieldContent>
                   <input
                     id="lead-phone"
                     className={inputClassName}
-                    placeholder="0901 234 567"
+                    placeholder={t("leadForm.phonePlaceholder")}
                     {...form.register("phone")}
                   />
                   <FieldError errors={[form.formState.errors.phone]} />
@@ -160,7 +163,7 @@ const HomeLeadFormDialog = ({
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Đóng
+              {t("close", { ns: "common" })}
             </Button>
             <Button
               type="submit"
@@ -170,7 +173,7 @@ const HomeLeadFormDialog = ({
               {isSubmitting ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : null}
-              {isSubmitting ? "Đang tạo..." : "Tiếp tục vào chat"}
+              {isSubmitting ? t("leadForm.submitting") : t("leadForm.submit")}
             </Button>
           </div>
         </form>

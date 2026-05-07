@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import {
   CheckCircle2,
   Eye,
@@ -43,25 +44,22 @@ type WebCrawlerSessionTableProps = {
   onDeleteSession: (session: CrawlSession) => void
 }
 
-const getStatusBadge = (session: CrawlSession) => {
-  if (session.status === "COMPLETED") {
+const getStatusBadge = (session: CrawlSession, t: (key: string) => string) => {
+  if (session.status === "COMPLETED")
     return {
-      label: "Completed",
+      label: t("statusCompleted"),
       icon: CheckCircle2,
       className: "border-emerald-200 bg-emerald-50 text-emerald-700",
     }
-  }
-
-  if (session.status === "FAILED") {
+  if (session.status === "FAILED")
     return {
-      label: "Failed",
+      label: t("statusFailed"),
       icon: XCircle,
       className: "border-red-200 bg-red-50 text-red-600",
     }
-  }
-
   return {
-    label: session.status === "SCRAPING" ? "Scraping" : "Pending",
+    label:
+      session.status === "SCRAPING" ? t("statusScraping") : t("statusPending"),
     icon: Loader2,
     className: "border-amber-200 bg-amber-50 text-amber-700",
   }
@@ -80,6 +78,7 @@ const WebCrawlerSessionTable = ({
   onSelectSession,
   onDeleteSession,
 }: WebCrawlerSessionTableProps) => {
+  const { t } = useTranslation("web-crawler")
   const hasPrev = offset > 0
   const hasNext = offset + limit < total
   const rangeText = useMemo(() => {
@@ -88,17 +87,15 @@ const WebCrawlerSessionTable = ({
   }, [offset, sessions.length])
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">
-            Crawl sessions
+          <h2 className="text-[14px] font-semibold text-slate-900">
+            {t("sessions")}
           </h2>
-          <p className="text-xs text-slate-500">
-            Select a session to review its crawled pages.
-          </p>
+          <p className="text-[12px] text-slate-500">{t("sessionsHint")}</p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading && (
             <Loader2 className="size-3.5 animate-spin" />
           )}
@@ -111,20 +108,20 @@ const WebCrawlerSessionTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
-            <TableHead className="px-5 text-xs font-medium text-slate-500">
-              Target
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
+              {t("target")}
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Pages
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              {t("pages")}
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Limit
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              {t("limit")}
             </TableHead>
-            <TableHead className="text-xs font-medium text-slate-500">
-              Status
+            <TableHead className="text-[11px] font-medium text-slate-500">
+              {t("status")}
             </TableHead>
-            <TableHead className="w-28 pr-5 text-right text-xs font-medium text-slate-500">
-              Actions
+            <TableHead className="w-28 pr-5 text-right text-[11px] font-medium text-slate-500">
+              {t("actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -156,16 +153,16 @@ const WebCrawlerSessionTable = ({
           {!isLoading && sessions.length === 0 && (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={5} className="py-16 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <Globe2 className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      No crawl sessions yet
+                    <p className="text-[13px] font-medium text-slate-900">
+                      {t("noSessions")}
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Start a crawl to create editable page markdown.
+                    <p className="mt-0.5 text-[12px] text-slate-500">
+                      {t("noSessionsHint")}
                     </p>
                   </div>
                 </div>
@@ -175,7 +172,7 @@ const WebCrawlerSessionTable = ({
 
           {!isLoading &&
             sessions.map((session) => {
-              const statusBadge = getStatusBadge(session)
+              const statusBadge = getStatusBadge(session, t)
               const StatusIcon = statusBadge.icon
               const deleting = deletingSessionId === session.id
               const selected = selectedSessionId === session.id
@@ -185,27 +182,27 @@ const WebCrawlerSessionTable = ({
                 <TableRow
                   key={session.id}
                   className={cn(
-                    "cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/70",
-                    selected && "bg-slate-50"
+                    "cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60",
+                    selected && "bg-slate-100"
                   )}
                   onClick={() => onSelectSession(session)}
                 >
                   <TableCell className="px-5 py-3.5">
                     <div className="min-w-0">
-                      <p className="line-clamp-1 max-w-[520px] text-sm font-medium text-slate-900">
+                      <p className="line-clamp-1 max-w-130 text-[13px] font-medium text-slate-900">
                         {session.target_url}
                       </p>
-                      <p className="mt-0.5 text-xs text-slate-400">
+                      <p className="mt-0.5 text-[11px] text-slate-400">
                         {session.created_at
                           ? new Date(session.created_at).toLocaleString()
                           : session.id}
                       </p>
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs text-slate-500">
+                  <TableCell className="text-[12px] text-slate-500">
                     {session.completed_pages}/{session.total_pages}
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-500">
+                  <TableCell className="font-mono text-[12px] text-slate-500">
                     {session.limit}
                   </TableCell>
                   <TableCell>
@@ -228,9 +225,9 @@ const WebCrawlerSessionTable = ({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-lg border-slate-200 text-slate-500 hover:text-slate-900"
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        className="size-8 rounded-lg border-slate-200 bg-white text-slate-500 shadow-none hover:text-slate-900"
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onSelectSession(session)
                         }}
                       >
@@ -240,10 +237,10 @@ const WebCrawlerSessionTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="size-8 rounded-lg border border-red-100 text-red-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                        className="size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                         disabled={deleting}
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           onDeleteSession(session)
                         }}
                       >
@@ -262,21 +259,21 @@ const WebCrawlerSessionTable = ({
       </Table>
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
-          Offset {offset} of {Math.max(total, 0)}
+        <p className="text-[12px] text-slate-500">
+          {t("offsetOf", { offset, total: Math.max(total, 0) })}
         </p>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent className="gap-1">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Prev"
+                text={t("prev")}
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   !hasPrev && "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
+                onClick={(e) => {
+                  e.preventDefault()
                   if (hasPrev) onPageChange(Math.max(0, offset - limit))
                 }}
               />
@@ -284,13 +281,13 @@ const WebCrawlerSessionTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Next"
+                text={t("next")}
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   !hasNext && "pointer-events-none opacity-40"
                 )}
-                onClick={(event) => {
-                  event.preventDefault()
+                onClick={(e) => {
+                  e.preventDefault()
                   if (hasNext) onPageChange(offset + limit)
                 }}
               />

@@ -1,4 +1,5 @@
 import { CalendarDays } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
   Select,
@@ -23,6 +24,8 @@ const DashboardRangeFilter = ({
   rangeLabel,
   onRangePresetChange,
 }: DashboardRangeFilterProps) => {
+  const { t } = useTranslation("dashboard")
+
   return (
     <div className="flex flex-col gap-4 overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)] sm:flex-row sm:items-center sm:justify-between">
       {/* Gold top bar */}
@@ -34,14 +37,14 @@ const DashboardRangeFilter = ({
         </div>
         <div>
           <p className="text-[14px] font-semibold text-slate-900">
-            Thống kê hàng ngày
+            {t("dailyStats")}
           </p>
           <p className="text-[12px] text-slate-500">
-            Bộ lọc áp dụng chung cho{" "}
+            {t("filterDescription")}{" "}
             <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
               daily
             </code>{" "}
-            và{" "}
+            {t("and")}{" "}
             <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
               daily/summary
             </code>
@@ -57,7 +60,7 @@ const DashboardRangeFilter = ({
           }
         >
           <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-            <SelectValue placeholder="Chọn khoảng thời gian" />
+            <SelectValue placeholder={t("selectRange")} />
           </SelectTrigger>
           <SelectContent>
             {DASHBOARD_RANGE_OPTIONS.map((option) => (

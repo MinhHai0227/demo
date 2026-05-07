@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   ArrowUpRight,
   FileText,
@@ -171,6 +172,7 @@ const LeadDetailPanel = ({
   errorMessage,
   onSave,
 }: LeadDetailPanelProps) => {
+  const { t } = useTranslation("leads")
   const [formState, setFormState] = useState<DetailFormState>(() =>
     buildFormState(lead)
   )
@@ -199,7 +201,7 @@ const LeadDetailPanel = ({
           | Record<string, unknown>
           | unknown[]
       } catch {
-        setLocalError("Hoạt động ngoại khóa phải là JSON hợp lệ trước khi lưu.")
+        setLocalError(t("invalidExtracurricularJson"))
         return
       }
     }
@@ -278,15 +280,15 @@ const LeadDetailPanel = ({
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <Mail className="size-3.5 text-slate-400" />
-                  {lead.email || "Chưa có email"}
+                  {lead.email || t("noEmail")}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Phone className="size-3.5 text-slate-400" />
-                  {lead.phone || "Chưa có số điện thoại"}
+                  {lead.phone || t("noPhone")}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="size-3.5 text-slate-400" />
-                  {lead.province || "Chưa có tỉnh/thành"}
+                  {lead.province || t("noProvince")}
                 </span>
               </div>
             </div>
@@ -322,7 +324,7 @@ const LeadDetailPanel = ({
                 className="rounded-full border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700"
               >
                 <Sparkles className="size-3" />
-                Điểm {lead.score ?? 0}
+                {t("scoreValue", { score: lead.score ?? 0 })}
               </Badge>
             </div>
           </div>
@@ -331,20 +333,20 @@ const LeadDetailPanel = ({
         <div className="grid gap-3 px-5 py-4 sm:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
             <p className="text-xs font-medium text-slate-500">
-              Tương tác gần nhất
+              {t("lastInteraction")}
             </p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.last_interaction_at)}
             </p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-            <p className="text-xs font-medium text-slate-500">Ngày tạo</p>
+            <p className="text-xs font-medium text-slate-500">{t("dateCreated")}</p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.created_at)}
             </p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-            <p className="text-xs font-medium text-slate-500">Cập nhật</p>
+            <p className="text-xs font-medium text-slate-500">{t("updatedAt")}</p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.updated_at)}
             </p>
@@ -355,9 +357,9 @@ const LeadDetailPanel = ({
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">Hồ sơ lead</h3>
+            <h3 className="text-sm font-semibold text-slate-900">{t("leadProfile")}</h3>
             <p className="text-xs text-slate-500">
-              Cập nhật thông tin hồ sơ và các chỉ số chấm điểm của lead.
+              {t("leadProfileDescription")}
             </p>
           </div>
 
@@ -368,7 +370,7 @@ const LeadDetailPanel = ({
             onClick={handleSave}
           >
             {savePending ? <Loader2 className="size-3.5 animate-spin" /> : null}
-            Lưu lead
+            {t("saveLead")}
           </Button>
         </div>
 
@@ -381,12 +383,12 @@ const LeadDetailPanel = ({
         <div className="mt-5 space-y-5">
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Thông tin liên hệ
+              {t("contactInfo")}
             </h4>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Họ và tên
+                  {t("fullName")}
                 </p>
                 <Input
                   value={formState.full_name}
@@ -398,7 +400,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Email
+                  {t("email")}
                 </p>
                 <Input
                   value={formState.email}
@@ -410,7 +412,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Số điện thoại
+                  {t("phone")}
                 </p>
                 <Input
                   value={formState.phone}
@@ -422,7 +424,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Tỉnh/thành
+                  {t("province")}
                 </p>
                 <Input
                   value={formState.province}
@@ -434,7 +436,7 @@ const LeadDetailPanel = ({
               </div>
               <div className="md:col-span-2">
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Trường THPT
+                  {t("highSchool")}
                 </p>
                 <Input
                   value={formState.high_school}
@@ -451,18 +453,18 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Trạng thái lead
+              {t("leadStatus")}
             </h4>
             <div className="mt-3 max-w-xs">
               <p className="mb-1.5 text-xs font-medium text-slate-500">
-                Trạng thái
+                {t("status")}
               </p>
               <Select
                 value={statusDraft}
                 onValueChange={(value) => setStatusDraft(value as LeadStatus)}
               >
                 <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-                  <SelectValue placeholder="Chọn trạng thái" />
+                  <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
                   {leadStatusOptions.map((item) => (
@@ -473,7 +475,7 @@ const LeadDetailPanel = ({
                 </SelectContent>
               </Select>
               <p className="mt-2 text-xs text-slate-400">
-                Trạng thái sẽ được lưu cùng các thông tin còn lại của lead.
+                {t("statusSaveNote")}
               </p>
             </div>
           </div>
@@ -482,12 +484,12 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Tín hiệu học thuật
+              {t("academicSignals")}
             </h4>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Mức độ quan tâm
+                  {t("temperature")}
                 </p>
                 <Select
                   value={formState.temperature}
@@ -499,11 +501,11 @@ const LeadDetailPanel = ({
                   }
                 >
                   <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-                    <SelectValue placeholder="Chưa có mức độ quan tâm" />
+                    <SelectValue placeholder={t("noTemperature")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="NONE">
-                      Chưa có mức độ quan tâm
+                      {t("noTemperature")}
                     </SelectItem>
                     {leadTemperatureOptions.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
@@ -568,12 +570,12 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Hồ sơ và tài liệu
+              {t("documents")}
             </h4>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  CV URL
+                  {t("cvUrl")}
                 </p>
                 <Input
                   value={formState.cv_url}
@@ -585,7 +587,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  URL bài luận
+                  {t("essayUrl")}
                 </p>
                 <Input
                   value={formState.essay_url}
@@ -597,7 +599,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  URL bảng điểm
+                  {t("transcriptUrl")}
                 </p>
                 <Input
                   value={formState.transcript_url}
@@ -614,12 +616,12 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Chỉ số chấm điểm
+              {t("scoringIndices")}
             </h4>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Năng lực
+                  {t("ability")}
                 </p>
                 <Input
                   value={formState.ability_score}
@@ -633,7 +635,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Khát vọng
+                  {t("aspiration")}
                 </p>
                 <Input
                   value={formState.aspiration_score}
@@ -647,7 +649,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Sáng tạo
+                  {t("creativity")}
                 </p>
                 <Input
                   value={formState.creativity_score}
@@ -661,7 +663,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Cam kết
+                  {t("commitment")}
                 </p>
                 <Input
                   value={formState.commitment_score}
@@ -675,7 +677,7 @@ const LeadDetailPanel = ({
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-medium text-slate-500">
-                  Độ phù hợp
+                  {t("fit")}
                 </p>
                 <Input
                   value={formState.fit_score}
@@ -694,11 +696,11 @@ const LeadDetailPanel = ({
 
           <div>
             <h4 className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
-              Hoạt động ngoại khóa JSON
+              {t("extracurricularJson")}
             </h4>
             <textarea
               value={formState.extracurriculars}
-              placeholder='Ví dụ: [{"club":"Debate","role":"Leader"}]'
+              placeholder={t("extracurricularsPlaceholder")}
               className={cn(textareaClassName, "mt-3")}
               onChange={(event) =>
                 handleFieldChange("extracurriculars", event.target.value)
@@ -713,7 +715,7 @@ const LeadDetailPanel = ({
           <div className="flex items-center gap-2">
             <GraduationCap className="size-4 text-slate-500" />
             <h3 className="text-sm font-semibold text-slate-900">
-              Ngành quan tâm
+              {t("interestedMajors")}
             </h3>
           </div>
 
@@ -726,7 +728,7 @@ const LeadDetailPanel = ({
 
             {!interestsPending && interests.length === 0 ? (
               <p className="text-sm text-slate-500">
-                Chưa ghi nhận ngành quan tâm.
+                {t("noInterests")}
               </p>
             ) : null}
 
@@ -739,7 +741,7 @@ const LeadDetailPanel = ({
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-slate-900">
-                          {item.major_name || "Chưa rõ ngành"}
+                          {item.major_name || t("unknownMajor")}
                         </p>
                         <p className="mt-1 text-xs tracking-[0.18em] text-slate-400 uppercase">
                           {item.major_code || item.major_id}
@@ -749,7 +751,7 @@ const LeadDetailPanel = ({
                         variant="outline"
                         className="rounded-full border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700"
                       >
-                        Ưu tiên {item.priority ?? 0}
+                        {t("priority", { priority: item.priority ?? 0 })}
                       </Badge>
                     </div>
                   </div>
@@ -762,7 +764,7 @@ const LeadDetailPanel = ({
           <div className="flex items-center gap-2">
             <FileText className="size-4 text-slate-500" />
             <h3 className="text-sm font-semibold text-slate-900">
-              Hồ sơ ứng tuyển
+              {t("applications")}
             </h3>
           </div>
 
@@ -775,7 +777,7 @@ const LeadDetailPanel = ({
 
             {!applicationsPending && applications.length === 0 ? (
               <p className="text-sm text-slate-500">
-                Chưa có hồ sơ ứng tuyển gắn với lead này.
+                {t("noApplications")}
               </p>
             ) : null}
 
@@ -791,7 +793,7 @@ const LeadDetailPanel = ({
                           {admissionStageLabelMap[item.stage]}
                         </p>
                         <p className="mt-1 text-xs text-slate-500">
-                          Năm tuyển sinh {item.admission_year}
+                          {t("admissionYear", { year: item.admission_year })}
                         </p>
                       </div>
                       <Badge
@@ -799,17 +801,17 @@ const LeadDetailPanel = ({
                         className="rounded-full border-slate-200 bg-white px-2.5 py-0.5 text-[11px] font-medium text-slate-700"
                       >
                         <Trophy className="size-3" />
-                        {item.round_name || "Vòng mặc định"}
+                        {item.round_name || t("defaultRound")}
                       </Badge>
                     </div>
 
                     <div className="mt-3 space-y-1.5 text-xs text-slate-500">
                       <p className="inline-flex items-center gap-1.5">
                         <ArrowUpRight className="size-3.5" />
-                        {item.source_channel || "Chưa có kênh nguồn"}
+                        {item.source_channel || t("noSourceChannel")}
                       </p>
-                      <p>Mã ngành: {item.major_id}</p>
-                      <p>Cập nhật: {formatDateOnly(item.updated_at)}</p>
+                      <p>{t("majorCode")}: {item.major_id}</p>
+                      <p>{t("updatedAt")}: {formatDateOnly(item.updated_at)}</p>
                     </div>
 
                     {item.note ? (

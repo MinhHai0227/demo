@@ -1,4 +1,11 @@
-import { ExternalLink, FileText, Loader2, Save, SendHorizontal } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import {
+  ExternalLink,
+  FileText,
+  Loader2,
+  Save,
+  SendHorizontal,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -81,6 +88,7 @@ const WebCrawlerPreviewDialog = ({
   onSave,
   onSendToKb,
 }: WebCrawlerPreviewDialogProps) => {
+  const { t } = useTranslation("web-crawler")
   const isDirty = draftContent !== content
   const isSent = Boolean(pageJob?.sent_to_kb)
   const canSave = Boolean(draftContent.trim()) && isDirty && !isSent
@@ -91,30 +99,34 @@ const WebCrawlerPreviewDialog = ({
     pageJob?.title ||
     pageJob?.detected_title ||
     pageJob?.suggested_metadata?.title ||
-    "Crawled page preview"
+    t("crawledPagePreview")
+
+  const inputCls =
+    "h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0 disabled:opacity-60"
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[92vh] max-w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-6xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-6 py-5">
+      <DialogContent className="flex max-h-[92vh] max-w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-6xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-start gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <FileText className="size-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <DialogTitle className="truncate text-base font-semibold text-slate-900">
+              <DialogTitle className="truncate text-[15px] font-semibold text-slate-900">
                 {displayTitle}
               </DialogTitle>
-              <DialogDescription className="truncate text-xs text-slate-500">
-                Edit markdown, then choose final metadata before sending this
-                page to Knowledge Base.
+              <DialogDescription className="truncate text-[12px] text-slate-500">
+                {t("previewHint")}
               </DialogDescription>
               {pageJob?.source_url && (
                 <a
                   href={pageJob.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-flex max-w-full items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                  className="mt-1.5 inline-flex max-w-full items-center gap-1 text-[11px] text-blue-600 hover:text-blue-700"
                 >
                   <ExternalLink className="size-3" />
                   <span className="truncate">{pageJob.source_url}</span>
@@ -125,26 +137,26 @@ const WebCrawlerPreviewDialog = ({
         </DialogHeader>
 
         <div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden">
+          {/* Controls */}
           <div className="border-b border-slate-100 bg-slate-50/60 px-6 py-4">
             <FieldGroup className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)_7rem_7rem_7rem_7rem]">
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  KB title
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("kbTitle")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     value={title}
                     disabled={isSent}
-                    placeholder="Final title for Knowledge Base"
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
-                    onChange={(event) => onTitleChange(event.target.value)}
+                    placeholder={t("kbTitlePlaceholder")}
+                    className={inputCls}
+                    onChange={(e) => onTitleChange(e.target.value)}
                   />
                 </FieldContent>
               </Field>
-
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Category
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("category")}
                 </FieldLabel>
                 <FieldContent>
                   <Select
@@ -152,8 +164,8 @@ const WebCrawlerPreviewDialog = ({
                     disabled={isSent}
                     onValueChange={onCategoryChange}
                   >
-                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-none">
-                      <SelectValue placeholder="Select category" />
+                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0 disabled:opacity-60">
+                      <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -165,10 +177,9 @@ const WebCrawlerPreviewDialog = ({
                   </Select>
                 </FieldContent>
               </Field>
-
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Year
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("year")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -176,16 +187,15 @@ const WebCrawlerPreviewDialog = ({
                     min={2000}
                     value={year}
                     disabled={isSent}
-                    placeholder="Optional"
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
-                    onChange={(event) => onYearChange(event.target.value)}
+                    placeholder={t("optional")}
+                    className={inputCls}
+                    onChange={(e) => onYearChange(e.target.value)}
                   />
                 </FieldContent>
               </Field>
-
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Version
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("version")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -193,17 +203,14 @@ const WebCrawlerPreviewDialog = ({
                     min={1}
                     value={versionStart}
                     disabled={isSent}
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
-                    onChange={(event) =>
-                      onVersionStartChange(event.target.value)
-                    }
+                    className={inputCls}
+                    onChange={(e) => onVersionStartChange(e.target.value)}
                   />
                 </FieldContent>
               </Field>
-
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Chunk
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("chunk")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -212,15 +219,14 @@ const WebCrawlerPreviewDialog = ({
                     max={5000}
                     value={chunkSize}
                     disabled={isSent}
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
-                    onChange={(event) => onChunkSizeChange(event.target.value)}
+                    className={inputCls}
+                    onChange={(e) => onChunkSizeChange(e.target.value)}
                   />
                 </FieldContent>
               </Field>
-
               <Field>
-                <FieldLabel className="text-xs font-medium text-slate-600">
-                  Overlap
+                <FieldLabel className="text-[12px] font-medium text-slate-600">
+                  {t("overlap")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -229,66 +235,62 @@ const WebCrawlerPreviewDialog = ({
                     max={500}
                     value={chunkOverlap}
                     disabled={isSent}
-                    className="h-10 rounded-xl border-slate-200 bg-white text-sm shadow-none"
-                    onChange={(event) =>
-                      onChunkOverlapChange(event.target.value)
-                    }
+                    className={inputCls}
+                    onChange={(e) => onChunkOverlapChange(e.target.value)}
                   />
                 </FieldContent>
               </Field>
             </FieldGroup>
           </div>
 
+          {/* Editor */}
           <div className="min-h-0 px-6 py-4">
             {isLoading ? (
-              <div className="flex h-[min(50vh,460px)] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500">
+              <div className="flex h-[min(50vh,460px)] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 text-[13px] text-slate-500">
                 <Loader2 className="mr-2 size-4 animate-spin" />
-                Loading markdown...
+                {t("loadingMarkdown")}
               </div>
             ) : (
               <textarea
                 value={draftContent}
                 spellCheck={false}
                 disabled={isSent}
-                className="h-[min(50vh,460px)] w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm leading-6 text-slate-800 shadow-none outline-none transition focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
-                onChange={(event) =>
-                  onDraftContentChange(event.target.value)
-                }
+                className="h-[min(50vh,460px)] w-full resize-none rounded-xl border border-slate-200 bg-slate-50/80 p-4 font-mono text-[13px] leading-relaxed text-slate-800 transition outline-none focus:border-slate-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-70"
+                onChange={(e) => onDraftContentChange(e.target.value)}
               />
             )}
-
             {errorMessage && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-600">
+              <div className="mt-3 rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
                 {errorMessage}
               </div>
             )}
           </div>
         </div>
 
+        {/* Footer */}
         <div className="flex flex-col gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-xs text-slate-500">
+          <p className="text-[12px] text-slate-500">
             {isSent
-              ? "This page has already been sent to the knowledge base."
+              ? t("pageAlreadySent")
               : isDirty
-                ? "Save markdown changes before sending to KB."
-                : "Markdown is saved and ready to send."}
-          </div>
-
+                ? t("saveBeforeSend")
+                : t("markdownReady")}
+          </p>
           <div className="flex flex-wrap justify-end gap-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-sm text-slate-600"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
               onClick={() => onOpenChange(false)}
             >
-              Close
+              {t("close")}
             </Button>
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-sm text-slate-700"
+              className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-700 shadow-none hover:bg-slate-50"
               disabled={!canSave || isSaving}
               onClick={onSave}
             >
@@ -297,12 +299,12 @@ const WebCrawlerPreviewDialog = ({
               ) : (
                 <Save className="size-3.5" />
               )}
-              Save markdown
+              {t("saveMarkdown")}
             </Button>
             <Button
               type="button"
               size="sm"
-              className="rounded-xl text-sm"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
               disabled={!canSend || isSending}
               onClick={onSendToKb}
             >
@@ -311,7 +313,7 @@ const WebCrawlerPreviewDialog = ({
               ) : (
                 <SendHorizontal className="size-3.5" />
               )}
-              Send to KB
+              {t("sendToKbBtn")}
             </Button>
           </div>
         </div>

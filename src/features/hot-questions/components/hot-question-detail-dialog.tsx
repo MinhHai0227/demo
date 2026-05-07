@@ -1,4 +1,5 @@
 import { FileSearch, Loader2, MessageSquareQuote } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -36,6 +37,7 @@ const HotQuestionDetailDialog = ({
   sourcesError = "",
   onOpenChange,
 }: HotQuestionDetailDialogProps) => {
+  const { t } = useTranslation("hot-questions")
   const hasAssistantMessage = Boolean(detail?.last_assistant_message_id)
   const sourceItems = sources?.items ?? []
 
@@ -50,10 +52,10 @@ const HotQuestionDetailDialog = ({
 
             <div className="min-w-0 flex-1">
               <DialogTitle className="text-base font-semibold text-slate-950">
-                Nguồn dữ liệu
+                {t("detailTitle")}
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Các chunk được dùng cho câu trả lời gần nhất của trợ lý.
+                {t("detailDescription")}
               </DialogDescription>
             </div>
 
@@ -62,7 +64,7 @@ const HotQuestionDetailDialog = ({
                 variant="outline"
                 className="shrink-0 border-slate-200 bg-white text-xs text-slate-500"
               >
-                Đang tải
+                {t("loading")}
               </Badge>
             ) : null}
           </div>
@@ -85,10 +87,10 @@ const HotQuestionDetailDialog = ({
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-950">
-                      Chunk nguồn
+                      {t("sourceChunks")}
                     </p>
                     <p className="text-xs text-slate-500">
-                      Message ID: {detail.last_assistant_message_id ?? "--"}
+                      {t("messageIdLabel")} {detail.last_assistant_message_id ?? "--"}
                     </p>
                   </div>
                 </div>
@@ -99,21 +101,21 @@ const HotQuestionDetailDialog = ({
                     className="w-fit shrink-0 gap-1 border-slate-200 bg-white text-xs text-slate-500"
                   >
                     <Loader2 className="size-3 animate-spin" />
-                    Đang tải
+                    {t("loading")}
                   </Badge>
                 ) : (
                   <Badge
                     variant="outline"
                     className="w-fit shrink-0 border-slate-200 bg-white text-xs text-slate-500"
                   >
-                    {sourceItems.length} chunk
+                    {t("chunkCount", { count: sourceItems.length })}
                   </Badge>
                 )}
               </div>
 
               {!hasAssistantMessage ? (
                 <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
-                  Chưa có assistant message gắn với hot question này.
+                  {t("noAssistantMessage")}
                 </div>
               ) : sourcesError ? (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
@@ -139,7 +141,7 @@ const HotQuestionDetailDialog = ({
                               variant="outline"
                               className="rounded-full border-slate-200 bg-slate-50 text-[11px] text-slate-700"
                             >
-                              Hạng {item.rank ?? index + 1}
+                              {t("rankLabel", { rank: item.rank ?? index + 1 })}
                             </Badge>
 
                             {item.category ? (
@@ -153,13 +155,13 @@ const HotQuestionDetailDialog = ({
 
                             {item.score !== null ? (
                               <span className="font-mono text-[11px] text-slate-500">
-                                điểm {item.score.toFixed(3)}
+                                {t("scoreLabel", { score: item.score.toFixed(3) })}
                               </span>
                             ) : null}
                           </div>
 
                           <p className="wrap-break-word text-xs text-slate-500">
-                            {item.source ?? "Nguồn không xác định"}
+                            {item.source ?? t("unknownSource")}
                           </p>
                         </div>
                       </div>
@@ -172,13 +174,13 @@ const HotQuestionDetailDialog = ({
                 </div>
               ) : (
                 <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
-                  Assistant message này chưa có chunk được ghi nhận.
+                  {t("noChunksRecorded")}
                 </div>
               )}
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-10 text-center text-xs text-slate-500">
-              Chọn một câu hỏi trong bảng để xem chi tiết.
+              {t("selectQuestionHint")}
             </div>
           )}
         </div>

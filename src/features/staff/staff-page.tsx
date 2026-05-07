@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import StaffDeleteDialog from "@/features/staff/components/staff-delete-dialog"
 import StaffFormDialog from "@/features/staff/components/staff-form-dialog"
@@ -11,6 +12,7 @@ import type { Staff, StaffListParams, StaffRole } from "@/types/staff-type"
 const PAGE_SIZE = 4
 
 const StaffPage = () => {
+  const { t } = useTranslation("staff")
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
   const [roleFilter, setRoleFilter] = useState<StaffRole | "ALL">("ALL")
@@ -100,7 +102,7 @@ const StaffPage = () => {
       setDialogError(
         error instanceof Error
           ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
+          : t("genericError")
       )
     }
   }
@@ -117,7 +119,7 @@ const StaffPage = () => {
       setActionError(
         error instanceof Error
           ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
+          : t("genericError")
       )
     } finally {
       setTogglingStaffId(null)
@@ -143,7 +145,7 @@ const StaffPage = () => {
       setActionError(
         error instanceof Error
           ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
+          : t("genericError")
       )
     }
   }
@@ -158,10 +160,8 @@ const StaffPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[18px] font-semibold text-slate-950">Nhân viên</h1>
-        <p className="text-[13px] text-slate-500">
-          Quản lý tài khoản admin và counselor trong nhóm tuyển sinh.
-        </p>
+        <h1 className="text-[18px] font-semibold text-slate-950">{t("title")}</h1>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <StaffToolbar

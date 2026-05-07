@@ -1,4 +1,5 @@
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
   AlertDialog,
@@ -27,6 +28,7 @@ const MajorDeleteDialog = ({
   onOpenChange,
   onConfirm,
 }: MajorDeleteDialogProps) => {
+  const { t } = useTranslation("major")
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200 p-0">
@@ -38,13 +40,13 @@ const MajorDeleteDialog = ({
 
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-base font-semibold text-slate-900">
-              Xóa ngành học này?
+              {t("deleteTitle")}
             </AlertDialogTitle>
 
             <AlertDialogDescription className="text-xs leading-relaxed text-slate-500">
               {major
-                ? `Thao tác này sẽ xóa vĩnh viễn ngành ${major.name} (${major.code}) nếu không còn được tham chiếu ở nơi khác.`
-                : "Thao tác này sẽ xóa vĩnh viễn ngành học đã chọn."}
+                ? t("deleteWarning", { name: major.name, code: major.code })
+                : t("deleteWarningGeneric")}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
@@ -55,7 +57,7 @@ const MajorDeleteDialog = ({
             disabled={isDeleting}
             className="h-9 rounded-xl border-slate-200 text-sm text-slate-600"
           >
-            Hủy
+            {t("cancel")}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -66,12 +68,12 @@ const MajorDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang xóa...
+                {t("deleting")}
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Xóa ngành
+                {t("deleteMajor")}
               </>
             )}
           </AlertDialogAction>

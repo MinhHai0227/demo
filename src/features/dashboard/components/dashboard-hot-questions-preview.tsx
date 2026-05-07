@@ -1,4 +1,5 @@
 import { ArrowRight, MessageSquareQuote } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import { Badge } from "@/components/ui/badge"
@@ -18,6 +19,8 @@ const DashboardHotQuestionsPreview = ({
   isLoading,
   isFetching,
 }: DashboardHotQuestionsPreviewProps) => {
+  const { t } = useTranslation("dashboard")
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
       <div className="absolute inset-x-0 top-0 h-[2.5px] bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
@@ -26,10 +29,10 @@ const DashboardHotQuestionsPreview = ({
       <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3.5 pt-5">
         <div>
           <h2 className="text-[13px] font-semibold text-slate-900">
-            Câu hỏi nổi bật
+            {t("hotQuestions")}
           </h2>
           <p className="text-[11px] text-slate-500">
-            Top 5 câu hỏi được hỏi nhiều nhất
+            {t("top5HotQuestions")}
           </p>
         </div>
         <Button
@@ -39,7 +42,7 @@ const DashboardHotQuestionsPreview = ({
           className="h-7 gap-1 rounded-lg px-2.5 text-[12px]"
         >
           <Link to="/admin/hot-questions">
-            Xem tất cả
+            {t("viewAll")}
             <ArrowRight className="size-3" />
           </Link>
         </Button>
@@ -74,17 +77,17 @@ const DashboardHotQuestionsPreview = ({
                         variant="outline"
                         className="shrink-0 border-slate-200 text-[9px] text-slate-400"
                       >
-                        đang cập nhật
+                        {t("updating")}
                       </Badge>
                     ) : null}
                   </div>
 
                   <div className="mt-1.5 flex flex-wrap items-center gap-1">
                     <span className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-medium text-slate-600">
-                      {item.intent ?? "Không có intent"}
+                      {item.intent ?? t("noIntent")}
                     </span>
                     <span className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-medium text-slate-600">
-                      {item.count} lượt hỏi
+                      {t("timesAsked", { count: item.count })}
                     </span>
                     <span
                       className={cn(
@@ -94,7 +97,7 @@ const DashboardHotQuestionsPreview = ({
                           : "bg-emerald-50 text-emerald-700"
                       )}
                     >
-                      {item.is_fallback ? "Fallback" : "Đã trả lời"}
+                      {item.is_fallback ? t("fallbacks") : t("answered")}
                     </span>
                   </div>
                 </div>
@@ -107,7 +110,7 @@ const DashboardHotQuestionsPreview = ({
               <MessageSquareQuote className="size-4 text-slate-400" />
             </div>
             <p className="text-[12px] text-slate-500">
-              Chưa có câu hỏi nổi bật để hiển thị.
+              {t("noHotQuestions")}
             </p>
           </div>
         )}

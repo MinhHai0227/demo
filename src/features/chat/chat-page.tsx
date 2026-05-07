@@ -26,10 +26,12 @@ import {
 } from "@tanstack/react-query"
 import { useDeferredValue, useState } from "react"
 import { useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 const PAGE_SIZE = 30
 
 const ChatPage = () => {
+  const { t } = useTranslation("chat")
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
   const currentUser = useAuthStore((state) => state.user)
@@ -172,7 +174,7 @@ const ChatPage = () => {
         content,
       })
     } catch (error) {
-      setActionError(getErrorMessage(error, "Không gửi được tin nhắn."))
+      setActionError(getErrorMessage(error, t("sendError")))
     }
   }
 
@@ -187,7 +189,7 @@ const ChatPage = () => {
         status,
       })
     } catch (error) {
-      setActionError(getErrorMessage(error, "Không cập nhật được trạng thái."))
+      setActionError(getErrorMessage(error, t("statusUpdateError")))
     }
   }
 
@@ -254,7 +256,7 @@ const ChatPage = () => {
           updateLeadMutation.error
             ? getErrorMessage(
                 updateLeadMutation.error,
-                "Không thể cập nhật lead lúc này."
+                t("leadUpdateError")
               )
             : null
         }

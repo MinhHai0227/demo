@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 
+import { useTranslation } from "react-i18next"
+
 import {
   getConversationStats,
   getConversionFunnel,
@@ -28,6 +30,7 @@ const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback
 
 const DashboardPage = () => {
+  const { t } = useTranslation("dashboard")
   const [rangePreset, setRangePreset] = useState<DashboardRangePreset>("today")
   const [dailyOffset, setDailyOffset] = useState(0)
   const [detailTargetDate, setDetailTargetDate] = useState<string | null>(null)
@@ -109,18 +112,8 @@ const DashboardPage = () => {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h1 className="text-[18px] font-semibold text-slate-950">Dashboard</h1>
-        <p className="text-[13px] text-slate-500">
-          Theo dõi thống kê hàng ngày với bộ lọc dùng chung cho{" "}
-          <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-600">
-            daily
-          </code>{" "}
-          và{" "}
-          <code className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-600">
-            daily/summary
-          </code>
-          , kèm xem nhanh top câu hỏi nổi bật.
-        </p>
+        <h1 className="text-[18px] font-semibold text-slate-950">{t("title")}</h1>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <DashboardRangeFilter

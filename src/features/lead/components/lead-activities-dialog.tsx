@@ -1,4 +1,5 @@
 import { Activity, Loader2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -55,6 +56,7 @@ const LeadActivitiesDialog = ({
   onOpenChange,
   onPageChange,
 }: LeadActivitiesDialogProps) => {
+  const { t } = useTranslation("leads")
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const pageItems = buildPageItems(currentPage, totalPages)
@@ -69,10 +71,10 @@ const LeadActivitiesDialog = ({
             </div>
             <div>
               <DialogTitle className="text-base font-semibold text-slate-950">
-                {lead?.full_name || "Lead"} - hoạt động
+                {lead?.full_name || t("lead")} - {t("activities")}
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Xem lịch sử tương tác và các thay đổi điểm của lead này.
+                {t("activitiesDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -80,13 +82,13 @@ const LeadActivitiesDialog = ({
 
         <div className="max-h-[calc(100vh-14rem)] overflow-y-auto px-6 py-5">
           <div className="mb-4 flex items-center justify-between text-xs text-slate-500">
-            <span>Tổng cộng {total} hoạt động</span>
+            <span>{t("totalActivities", { count: total })}</span>
             <span className="inline-flex items-center gap-2">
               {isFetching && !isLoading ? (
                 <Loader2 className="size-3.5 animate-spin" />
               ) : null}
               {activities.length ? offset + 1 : 0}-{offset + activities.length}{" "}
-              trên {total}
+              {t("outOf")} {total}
             </span>
           </div>
 
@@ -100,10 +102,10 @@ const LeadActivitiesDialog = ({
             {!isLoading && activities.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-4 py-10 text-center">
                 <p className="text-sm font-medium text-slate-900">
-                  Chưa có lịch sử hoạt động
+                  {t("noActivities")}
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Các thay đổi điểm và tương tác của lead sẽ hiển thị tại đây.
+                  {t("noActivitiesHint")}
                 </p>
               </div>
             ) : null}
@@ -150,7 +152,7 @@ const LeadActivitiesDialog = ({
 
         <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4 md:flex-row md:items-center md:justify-between">
           <p className="text-xs text-slate-500">
-            Trang {currentPage} / {totalPages}
+            {t("page", { current: currentPage, total: totalPages })}
           </p>
 
           <Pagination className="mx-0 w-auto justify-end">
@@ -158,7 +160,7 @@ const LeadActivitiesDialog = ({
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
-                  text="Trước"
+                  text={t("prev")}
                   className={cn(
                     "h-8 rounded-lg px-3 text-xs",
                     currentPage === 1 && "pointer-events-none opacity-40"
@@ -189,7 +191,7 @@ const LeadActivitiesDialog = ({
               <PaginationItem>
                 <PaginationNext
                   href="#"
-                  text="Sau"
+                  text={t("next")}
                   className={cn(
                     "h-8 rounded-lg px-3 text-xs",
                     currentPage === totalPages &&

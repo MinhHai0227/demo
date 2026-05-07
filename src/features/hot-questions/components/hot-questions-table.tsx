@@ -1,4 +1,5 @@
 import { Loader2, MessageSquareQuote, Sparkles } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -58,6 +59,7 @@ const HotQuestionsTable = ({
   onPageChange,
   onSelect,
 }: HotQuestionsTableProps) => {
+  const { t } = useTranslation("hot-questions")
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const pageItems = buildPageItems(currentPage, totalPages)
@@ -67,10 +69,10 @@ const HotQuestionsTable = ({
       <div className="flex flex-col gap-2 border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-sm font-semibold text-slate-950">
-            Danh sách câu hỏi nổi bật
+            {t("table")}
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            Tổng cộng {total} câu hỏi trong hệ thống
+            {t("totalQuestions", { count: total })}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ const HotQuestionsTable = ({
             <Loader2 className="size-3.5 animate-spin text-slate-400" />
           ) : null}
           <span>
-            {items.length ? offset + 1 : 0}-{offset + items.length} trên {total}
+            {items.length ? offset + 1 : 0}-{offset + items.length} / {total}
           </span>
         </div>
       </div>
@@ -88,19 +90,19 @@ const HotQuestionsTable = ({
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/70 hover:bg-slate-50/70">
             <TableHead className="px-5 text-xs font-semibold text-slate-500">
-              Câu hỏi
+              {t("question")}
             </TableHead>
             <TableHead className="text-xs font-semibold text-slate-500">
-              Intent
+              {t("intent")}
             </TableHead>
             <TableHead className="text-xs font-semibold text-slate-500">
-              Trạng thái
+              {t("fallback")}
             </TableHead>
             <TableHead className="text-xs font-semibold text-slate-500">
-              Lượt hỏi
+              {t("count")}
             </TableHead>
             <TableHead className="pr-5 text-xs font-semibold text-slate-500">
-              Lần hỏi gần nhất
+              {t("lastAsked")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -143,10 +145,10 @@ const HotQuestionsTable = ({
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">
-                      Không tìm thấy câu hỏi nổi bật
+                      {t("notFoundTable")}
                     </p>
                     <p className="mt-0.5 text-xs leading-5 text-slate-500">
-                      Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc hiện tại.
+                      {t("notFoundHint")}
                     </p>
                   </div>
                 </div>
@@ -179,7 +181,7 @@ const HotQuestionsTable = ({
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
                             <span>
-                              {item.normalized || "Chưa có nội dung chuẩn hóa"}
+                              {item.normalized || t("normalizedMissing")}
                             </span>
                           </div>
                         </div>
@@ -191,7 +193,7 @@ const HotQuestionsTable = ({
                         variant="outline"
                         className="rounded-full border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-700"
                       >
-                        {item.intent ?? "Không xác định"}
+                        {item.intent ?? t("unknownIntent")}
                       </Badge>
                     </TableCell>
 
@@ -205,7 +207,7 @@ const HotQuestionsTable = ({
                             : "border-emerald-200 bg-emerald-50 text-emerald-700"
                         )}
                       >
-                        {item.is_fallback ? "Fallback" : "Đã trả lời"}
+                        {item.is_fallback ? t("fallbackStatus") : t("answeredStatus")}
                       </Badge>
                     </TableCell>
 
@@ -225,7 +227,7 @@ const HotQuestionsTable = ({
 
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-xs text-slate-500">
-          Trang {currentPage} / {totalPages}
+          {t("page", { current: currentPage, total: totalPages })}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -233,7 +235,7 @@ const HotQuestionsTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Trước"
+                text={t("prev")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -264,7 +266,7 @@ const HotQuestionsTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Sau"
+                text={t("next")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-xs",
                   currentPage === totalPages && "pointer-events-none opacity-40"

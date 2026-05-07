@@ -3,11 +3,13 @@ type StaffLoginRequest = {
   password: string
 }
 
+type UserRole = "ADMIN" | "COUNSELOR"
+
 type AuthUser = {
   sub: string
   name: string
   email: string
-  role: string
+  role: UserRole
 }
 
 type StaffLoginResponse = {
@@ -15,4 +17,4 @@ type StaffLoginResponse = {
   user: AuthUser
 }
 
-export type { StaffLoginRequest, AuthUser, StaffLoginResponse }
+export type { StaffLoginRequest, AuthUser, StaffLoginResponse, UserRole }

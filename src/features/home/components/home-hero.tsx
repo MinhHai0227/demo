@@ -1,4 +1,5 @@
 import { Sparkles, Send } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
 const TELEGRAM_BOT_URL = "https://t.me/vinunitele_bot"
@@ -9,25 +10,11 @@ type HomeHighlight = {
   description: string
 }
 
-const highlights: HomeHighlight[] = [
-  {
-    label: "Phản hồi",
-    value: "~30 giây",
-    description: "Trả lời nhanh các câu hỏi tuyển sinh phổ biến.",
-  },
-  {
-    label: "Nội dung",
-    value: "24/7",
-    description: "Sẵn sàng hỗ trợ thông tin chương trình, học phí và hồ sơ.",
-  },
-  {
-    label: "Tư vấn",
-    value: "1:1",
-    description: "Gợi ý lộ trình hỏi đáp trước khi liên hệ bộ phận admissions.",
-  },
-]
-
 const HomeHero = () => {
+  const { t } = useTranslation("home")
+
+  const highlights: HomeHighlight[] = (t("hero.highlights", { returnObjects: true }) as unknown as HomeHighlight[])
+
   return (
     <div className="flex h-full min-h-0 flex-col justify-between gap-8 py-2 lg:gap-10 lg:py-4">
       {/* Top content */}
@@ -35,16 +22,16 @@ const HomeHero = () => {
         {/* Badge */}
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d6ae4e]/30 bg-[#d6ae4e]/8 px-4 py-2 text-[13px] font-medium text-[#a07c24] shadow-[0_1px_3px_rgba(214,174,78,0.12)]">
           <Sparkles className="h-3.5 w-3.5 text-[#d6ae4e]" />
-          Trợ lý tư vấn tuyển sinh thông minh VinUni
+          {t("hero.badge")}
         </div>
 
         {/* Headline */}
         <div className="space-y-4">
           <h1 className="max-w-xl text-[2rem] leading-[1.12] font-semibold tracking-[-0.02em] text-slate-950 sm:text-[2.5rem] lg:text-[2.75rem]">
-            Chatbot tuyển sinh —{" "}
+            {t("hero.headline")}{" "}
             <span className="relative">
               <span className="relative z-10 text-slate-950">
-                hỏi bất cứ điều gì.
+                {t("hero.headlineHighlight")}
               </span>
               <span
                 aria-hidden
@@ -53,8 +40,7 @@ const HomeHero = () => {
             </span>
           </h1>
           <p className="max-w-md text-[15px] leading-relaxed text-slate-500">
-            Nhận thông tin chính xác về chương trình học, học phí, học bổng và
-            quy trình nộp hồ sơ — bất kỳ lúc nào.
+            {t("hero.description")}
           </p>
         </div>
 
@@ -94,11 +80,11 @@ const HomeHero = () => {
         >
           <a href={TELEGRAM_BOT_URL} target="_blank" rel="noopener noreferrer">
             <Send className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
-            Chat trên Telegram
+            {t("hero.telegramButton")}
           </a>
         </Button>
         <span className="text-[12px] text-slate-400">
-          hoặc dùng chatbox bên phải
+          {t("hero.orUseChatbox")}
         </span>
       </div>
     </div>

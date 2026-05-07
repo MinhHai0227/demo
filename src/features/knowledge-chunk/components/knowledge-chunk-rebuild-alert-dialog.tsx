@@ -1,4 +1,5 @@
 import { AlertTriangle, DatabaseZap, Loader2 } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 
 import {
   AlertDialog,
@@ -24,6 +25,8 @@ const KnowledgeChunkRebuildAlertDialog = ({
   onConfirm,
   isSubmitting = false,
 }: KnowledgeChunkRebuildAlertDialogProps) => {
+  const { t } = useTranslation("knowledge-chunk")
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200/70 p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)]">
@@ -34,11 +37,10 @@ const KnowledgeChunkRebuildAlertDialog = ({
           </div>
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-              Rebuild embedding còn thiếu?
+              {t("rebuildDialogTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
-              Thao tác này sẽ xử lý tối đa 100 chunk đang hoạt động nhưng chưa
-              có embedding. Nhấn xác nhận để bắt đầu batch rebuild.
+              {t("rebuildDialogDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
@@ -47,11 +49,15 @@ const KnowledgeChunkRebuildAlertDialog = ({
           <div className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
             <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-amber-600" />
             <p className="text-[11px] text-amber-800">
-              Chỉ các chunk có{" "}
-              <code className="rounded-md bg-amber-100 px-1.5 py-0.5 font-mono text-[10px]">
-                needs_embedding=true
-              </code>{" "}
-              mới được xử lý lại.
+              <Trans
+                i18nKey="rebuildDialogNote"
+                ns="knowledge-chunk"
+                components={{
+                  code: (
+                    <code className="rounded-md bg-amber-100 px-1.5 py-0.5 font-mono text-[10px]" />
+                  ),
+                }}
+              />
             </p>
           </div>
         </div>
@@ -61,7 +67,7 @@ const KnowledgeChunkRebuildAlertDialog = ({
             disabled={isSubmitting}
             className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
           >
-            Hủy
+            {t("cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={isSubmitting}
@@ -71,12 +77,12 @@ const KnowledgeChunkRebuildAlertDialog = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang rebuild...
+                {t("rebuilding")}
               </>
             ) : (
               <>
                 <DatabaseZap className="size-3.5" />
-                Rebuild
+                {t("rebuild")}
               </>
             )}
           </AlertDialogAction>

@@ -1,4 +1,5 @@
 import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -21,11 +22,14 @@ import type {
   NotificationTarget,
 } from "@/types/notification-type"
 
+import LanguageSwitcher from "@/components/common/language-switcher"
 import { Separator } from "../ui/separator"
 import { SidebarTrigger } from "../ui/sidebar"
 
 const HeaderAdmin = () => {
   const navigate = useNavigate()
+  const { t: th } = useTranslation("header-admin")
+  const { t: tc } = useTranslation("common")
   const { user, logout, logoutPending, clearAuthData } = useAuth()
   const accessToken = useAuthStore((state) => state.accessToken)
   const notificationTarget: NotificationTarget | undefined =
@@ -85,7 +89,7 @@ const HeaderAdmin = () => {
     }
 
     if (notification.lead_id) {
-      navigate("/admin/leads")
+      navigate(`/admin/leads?leadId=${notification.lead_id}`)
     }
   }
 
@@ -100,6 +104,7 @@ const HeaderAdmin = () => {
       </div>
 
       <div className="flex items-center gap-3">
+        <LanguageSwitcher />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative h-8 w-8">
@@ -116,9 +121,9 @@ const HeaderAdmin = () => {
             <div className="flex items-center justify-between px-2 py-1.5">
               <div>
                 <p className="text-sm font-semibold text-slate-900">
-                  Notifications
+                  {th("notifications")}
                 </p>
-                <p className="text-xs text-slate-500">{unreadCount} unread</p>
+                <p className="text-xs text-slate-500">{unreadCount} {tc("unread")}</p>
               </div>
               <Button
                 type="button"
@@ -129,7 +134,7 @@ const HeaderAdmin = () => {
                   void markAllNotificationsRead()
                 }}
               >
-                Mark all read
+                {tc("markAllRead")}
               </Button>
             </div>
 
@@ -137,11 +142,11 @@ const HeaderAdmin = () => {
 
             {notificationsPending ? (
               <div className="px-3 py-6 text-center text-sm text-slate-500">
-                Dang tai thong bao...
+                {th("loadingNotifications")}
               </div>
             ) : notifications.length === 0 ? (
               <div className="px-3 py-6 text-center text-sm text-slate-500">
-                Chua co thong bao nao.
+                {th("noNotifications")}
               </div>
             ) : (
               notifications.map((notification) => (
@@ -204,12 +209,12 @@ const HeaderAdmin = () => {
 
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              Ho so ca nhan
+              {th("profile")}
             </DropdownMenuItem>
 
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
-              Cai dat
+              {th("settings")}
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -222,7 +227,7 @@ const HeaderAdmin = () => {
               }}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              {logoutPending ? "Dang dang xuat..." : "Dang xuat"}
+              {logoutPending ? th("loggingOut") : th("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

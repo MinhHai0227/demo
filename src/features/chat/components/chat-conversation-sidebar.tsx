@@ -17,6 +17,7 @@ import type {
 } from "@/types/chat-type"
 import { MessageCircle, MoreHorizontal, Search } from "lucide-react"
 import { useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 type ChatConversationSidebarProps = {
   conversations: ChatConversation[]
@@ -47,6 +48,7 @@ const ChatConversationSidebar = ({
   onStatusFilterChange,
   onSelectConversation,
 }: ChatConversationSidebarProps) => {
+  const { t } = useTranslation("chat")
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const handleScroll = () => {
@@ -68,9 +70,9 @@ const ChatConversationSidebar = ({
         <div className="mb-3 flex items-center justify-between">
           <div>
             <h1 className="text-[14px] font-semibold text-slate-950">
-              Tin nhắn
+              {t("sidebarTitle")}
             </h1>
-            <p className="text-[11px] text-slate-500">{total} hội thoại</p>
+            <p className="text-[11px] text-slate-500">{t("conversationCount", { count: total })}</p>
           </div>
           <Button
             variant="ghost"
@@ -87,7 +89,7 @@ const ChatConversationSidebar = ({
           <Input
             value={searchInput}
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Tìm tên, email, số điện thoại"
+            placeholder={t("sidebarSearchPlaceholder")}
             className="h-9 rounded-full border-slate-200 bg-slate-100/80 pl-8 text-[12px] shadow-none placeholder:text-slate-400 focus:bg-white focus-visible:ring-0"
           />
         </div>
@@ -130,10 +132,10 @@ const ChatConversationSidebar = ({
           <div className="flex h-full flex-col items-center justify-center px-6 text-center">
             <MessageCircle className="mb-3 size-10 text-slate-200" />
             <p className="text-[13px] font-medium text-slate-700">
-              Chưa có hội thoại
+              {t("noConversationsSidebar")}
             </p>
             <p className="mt-1 text-[11px] text-slate-500">
-              Thử đổi bộ lọc hoặc từ khóa tìm kiếm khác.
+              {t("noConversationsSidebarHint")}
             </p>
           </div>
         ) : (
@@ -170,7 +172,7 @@ const ChatConversationSidebar = ({
                   <p className="mt-0.5 truncate text-[11px] text-slate-500">
                     {conversation.last_message ||
                       conversation.summary ||
-                      "Chưa có tin nhắn"}
+                      t("noMessages")}
                   </p>
 
                   <div className="mt-1.5 flex items-center justify-between gap-2">
@@ -184,7 +186,7 @@ const ChatConversationSidebar = ({
                       {getStatusLabel(conversation.status)}
                     </Badge>
                     <span className="text-[10px] text-slate-400">
-                      {conversation.message_count} tin
+                      {t("messageCount", { count: conversation.message_count })}
                     </span>
                   </div>
                 </div>
@@ -193,7 +195,7 @@ const ChatConversationSidebar = ({
 
             {isFetchingMore ? (
               <div className="px-3 py-4 text-center text-[11px] text-slate-400">
-                Đang tải thêm hội thoại...
+                {t("loadingMoreConversations")}
               </div>
             ) : null}
           </>

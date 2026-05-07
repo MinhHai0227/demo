@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import KnowledgeChunkDeleteDialog from "@/features/knowledge-chunk/components/knowledge-chunk-delete-dialog"
 import KnowledgeChunkDeleteUploadedFileDialog from "@/features/knowledge-chunk/components/knowledge-chunk-delete-uploaded-file-dialog"
@@ -8,7 +9,9 @@ import KnowledgeChunkTable from "@/features/knowledge-chunk/components/knowledge
 import KnowledgeChunkToolbar from "@/features/knowledge-chunk/components/knowledge-chunk-toolbar"
 import KnowledgeChunkUploadDialog from "@/features/knowledge-chunk/components/knowledge-chunk-upload-dialog"
 import useKnowledgeChunk from "@/hooks/use-knowledge-chunk"
+import { canManageManagedContent } from "@/lib/permissions"
 import type { KnowledgeChunkFormValues } from "@/schemas/knowledge-chunk-schema"
+import useAuthStore from "@/stores/auth-store"
 import type {
   AdmissionCategory,
   KnowledgeChunk,
@@ -22,6 +25,9 @@ type StatusFilter = "ALL" | "ACTIVE" | "INACTIVE"
 type EmbeddingFilter = "ALL" | "READY" | "MISSING"
 
 const KnowledgeChunkPage = () => {
+  const { t } = useTranslation("knowledge-chunk")
+  const userRole = useAuthStore((state) => state.user?.role)
+  const canManage = canManageManagedContent(userRole)
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
   const [categoryFilter, setCategoryFilter] = useState<
@@ -116,6 +122,7 @@ const KnowledgeChunkPage = () => {
   const uploadedFilesTotal = uploadedKnowledgeChunkFileList?.total ?? 0
 
   const handleCreateClick = () => {
+    if (!canManage) return
     setDialogMode("create")
     setSelectedChunk(null)
     setDialogError(null)
@@ -124,6 +131,7 @@ const KnowledgeChunkPage = () => {
   }
 
   const handleEditClick = (chunk: KnowledgeChunk) => {
+    if (!canManage) return
     setDialogMode("edit")
     setSelectedChunk(chunk)
     setDialogError(null)
@@ -132,6 +140,7 @@ const KnowledgeChunkPage = () => {
   }
 
   const handleDialogSubmit = async (values: KnowledgeChunkFormValues) => {
+    if (!canManage) return
     setDialogError(null)
     const payload = {
       major_id: values.major_id,
@@ -161,11 +170,12 @@ const KnowledgeChunkPage = () => {
       setDialogOpen(false)
       setSelectedChunk(null)
     } catch (error) {
-      setDialogError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
+      setDialogError(error instanceof Error ? error.message : t("genericError"))
     }
   }
 
   const handleToggleStatus = async (chunk: KnowledgeChunk) => {
+    if (!canManage) return
     setTogglingChunkId(chunk.id)
     setActionError(null)
     setActionSuccess(null)
@@ -175,30 +185,32 @@ const KnowledgeChunkPage = () => {
         is_active: !chunk.is_active,
       })
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
+      setActionError(error instanceof Error ? error.message : t("genericError"))
     } finally {
       setTogglingChunkId(null)
     }
   }
 
   const handleDeleteClick = (chunk: KnowledgeChunk) => {
+    if (!canManage) return
     setChunkToDelete(chunk)
     setActionSuccess(null)
     setDeleteDialogOpen(true)
   }
 
   const handleConfirmDelete = async () => {
-    if (!chunkToDelete) return
+    if (!canManage || !chunkToDelete) return
     try {
       await deleteKnowledgeChunkAction(chunkToDelete.id)
-      if (items.length === 1 && offset > 0)
+      if (items.length === 1 && offset > 0) {
         setOffset(Math.max(0, offset - PAGE_SIZE))
+      }
       setDeleteDialogOpen(false)
       setChunkToDelete(null)
       setActionError(null)
-      setActionSuccess("Đã xóa knowledge chunk thành công.")
+      setActionSuccess(t("deleteSuccess"))
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
+      setActionError(error instanceof Error ? error.message : t("genericError"))
     }
   }
 
@@ -212,16 +224,21 @@ const KnowledgeChunkPage = () => {
   }
 
   const handleRebuildMissingEmbeddings = async () => {
+    if (!canManage) return
     setActionError(null)
     setActionSuccess(null)
     try {
       const response = await rebuildMissingEmbeddingsAction(100)
       setRebuildDialogOpen(false)
       setActionSuccess(
-        `Rebuild hoàn tất. Đã xử lý ${response.processed}, embed thành công ${response.embedded}, thất bại ${response.failed}.`
+        t("rebuildSuccess", {
+          processed: response.processed,
+          embedded: response.embedded,
+          failed: response.failed,
+        })
       )
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Có lỗi xảy ra.")
+      setActionError(error instanceof Error ? error.message : t("genericError"))
     }
   }
 
@@ -229,15 +246,13 @@ const KnowledgeChunkPage = () => {
     <div className="space-y-4">
       <div>
         <h1 className="text-[18px] font-semibold text-slate-950">
-          Knowledge Chunks
+          {t("title")}
         </h1>
-        <p className="text-[13px] text-slate-500">
-          Quản lý nội dung có cấu trúc cho hệ thống truy xuất thông tin tuyển
-          sinh bằng AI.
-        </p>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <KnowledgeChunkToolbar
+        canManage={canManage}
         searchInput={searchInput}
         appliedSearch={appliedSearch}
         categoryFilter={categoryFilter}
@@ -258,10 +273,12 @@ const KnowledgeChunkPage = () => {
         }}
         onCreateClick={handleCreateClick}
         onUploadFileClick={() => {
+          if (!canManage) return
           setActionSuccess(null)
           setUploadDialogOpen(true)
         }}
         onDeleteUploadedFileClick={() => {
+          if (!canManage) return
           setActionSuccess(null)
           setUploadedFileSearchInput("")
           setAppliedUploadedFileSearch("")
@@ -269,25 +286,27 @@ const KnowledgeChunkPage = () => {
           setDeleteUploadedDialogOpen(true)
         }}
         onRebuildClick={() => {
+          if (!canManage) return
           setActionSuccess(null)
           setRebuildDialogOpen(true)
         }}
         onClearFilters={handleClearFilters}
       />
 
-      {actionError && (
+      {actionError ? (
         <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
           {actionError}
         </div>
-      )}
+      ) : null}
 
-      {actionSuccess && (
+      {actionSuccess ? (
         <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
           {actionSuccess}
         </div>
-      )}
+      ) : null}
 
       <KnowledgeChunkTable
+        canManage={canManage}
         items={items}
         total={total}
         limit={PAGE_SIZE}
@@ -301,71 +320,75 @@ const KnowledgeChunkPage = () => {
         onToggleStatus={handleToggleStatus}
       />
 
-      <KnowledgeChunkFormDialog
-        open={dialogOpen}
-        mode={dialogMode}
-        chunk={selectedChunk}
-        errorMessage={dialogError}
-        isSubmitting={
-          createKnowledgeChunkPending || updateKnowledgeChunkPending
-        }
-        onOpenChange={(open) => {
-          setDialogOpen(open)
-          if (!open) {
-            setDialogError(null)
-            setSelectedChunk(null)
-          }
-        }}
-        onSubmit={handleDialogSubmit}
-      />
+      {canManage ? (
+        <>
+          <KnowledgeChunkFormDialog
+            open={dialogOpen}
+            mode={dialogMode}
+            chunk={selectedChunk}
+            errorMessage={dialogError}
+            isSubmitting={
+              createKnowledgeChunkPending || updateKnowledgeChunkPending
+            }
+            onOpenChange={(open) => {
+              setDialogOpen(open)
+              if (!open) {
+                setDialogError(null)
+                setSelectedChunk(null)
+              }
+            }}
+            onSubmit={handleDialogSubmit}
+          />
 
-      <KnowledgeChunkDeleteDialog
-        open={deleteDialogOpen}
-        chunk={chunkToDelete}
-        isDeleting={deleteKnowledgeChunkPending}
-        onOpenChange={(open) => {
-          setDeleteDialogOpen(open)
-          if (!open) setChunkToDelete(null)
-        }}
-        onConfirm={handleConfirmDelete}
-      />
+          <KnowledgeChunkDeleteDialog
+            open={deleteDialogOpen}
+            chunk={chunkToDelete}
+            isDeleting={deleteKnowledgeChunkPending}
+            onOpenChange={(open) => {
+              setDeleteDialogOpen(open)
+              if (!open) setChunkToDelete(null)
+            }}
+            onConfirm={handleConfirmDelete}
+          />
 
-      <KnowledgeChunkUploadDialog
-        open={uploadDialogOpen}
-        onOpenChange={setUploadDialogOpen}
-        onSubmit={uploadKnowledgeChunkFileAction}
-        isSubmitting={uploadKnowledgeChunkFilePending}
-      />
+          <KnowledgeChunkUploadDialog
+            open={uploadDialogOpen}
+            onOpenChange={setUploadDialogOpen}
+            onSubmit={uploadKnowledgeChunkFileAction}
+            isSubmitting={uploadKnowledgeChunkFilePending}
+          />
 
-      <KnowledgeChunkDeleteUploadedFileDialog
-        open={deleteUploadedDialogOpen}
-        files={uploadedFiles}
-        total={uploadedFilesTotal}
-        limit={UPLOADED_FILE_PAGE_SIZE}
-        offset={uploadedFileOffset}
-        searchInput={uploadedFileSearchInput}
-        isLoading={uploadedKnowledgeChunkFileListPending}
-        isFetching={uploadedKnowledgeChunkFileListFetching}
-        onSearchInputChange={setUploadedFileSearchInput}
-        onPageChange={(nextOffset) => setUploadedFileOffset(nextOffset)}
-        onOpenChange={(open) => {
-          setDeleteUploadedDialogOpen(open)
-          if (!open) {
-            setUploadedFileSearchInput("")
-            setAppliedUploadedFileSearch("")
-            setUploadedFileOffset(0)
-          }
-        }}
-        onSubmit={deleteUploadedKnowledgeChunkFileAction}
-        isSubmitting={deleteUploadedKnowledgeChunkFilePending}
-      />
+          <KnowledgeChunkDeleteUploadedFileDialog
+            open={deleteUploadedDialogOpen}
+            files={uploadedFiles}
+            total={uploadedFilesTotal}
+            limit={UPLOADED_FILE_PAGE_SIZE}
+            offset={uploadedFileOffset}
+            searchInput={uploadedFileSearchInput}
+            isLoading={uploadedKnowledgeChunkFileListPending}
+            isFetching={uploadedKnowledgeChunkFileListFetching}
+            onSearchInputChange={setUploadedFileSearchInput}
+            onPageChange={(nextOffset) => setUploadedFileOffset(nextOffset)}
+            onOpenChange={(open) => {
+              setDeleteUploadedDialogOpen(open)
+              if (!open) {
+                setUploadedFileSearchInput("")
+                setAppliedUploadedFileSearch("")
+                setUploadedFileOffset(0)
+              }
+            }}
+            onSubmit={deleteUploadedKnowledgeChunkFileAction}
+            isSubmitting={deleteUploadedKnowledgeChunkFilePending}
+          />
 
-      <KnowledgeChunkRebuildAlertDialog
-        open={rebuildDialogOpen}
-        onOpenChange={setRebuildDialogOpen}
-        onConfirm={handleRebuildMissingEmbeddings}
-        isSubmitting={rebuildMissingEmbeddingsPending}
-      />
+          <KnowledgeChunkRebuildAlertDialog
+            open={rebuildDialogOpen}
+            onOpenChange={setRebuildDialogOpen}
+            onConfirm={handleRebuildMissingEmbeddings}
+            isSubmitting={rebuildMissingEmbeddingsPending}
+          />
+        </>
+      ) : null}
     </div>
   )
 }

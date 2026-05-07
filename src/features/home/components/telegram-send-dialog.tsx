@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Send, MessageSquare } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,13 +29,6 @@ type TelegramSendDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
-const telegramSendSchema = z.object({
-  chat_id: z.number().int().refine((v) => v !== 0, "Chat ID không được bằng 0"),
-  text: z.string().min(1, "Tin nhắn không được để trống").max(4096, "Tin nhắn quá dài"),
-})
-
-type TelegramSendSchema = z.infer<typeof telegramSendSchema>
-
 const inputClassName =
   "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-primary/50"
 
@@ -42,6 +36,25 @@ const TelegramSendDialog = ({
   open,
   onOpenChange,
 }: TelegramSendDialogProps) => {
+  const { t } = useTranslation("home")
+
+  const telegramSendSchema = useMemo(
+    () =>
+      z.object({
+        chat_id: z
+          .number()
+          .int()
+          .refine((v) => v !== 0, t("telegram.chatIdValidation")),
+        text: z
+          .string()
+          .min(1, t("telegram.messageRequired"))
+          .max(4096, t("telegram.messageTooLong")),
+      }),
+    [t]
+  )
+
+  type TelegramSendSchema = z.infer<typeof telegramSendSchema>
+
   const form = useForm<TelegramSendSchema>({
     resolver: zodResolver(telegramSendSchema) as any,
     defaultValues: {
@@ -83,10 +96,10 @@ const TelegramSendDialog = ({
         <DialogHeader className="border-b border-slate-200 px-6 py-5">
           <DialogTitle className="flex items-center gap-2 text-xl font-semibold text-slate-950">
             <MessageSquare className="h-5 w-5 text-primary" />
-            Gửi tin nhắn Telegram
+            {t("telegram.title")}
           </DialogTitle>
           <DialogDescription className="max-w-xl text-sm leading-6 text-slate-600">
-            Gửi tin nhắn trực tiếp đến chat Telegram qua Bot API.
+            {t("telegram.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -97,7 +110,7 @@ const TelegramSendDialog = ({
         >
           <FieldGroup className="gap-5">
             <Field>
-              <FieldLabel htmlFor="telegram-chat-id">Telegram Chat ID</FieldLabel>
+              <FieldLabel htmlFor="telegram-chat-id">{t("telegram.chatIdLabel")}</FieldLabel>
               <FieldContent>
                 <input
                   id="telegram-chat-id"
@@ -107,20 +120,20 @@ const TelegramSendDialog = ({
                   {...form.register("chat_id")}
                 />
                 <FieldDescription>
-                  Chat ID của người nhận trên Telegram.
+                  {t("telegram.chatIdDescription")}
                 </FieldDescription>
                 <FieldError errors={[form.formState.errors.chat_id]} />
               </FieldContent>
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="telegram-text">Nội dung tin nhắn</FieldLabel>
+              <FieldLabel htmlFor="telegram-text">{t("telegram.messageLabel")}</FieldLabel>
               <FieldContent>
                 <textarea
                   id="telegram-text"
                   rows={4}
                   className={`${inputClassName} resize-none py-3`}
-                  placeholder="Nội dung tin nhắn..."
+                  placeholder={t("telegram.messagePlaceholder")}
                   {...form.register("text")}
                 />
                 <FieldError errors={[form.formState.errors.text]} />
@@ -130,7 +143,7 @@ const TelegramSendDialog = ({
 
           {sendMutation.isError && (
             <p className="mt-4 text-sm text-destructive">
-              Không thể gửi tin nhắn. Vui lòng kiểm tra Chat ID và thử lại.
+              {t("telegram.error")}
             </p>
           )}
 
@@ -142,7 +155,7 @@ const TelegramSendDialog = ({
               disabled={sendMutation.isPending}
               onClick={() => onOpenChange(false)}
             >
-              Đóng
+              {t("close", { ns: "common" })}
             </Button>
             <Button
               type="submit"
@@ -154,7 +167,7 @@ const TelegramSendDialog = ({
               ) : (
                 <Send className="h-4 w-4" />
               )}
-              {sendMutation.isPending ? "Đang gửi..." : "Gửi tin nhắn"}
+              {sendMutation.isPending ? t("chat.sending") : t("telegram.sendButton")}
             </Button>
           </DialogFooter>
         </form>

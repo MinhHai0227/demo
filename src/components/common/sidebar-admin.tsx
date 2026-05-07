@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { Link, useLocation } from "react-router-dom"
 import {
   BookOpenText,
@@ -7,9 +8,9 @@ import {
   LayoutDashboard,
   MessageCircle,
   MessageSquareQuote,
+  Scan,
   ShieldCheck,
   Users,
-  Scan,
 } from "lucide-react"
 
 import logo from "@/assets/logo.png"
@@ -24,11 +25,15 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { canAccessAdminOnlyTools } from "@/lib/permissions"
+import useAuthStore from "@/stores/auth-store"
+import type { UserRole } from "@/types/auth-type"
 
 type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   href: string
+  roles?: UserRole[]
 }
 
 type NavSection = {
@@ -36,64 +41,90 @@ type NavSection = {
   items: NavItem[]
 }
 
-const navSections: NavSection[] = [
-  {
-    title: "Tổng quan",
-    items: [
-      { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
-      {
-        label: "Hot Questions",
-        icon: MessageSquareQuote,
-        href: "/admin/hot-questions",
-      },
-      { label: "Leads", icon: Users, href: "/admin/leads" },
-      // { label: "Applications", icon: FileText, href: "/admin/applications" },
-    ],
-  },
-  {
-    title: "Vận hành tuyển sinh",
-    items: [
-      {
-        label: "Web Crawler",
-        icon: Globe2,
-        href: "/admin/web-crawler",
-      },
-      {
-        label: "Quick Processing",
-        icon: Scan,
-        href: "/admin/quick-processing",
-      },
-
-      {
-        label: "Knowledge Chunks",
-        icon: BookOpenText,
-        href: "/admin/knowledge-chunks",
-      },
-    ],
-  },
-  {
-    title: "Nội dung và chính sách",
-    items: [
-      { label: "Majors", icon: GraduationCap, href: "/admin/majors" },
-      {
-        label: "Tuition Policies",
-        icon: CreditCard,
-        href: "/admin/tuition-policies",
-      },
-    ],
-  },
-  {
-    title: "Quản trị hệ thống",
-    items: [{ label: "Staffs", icon: ShieldCheck, href: "/admin/staffs" }],
-  },
-  {
-    title: "Chat",
-    items: [{ label: "Chat", icon: MessageCircle, href: "/message" }],
-  },
-]
-
 const AppSidebar = () => {
   const location = useLocation()
+  const { t } = useTranslation("sidebar-admin")
+  const userRole = useAuthStore((state) => state.user?.role)
+
+  const navSections: NavSection[] = [
+    {
+      title: t("sections.overview"),
+      items: [
+        { label: t("nav.dashboard"), icon: LayoutDashboard, href: "/admin" },
+        {
+          label: t("nav.hotQuestions"),
+          icon: MessageSquareQuote,
+          href: "/admin/hot-questions",
+        },
+        { label: t("nav.leads"), icon: Users, href: "/admin/leads" },
+      ],
+    },
+    {
+      title: t("sections.admissionsOperations"),
+      items: [
+        {
+          label: t("nav.webCrawler"),
+          icon: Globe2,
+          href: "/admin/web-crawler",
+          roles: ["ADMIN"],
+        },
+        {
+          label: t("nav.quickProcessing"),
+          icon: Scan,
+          href: "/admin/quick-processing",
+          roles: ["ADMIN"],
+        },
+        {
+          label: t("nav.knowledgeChunks"),
+          icon: BookOpenText,
+          href: "/admin/knowledge-chunks",
+        },
+      ],
+    },
+    {
+      title: t("sections.contentAndPolicy"),
+      items: [
+        { label: t("nav.majors"), icon: GraduationCap, href: "/admin/majors" },
+        {
+          label: t("nav.tuitionPolicies"),
+          icon: CreditCard,
+          href: "/admin/tuition-policies",
+        },
+      ],
+    },
+    {
+      title: t("sections.systemAdmin"),
+      items: [
+        {
+          label: t("nav.staffs"),
+          icon: ShieldCheck,
+          href: "/admin/staffs",
+          roles: ["ADMIN"],
+        },
+      ],
+    },
+    {
+      title: t("sections.chat"),
+      items: [{ label: t("nav.chat"), icon: MessageCircle, href: "/message" }],
+    },
+  ]
+
+  const visibleSections = navSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        if (!item.roles || item.roles.length === 0) {
+          return true
+        }
+
+        if (item.roles.length === 1 && item.roles[0] === "ADMIN") {
+          return canAccessAdminOnlyTools(userRole)
+        }
+
+        return item.roles.includes(userRole ?? "COUNSELOR")
+      }),
+    }))
+    .filter((section) => section.items.length > 0)
 
   return (
     <Sidebar>
@@ -109,17 +140,17 @@ const AppSidebar = () => {
           />
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-slate-950">
-              Admissions Admin
+              {t("adminLabel")}
             </p>
             <p className="truncate text-xs text-slate-500">
-              Quản lý tuyển sinh
+              {t("adminDescription")}
             </p>
           </div>
         </Link>
       </SidebarHeader>
 
       <SidebarContent>
-        {navSections.map((section) => (
+        {visibleSections.map((section) => (
           <SidebarGroup key={section.title}>
             <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
             <SidebarMenu>

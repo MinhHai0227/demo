@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import WebCrawlerCreateDialog from "@/features/web-crawler/components/web-crawler-create-dialog"
 import WebCrawlerPageJobTable from "@/features/web-crawler/components/web-crawler-page-job-table"
@@ -58,16 +59,15 @@ const parseOptionalNumber = (value: string) => {
 }
 
 const WebCrawlerPage = () => {
+  const { t } = useTranslation("web-crawler")
   const [sessionOffset, setSessionOffset] = useState(0)
   const [pageJobOffset, setPageJobOffset] = useState(0)
   const [selectedSession, setSelectedSession] = useState<CrawlSession | null>(
     null
   )
-
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
   const [pageJobFilter, setPageJobFilter] = useState<PageJobFilter>("ALL")
-
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -102,7 +102,6 @@ const WebCrawlerPage = () => {
         setAppliedSearch(searchInput.trim())
       })
     }, 700)
-
     return () => window.clearTimeout(timeoutId)
   }, [searchInput])
 
@@ -110,7 +109,6 @@ const WebCrawlerPage = () => {
     limit: SESSION_PAGE_SIZE,
     offset: sessionOffset,
   }
-
   const pageJobParams: CrawlPageJobListParams = {
     crawl_session_id: selectedSession?.id,
     sent_to_kb:
@@ -164,7 +162,6 @@ const WebCrawlerPage = () => {
     setCreateError(null)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       const session = await createCrawlSessionAction(payload)
       setSelectedSession(session)
@@ -197,20 +194,17 @@ const WebCrawlerPage = () => {
 
   const handleDeleteSession = async (session: CrawlSession) => {
     if (!window.confirm("Delete this crawl session and its page jobs?")) return
-
     setDeletingSessionId(session.id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       await deleteCrawlSessionAction(session.id)
       if (selectedSession?.id === session.id) {
         setSelectedSession(null)
         setPageJobOffset(0)
       }
-      if (sessions.length === 1 && sessionOffset > 0) {
+      if (sessions.length === 1 && sessionOffset > 0)
         setSessionOffset(Math.max(0, sessionOffset - SESSION_PAGE_SIZE))
-      }
       setActionSuccess("Crawl session deleted successfully.")
     } catch (error) {
       setActionError(
@@ -237,7 +231,6 @@ const WebCrawlerPage = () => {
     setActionError(null)
     setActionSuccess(null)
     setPreviewDialogOpen(true)
-
     try {
       const content = await getCrawlPageJobContentAction(pageJob.id)
       setMarkdownContent(content)
@@ -258,11 +251,9 @@ const WebCrawlerPage = () => {
 
   const handleSaveMarkdown = async () => {
     if (!selectedPageJob) return
-
     setPreviewError(null)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       const updatedPageJob = await updateCrawlPageJobContentAction({
         pageJobId: selectedPageJob.id,
@@ -280,31 +271,25 @@ const WebCrawlerPage = () => {
 
   const handleSendToKb = async () => {
     if (!selectedPageJob) return
-
     const normalizedYear = parseOptionalNumber(sendYear)
     const normalizedVersionStart = Number(versionStart || 1)
     const normalizedChunkSize = Number(chunkSize || 1200)
     const normalizedChunkOverlap = Number(chunkOverlap || 100)
-
     setPreviewError(null)
     setActionError(null)
     setActionSuccess(null)
-
     if (!sendTitle.trim()) {
       setPreviewError("Title is required before sending to KB.")
       return
     }
-
     if (sendYear.trim() && normalizedYear === undefined) {
       setPreviewError("Year must be a valid number.")
       return
     }
-
     if (normalizedChunkOverlap >= normalizedChunkSize) {
       setPreviewError("Chunk overlap must be smaller than chunk size.")
       return
     }
-
     try {
       await sendCrawlPageJobToKbAction({
         pageJobId: selectedPageJob.id,
@@ -329,7 +314,6 @@ const WebCrawlerPage = () => {
     setDownloadingPageJobId(pageJob.id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       const url = await getCrawlPageJobDownloadUrlAction(pageJob.id)
       window.open(url, "_blank", "noopener,noreferrer")
@@ -344,16 +328,13 @@ const WebCrawlerPage = () => {
 
   const handleDeletePageJob = async (pageJob: CrawlPageJob) => {
     if (!window.confirm("Delete this crawled page job?")) return
-
     setDeletingPageJobId(pageJob.id)
     setActionError(null)
     setActionSuccess(null)
-
     try {
       await deleteCrawlPageJobAction(pageJob.id)
-      if (pageJobs.length === 1 && pageJobOffset > 0) {
+      if (pageJobs.length === 1 && pageJobOffset > 0)
         setPageJobOffset(Math.max(0, pageJobOffset - PAGE_JOB_PAGE_SIZE))
-      }
       setActionSuccess("Crawled page job deleted successfully.")
     } catch (error) {
       setActionError(
@@ -374,11 +355,10 @@ const WebCrawlerPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Web Crawler</h1>
-        <p className="text-sm text-slate-500">
-          Crawl a site URL into one markdown file per internal page, edit the
-          markdown, then send selected pages to the knowledge base.
-        </p>
+        <h1 className="text-[18px] font-semibold text-slate-950">
+          {t("title")}
+        </h1>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <WebCrawlerToolbar
@@ -404,16 +384,14 @@ const WebCrawlerPage = () => {
       />
 
       {actionError && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <span className="mt-0.5 shrink-0 text-red-400">!</span>
-          <span>{actionError}</span>
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+          {actionError}
         </div>
       )}
 
       {actionSuccess && (
-        <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          <span className="mt-0.5 shrink-0 text-emerald-500">OK</span>
-          <span>{actionSuccess}</span>
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
+          {actionSuccess}
         </div>
       )}
 

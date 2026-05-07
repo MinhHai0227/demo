@@ -1,4 +1,5 @@
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
   AlertDialog,
@@ -27,6 +28,8 @@ const StaffDeleteDialog = ({
   onOpenChange,
   onConfirm,
 }: StaffDeleteDialogProps) => {
+  const { t } = useTranslation("staff")
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm gap-0 overflow-hidden rounded-2xl border border-slate-200/70 p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)]">
@@ -38,21 +41,20 @@ const StaffDeleteDialog = ({
           </div>
           <AlertDialogHeader className="space-y-1 text-center">
             <AlertDialogTitle className="text-[15px] font-semibold text-slate-900">
-              Xóa tài khoản nhân viên?
+              {t("deleteTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[12px] leading-relaxed text-slate-500">
               {staff ? (
                 <>
-                  Thao tác này sẽ xóa vĩnh viễn{" "}
-                  <span className="font-medium text-slate-700">
-                    {staff.name}
-                  </span>{" "}
-                  ({staff.email}) khỏi hệ thống.
+                  {t("deleteWarningWithName", {
+                    name: staff.name,
+                    email: staff.email,
+                  })}
                 </>
               ) : (
-                "Thao tác này sẽ xóa vĩnh viễn tài khoản nhân viên đã chọn."
+                t("deleteWarningGeneric")
               )}{" "}
-              Không thể hoàn tác sau khi xóa.
+              {t("deleteUndoWarning")}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </div>
@@ -62,7 +64,7 @@ const StaffDeleteDialog = ({
             disabled={isDeleting}
             className="h-9 rounded-xl border-slate-200 text-[13px] text-slate-600"
           >
-            Hủy
+            {t("cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={isDeleting}
@@ -72,12 +74,12 @@ const StaffDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Đang xóa...
+                {t("deleting")}
               </>
             ) : (
               <>
                 <Trash2 className="size-3.5" />
-                Xóa tài khoản
+                {t("deleteAccount")}
               </>
             )}
           </AlertDialogAction>

@@ -1,4 +1,5 @@
 import { Filter, TrendingUp } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -29,6 +30,7 @@ const DashboardConversionFunnelPanel = ({
   isLoading,
   isFetching,
 }: DashboardConversionFunnelPanelProps) => {
+  const { t } = useTranslation("dashboard")
   const stages = funnel?.stages ?? []
   const maxCount = Math.max(...stages.map((stage) => stage.count), 0)
 
@@ -41,9 +43,9 @@ const DashboardConversionFunnelPanel = ({
           </div>
           <div>
             <h2 className="text-sm font-semibold text-slate-900">
-              Conversion funnel
+              {t("conversionFunnelTitle")}
             </h2>
-            <p className="text-xs text-slate-500">Lead journey by stage.</p>
+            <p className="text-xs text-slate-500">{t("leadJourneyByStage")}</p>
           </div>
         </div>
         {isFetching ? (
@@ -51,7 +53,7 @@ const DashboardConversionFunnelPanel = ({
             variant="outline"
             className="border-slate-200 text-xs text-slate-500"
           >
-            Refreshing
+            {t("refreshing")}
           </Badge>
         ) : null}
       </div>
@@ -86,7 +88,7 @@ const DashboardConversionFunnelPanel = ({
                       </p>
                     </div>
                     <p className="mt-1 text-[10px] text-slate-400">
-                      From previous: {conversionLabel}
+                      {t("fromPrevious")} {conversionLabel}
                     </p>
                   </div>
                   <span className="shrink-0 text-sm font-semibold text-slate-900">
@@ -116,7 +118,7 @@ const DashboardConversionFunnelPanel = ({
               <TrendingUp className="size-4 text-slate-400" />
             </div>
             <p className="text-xs text-slate-500">
-              No conversion funnel data yet.
+              {t("noFunnelData")}
             </p>
           </div>
         )}

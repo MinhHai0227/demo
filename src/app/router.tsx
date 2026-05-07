@@ -1,5 +1,9 @@
+import type { ReactNode } from "react"
+
 import DashboardPage from "@/features/dashboard/dashboard-page"
 import HomePage from "@/features/home/home-page"
+import ProgramsPage from "@/features/home/programs-page"
+import ScholarshipPage from "@/features/home/scholarship-page"
 import HotQuestionsPage from "@/features/hot-questions/hot-questions-page"
 import LeadPage from "@/features/lead/lead-page"
 import KnowledgeChunkPage from "@/features/knowledge-chunk/knowledge-chunk-page"
@@ -11,8 +15,35 @@ import WebCrawlerPage from "@/features/web-crawler/web-crawler-page"
 import AdminLayout from "@/layouts/admin-layout"
 import HomeLayout from "@/layouts/home-layout"
 import LoginLayout from "@/layouts/login-layout"
-import { createBrowserRouter } from "react-router-dom"
 import MessageLayout from "@/layouts/message-layout"
+import { hasAnyRole } from "@/lib/permissions"
+import useAuthStore from "@/stores/auth-store"
+import type { UserRole } from "@/types/auth-type"
+import { createBrowserRouter, Navigate } from "react-router-dom"
+
+type ProtectedRouteProps = {
+  roles: readonly UserRole[]
+  children: ReactNode
+  redirectTo?: string
+}
+
+const ProtectedRoute = ({
+  roles,
+  children,
+  redirectTo = "/admin",
+}: ProtectedRouteProps) => {
+  const userRole = useAuthStore((state) => state.user?.role)
+
+  if (!userRole) {
+    return <Navigate to="/login" replace />
+  }
+
+  if (!hasAnyRole(userRole, roles)) {
+    return <Navigate to={redirectTo} replace />
+  }
+
+  return <>{children}</>
+}
 
 const router = createBrowserRouter([
   {
@@ -24,6 +55,14 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
+      {
+        path: "programs",
+        element: <ProgramsPage />,
+      },
+      {
+        path: "scholarship",
+        element: <ScholarshipPage />,
+      },
     ],
   },
   {
@@ -32,11 +71,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/message",
-    element: <MessageLayout />,
+    element: (
+      <ProtectedRoute roles={["ADMIN", "COUNSELOR"]}>
+        <MessageLayout />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute roles={["ADMIN", "COUNSELOR"]} redirectTo="/login">
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -44,7 +91,11 @@ const router = createBrowserRouter([
       },
       {
         path: "staffs",
-        element: <StaffPage />,
+        element: (
+          <ProtectedRoute roles={["ADMIN"]}>
+            <StaffPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "leads",
@@ -68,11 +119,19 @@ const router = createBrowserRouter([
       },
       {
         path: "quick-processing",
-        element: <QuickProcessingPage />,
+        element: (
+          <ProtectedRoute roles={["ADMIN"]}>
+            <QuickProcessingPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "web-crawler",
-        element: <WebCrawlerPage />,
+        element: (
+          <ProtectedRoute roles={["ADMIN"]}>
+            <WebCrawlerPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

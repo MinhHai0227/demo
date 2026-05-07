@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -71,6 +72,7 @@ const TuitionPolicyFormDialog = ({
   onOpenChange,
   onSubmit,
 }: TuitionPolicyFormDialogProps) => {
+  const { t } = useTranslation("tuition-policy")
   const form = useForm<
     TuitionPolicyFormInput,
     unknown,
@@ -110,12 +112,10 @@ const TuitionPolicyFormDialog = ({
             </div>
             <div>
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                {isCreate
-                  ? "Tạo chính sách học phí"
-                  : "Chỉnh sửa chính sách học phí"}
+                {isCreate ? t("createTitle") : t("editTitle")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                Cấu hình quy tắc học phí theo ngành và năm học.
+                {t("formDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -133,7 +133,7 @@ const TuitionPolicyFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <GraduationCap className="size-3.5 text-slate-400" />
-                  Ngành học
+                  {t("major")}
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -148,7 +148,7 @@ const TuitionPolicyFormDialog = ({
                         }
                       >
                         <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                          <SelectValue placeholder="Chọn ngành học" />
+                          <SelectValue placeholder={t("selectMajor")} />
                         </SelectTrigger>
                         <SelectContent>
                           {majorOptions.map((major) => (
@@ -162,8 +162,8 @@ const TuitionPolicyFormDialog = ({
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
                     {majorOptions.length === 0
-                      ? "Hãy tạo ngành học trước khi thêm chính sách học phí."
-                      : "Chọn chương trình đào tạo áp dụng chính sách này."}
+                      ? t("noMajorsHint")
+                      : t("selectMajorHint")}
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.major_id]} />
                 </FieldContent>
@@ -172,7 +172,7 @@ const TuitionPolicyFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <Calendar className="size-3.5 text-slate-400" />
-                  Năm học
+                  {t("academicYear")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -191,7 +191,7 @@ const TuitionPolicyFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <CreditCard className="size-3.5 text-slate-400" />
-                  Loại phí
+                  {t("feeType")}
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -203,7 +203,7 @@ const TuitionPolicyFormDialog = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                          <SelectValue placeholder="Chọn loại phí" />
+                          <SelectValue placeholder={t("selectFeeType")} />
                         </SelectTrigger>
                         <SelectContent>
                           {feeTypeOptions.map((item) => (
@@ -222,7 +222,7 @@ const TuitionPolicyFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <DollarSign className="size-3.5 text-slate-400" />
-                  Học phí gốc
+                  {t("baseFee")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -254,7 +254,7 @@ const TuitionPolicyFormDialog = ({
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Hủy
+              {t("cancel")}
             </Button>
 
             <Button
@@ -269,13 +269,7 @@ const TuitionPolicyFormDialog = ({
               }
             >
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
-              {isCreate
-                ? isSubmitting
-                  ? "Đang tạo..."
-                  : "Tạo chính sách"
-                : isSubmitting
-                  ? "Đang lưu..."
-                  : "Lưu thay đổi"}
+              {isCreate ? (isSubmitting ? t("creating") : t("createPolicy")) : (isSubmitting ? t("saving") : t("saveChanges"))}
             </Button>
           </div>
         </form>

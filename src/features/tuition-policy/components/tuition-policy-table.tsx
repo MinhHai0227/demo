@@ -1,4 +1,5 @@
 import { CreditCard, Loader2, Power, PowerOff, Trash2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,7 @@ import {
 } from "@/types/tuition-policy-type"
 
 type TuitionPolicyTableProps = {
+  canManage?: boolean
   items: TuitionPolicy[]
   total: number
   limit: number
@@ -42,11 +44,15 @@ type TuitionPolicyTableProps = {
 }
 
 const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5)
+  if (totalPages <= 5) {
     return Array.from({ length: totalPages }, (_, i) => i + 1)
-  if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
-  if (currentPage >= totalPages - 2)
+  }
+  if (currentPage <= 3) {
+    return [1, 2, 3, 4, totalPages]
+  }
+  if (currentPage >= totalPages - 2) {
     return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
+  }
   return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
@@ -58,6 +64,7 @@ const formatCurrency = (value: number) =>
   }).format(value)
 
 const TuitionPolicyTable = ({
+  canManage = true,
   items,
   total,
   limit,
@@ -71,27 +78,27 @@ const TuitionPolicyTable = ({
   onDelete,
   onToggleStatus,
 }: TuitionPolicyTableProps) => {
+  const { t } = useTranslation("tuition-policy")
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
     <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
-      {/* Header */}
       <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-[14px] font-semibold text-slate-900">
-            Chính sách học phí
+            {t("title")}
           </h2>
           <p className="text-[12px] text-slate-500">
-            Tổng cộng {total} chính sách
+            {t("totalPolicies", { count: total })}
           </p>
         </div>
 
         <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
-          {isFetching && !isLoading && (
+          {isFetching && !isLoading ? (
             <Loader2 className="size-3.5 animate-spin" />
-          )}
+          ) : null}
           <span>
             {items.length ? offset + 1 : 0}–{offset + items.length} / {total}
           </span>
@@ -102,67 +109,68 @@ const TuitionPolicyTable = ({
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/60 hover:bg-slate-50/60">
             <TableHead className="px-5 text-[11px] font-medium text-slate-500">
-              Ngành học
+              {t("major")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Năm
+              {t("year")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Loại phí
+              {t("feeType")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Học phí gốc
+              {t("baseFee")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Trạng thái
+              {t("status")}
             </TableHead>
             <TableHead className="text-[11px] font-medium text-slate-500">
-              Cập nhật
+              {t("updated")}
             </TableHead>
             <TableHead className="w-20 pr-5 text-right text-[11px] font-medium text-slate-500">
-              Thao tác
+              {t("actions")}
             </TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {isLoading &&
-            Array.from({ length: 6 }).map((_, index) => (
-              <TableRow
-                key={`tuition-policy-skeleton-${index}`}
-                className="border-slate-100"
-              >
-                <TableCell className="px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="size-9 rounded-xl" />
-                    <div className="space-y-1.5">
-                      <Skeleton className="h-3.5 w-40 rounded-full" />
-                      <Skeleton className="h-3 w-24 rounded-full" />
+          {isLoading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <TableRow
+                  key={`tuition-policy-skeleton-${index}`}
+                  className="border-slate-100"
+                >
+                  <TableCell className="px-5 py-4">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="size-9 rounded-xl" />
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-3.5 w-40 rounded-full" />
+                        <Skeleton className="h-3 w-24 rounded-full" />
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-3.5 w-14 rounded-full" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-20 rounded-full" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-3.5 w-20 rounded-full" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-7 w-20 rounded-full" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-3.5 w-20 rounded-full" />
-                </TableCell>
-                <TableCell className="pr-5">
-                  <Skeleton className="ml-auto size-8 rounded-lg" />
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3.5 w-14 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-20 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3.5 w-20 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-7 w-20 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3.5 w-20 rounded-full" />
+                  </TableCell>
+                  <TableCell className="pr-5">
+                    <Skeleton className="ml-auto size-8 rounded-lg" />
+                  </TableCell>
+                </TableRow>
+              ))
+            : null}
 
-          {!isLoading && items.length === 0 && (
+          {!isLoading && items.length === 0 ? (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={7} className="py-20 text-center">
                 <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
@@ -171,118 +179,139 @@ const TuitionPolicyTable = ({
                   </div>
                   <div>
                     <p className="text-[13px] font-medium text-slate-900">
-                      Chưa tìm thấy chính sách
+                      {t("notFound")}
                     </p>
                     <p className="mt-0.5 text-[12px] text-slate-500">
-                      Tạo chính sách học phí để bắt đầu quản lý cấu hình học
-                      phí.
+                      {t("notFoundHint")}
                     </p>
                   </div>
                 </div>
               </TableCell>
             </TableRow>
-          )}
+          ) : null}
 
-          {!isLoading &&
-            items.map((policy) => {
-              const isToggling = togglingPolicyId === policy.id
-              const majorLabel =
-                majorNameById[policy.major_id] ?? "Ngành không xác định"
+          {!isLoading
+            ? items.map((policy) => {
+                const isToggling = togglingPolicyId === policy.id
+                const majorLabel =
+                  majorNameById[policy.major_id] ?? t("unknownMajor")
 
-              return (
-                <TableRow
-                  key={policy.id}
-                  className="cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/60"
-                  onClick={() => onEdit(policy)}
-                >
-                  <TableCell className="px-5 py-3.5">
-                    <div className="flex items-start gap-3">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-emerald-100 to-teal-100 text-emerald-700">
-                        <CreditCard className="size-4" />
+                return (
+                  <TableRow
+                    key={policy.id}
+                    className={cn(
+                      "border-slate-100 transition-colors hover:bg-slate-50/60",
+                      canManage && "cursor-pointer"
+                    )}
+                    onClick={() => {
+                      if (canManage) {
+                        onEdit(policy)
+                      }
+                    }}
+                  >
+                    <TableCell className="px-5 py-3.5">
+                      <div className="flex items-start gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-emerald-100 to-teal-100 text-emerald-700">
+                          <CreditCard className="size-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-[13px] font-medium text-slate-900">
+                            {majorLabel}
+                          </p>
+                          <p className="font-mono text-[10px] tracking-[0.12em] text-slate-400">
+                            {policy.major_id.slice(0, 8)}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-[13px] font-medium text-slate-900">
-                          {majorLabel}
-                        </p>
-                        <p className="font-mono text-[10px] tracking-[0.12em] text-slate-400">
-                          {policy.major_id.slice(0, 8)}
-                        </p>
-                      </div>
-                    </div>
-                  </TableCell>
+                    </TableCell>
 
-                  <TableCell className="font-mono text-[12px] text-slate-500">
-                    {policy.year}
-                  </TableCell>
+                    <TableCell className="font-mono text-[12px] text-slate-500">
+                      {policy.year}
+                    </TableCell>
 
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className="rounded-full border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700"
-                    >
-                      {feeTypeLabelMap[policy.fee_type]}
-                    </Badge>
-                  </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className="rounded-full border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700"
+                      >
+                        {feeTypeLabelMap[policy.fee_type]}
+                      </Badge>
+                    </TableCell>
 
-                  <TableCell className="font-mono text-[12px] font-medium text-slate-700">
-                    {formatCurrency(policy.base_fee)}
-                  </TableCell>
+                    <TableCell className="font-mono text-[12px] font-medium text-slate-700">
+                      {formatCurrency(policy.base_fee)}
+                    </TableCell>
 
-                  <TableCell>
-                    <button
-                      type="button"
-                      disabled={isToggling}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onToggleStatus(policy)
-                      }}
-                      className={cn(
-                        "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
-                        policy.is_active
-                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
-                          : "bg-slate-100 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-200",
-                        isToggling && "cursor-not-allowed opacity-60"
-                      )}
-                    >
-                      {isToggling ? (
-                        <Loader2 className="size-3 animate-spin" />
-                      ) : policy.is_active ? (
-                        <Power className="size-3" />
+                    <TableCell>
+                      <button
+                        type="button"
+                        disabled={!canManage || isToggling}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (canManage) {
+                            onToggleStatus(policy)
+                          }
+                        }}
+                        className={cn(
+                          "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
+                          policy.is_active
+                            ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                            : "bg-slate-100 text-slate-500 ring-1 ring-slate-200",
+                          canManage &&
+                            policy.is_active &&
+                            "hover:bg-emerald-100",
+                          canManage &&
+                            !policy.is_active &&
+                            "hover:bg-slate-200",
+                          (!canManage || isToggling) &&
+                            "cursor-not-allowed opacity-60"
+                        )}
+                      >
+                        {isToggling ? (
+                          <Loader2 className="size-3 animate-spin" />
+                        ) : policy.is_active ? (
+                          <Power className="size-3" />
+                        ) : (
+                          <PowerOff className="size-3" />
+                        )}
+                        {policy.is_active ? t("active") : t("inactive")}
+                      </button>
+                    </TableCell>
+
+                    <TableCell className="text-[12px] text-slate-500">
+                      {formatDateOnly(policy.updated_at)}
+                    </TableCell>
+
+                    <TableCell className="pr-5">
+                      {canManage ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onDelete(policy)
+                          }}
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
                       ) : (
-                        <PowerOff className="size-3" />
+                        <span className="ml-auto block text-right text-[12px] text-slate-300">
+                          -
+                        </span>
                       )}
-                      {policy.is_active ? "Đang hoạt động" : "Tạm ẩn"}
-                    </button>
-                  </TableCell>
-
-                  <TableCell className="text-[12px] text-slate-500">
-                    {formatDateOnly(policy.updated_at)}
-                  </TableCell>
-
-                  <TableCell className="pr-5">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onDelete(policy)
-                      }}
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            : null}
         </TableBody>
       </Table>
 
-      {/* Footer pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
         <p className="text-[12px] text-slate-500">
-          Trang {currentPage} / {totalPages}
+          {t("page", { current: currentPage, total: totalPages })}
         </p>
 
         <Pagination className="mx-0 w-auto justify-end">
@@ -290,7 +319,7 @@ const TuitionPolicyTable = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="Trước"
+                text={t("prev")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
@@ -321,7 +350,7 @@ const TuitionPolicyTable = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="Sau"
+                text={t("next")}
                 className={cn(
                   "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"

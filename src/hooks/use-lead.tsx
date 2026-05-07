@@ -24,12 +24,7 @@ const useLead = ({ params, leadId }: UseLeadOptions) => {
   })
 
   const leadItems = leadListQuery.data?.items ?? []
-  const resolvedLeadId =
-    leadItems.length === 0
-      ? null
-      : leadId && leadItems.some((item) => item.id === leadId)
-        ? leadId
-        : leadItems[0]?.id ?? null
+  const resolvedLeadId = leadId ?? leadItems[0]?.id ?? null
 
   const leadDetailQuery = useQuery({
     queryKey: ["lead", resolvedLeadId],

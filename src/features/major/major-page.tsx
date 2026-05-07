@@ -1,16 +1,23 @@
 import { startTransition, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import MajorDeleteDialog from "@/features/major/components/major-delete-dialog"
 import MajorFormDialog from "@/features/major/components/major-form-dialog"
 import MajorTable from "@/features/major/components/major-table"
 import MajorToolbar from "@/features/major/components/major-toolbar"
 import useMajor from "@/hooks/use-major"
+import { canManageManagedContent } from "@/lib/permissions"
 import type { MajorFormValues } from "@/schemas/major-schema"
+import useAuthStore from "@/stores/auth-store"
 import type { Major, MajorListParams, MajorType } from "@/types/major-type"
 
 const PAGE_SIZE = 3
 
 const MajorPage = () => {
+  const { t } = useTranslation("major")
+  const { t: tc } = useTranslation("common")
+  const userRole = useAuthStore((state) => state.user?.role)
+  const canManage = canManageManagedContent(userRole)
   const [searchInput, setSearchInput] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
   const [majorTypeFilter, setMajorTypeFilter] = useState<MajorType | "ALL">(
@@ -62,6 +69,7 @@ const MajorPage = () => {
   const items = majorList?.items ?? []
 
   const handleCreateClick = () => {
+    if (!canManage) return
     setDialogMode("create")
     setSelectedMajor(null)
     setDialogError(null)
@@ -70,6 +78,7 @@ const MajorPage = () => {
   }
 
   const handleEditClick = (major: Major) => {
+    if (!canManage) return
     setDialogMode("edit")
     setSelectedMajor(major)
     setDialogError(null)
@@ -78,6 +87,7 @@ const MajorPage = () => {
   }
 
   const handleDialogSubmit = async (values: MajorFormValues) => {
+    if (!canManage) return
     setDialogError(null)
 
     const payload = {
@@ -94,7 +104,7 @@ const MajorPage = () => {
       if (dialogMode === "create") {
         await createMajorAction({ ...payload, is_active: true })
         setDialogOpen(false)
-        setActionSuccess("Đã tạo ngành học thành công.")
+        setActionSuccess(t("createSuccess"))
         return
       }
 
@@ -103,17 +113,14 @@ const MajorPage = () => {
       await updateMajorAction({ majorId: selectedMajor.id, values: payload })
       setDialogOpen(false)
       setSelectedMajor(null)
-      setActionSuccess("Đã cập nhật ngành học thành công.")
+      setActionSuccess(t("updateSuccess"))
     } catch (error) {
-      setDialogError(
-        error instanceof Error
-          ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
-      )
+      setDialogError(error instanceof Error ? error.message : tc("error"))
     }
   }
 
   const handleToggleStatus = async (major: Major) => {
+    if (!canManage) return
     setTogglingMajorId(major.id)
     setActionError(null)
     setActionSuccess(null)
@@ -123,28 +130,23 @@ const MajorPage = () => {
         majorId: major.id,
         is_active: !major.is_active,
       })
-      setActionSuccess(
-        `Đã ${!major.is_active ? "kích hoạt" : "tạm ẩn"} ngành học thành công.`
-      )
+      setActionSuccess(t(!major.is_active ? "toggleActive" : "toggleInactive"))
     } catch (error) {
-      setActionError(
-        error instanceof Error
-          ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
-      )
+      setActionError(error instanceof Error ? error.message : tc("error"))
     } finally {
       setTogglingMajorId(null)
     }
   }
 
   const handleDeleteClick = (major: Major) => {
+    if (!canManage) return
     setMajorToDelete(major)
     setActionSuccess(null)
     setDeleteDialogOpen(true)
   }
 
   const handleConfirmDelete = async () => {
-    if (!majorToDelete) return
+    if (!canManage || !majorToDelete) return
 
     try {
       await deleteMajorAction(majorToDelete.id)
@@ -154,13 +156,9 @@ const MajorPage = () => {
       setDeleteDialogOpen(false)
       setMajorToDelete(null)
       setActionError(null)
-      setActionSuccess("Đã xóa ngành học thành công.")
+      setActionSuccess(t("deleteSuccess"))
     } catch (error) {
-      setActionError(
-        error instanceof Error
-          ? error.message
-          : "Có lỗi xảy ra. Vui lòng thử lại."
-      )
+      setActionError(error instanceof Error ? error.message : tc("error"))
     }
   }
 
@@ -174,13 +172,14 @@ const MajorPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[18px] font-semibold text-slate-950">Ngành học</h1>
-        <p className="text-[13px] text-slate-500">
-          Quản lý chương trình đào tạo phục vụ nội dung và quy trình tuyển sinh.
-        </p>
+        <h1 className="text-[18px] font-semibold text-slate-950">
+          {t("title")}
+        </h1>
+        <p className="text-[13px] text-slate-500">{t("description")}</p>
       </div>
 
       <MajorToolbar
+        canManage={canManage}
         searchInput={searchInput}
         appliedSearch={appliedSearch}
         majorTypeFilter={majorTypeFilter}
@@ -206,6 +205,7 @@ const MajorPage = () => {
       ) : null}
 
       <MajorTable
+        canManage={canManage}
         items={items}
         total={total}
         limit={PAGE_SIZE}
@@ -219,32 +219,36 @@ const MajorPage = () => {
         onToggleStatus={handleToggleStatus}
       />
 
-      <MajorFormDialog
-        open={dialogOpen}
-        mode={dialogMode}
-        major={selectedMajor}
-        errorMessage={dialogError}
-        isSubmitting={createMajorPending || updateMajorPending}
-        onOpenChange={(open) => {
-          setDialogOpen(open)
-          if (!open) {
-            setDialogError(null)
-            setSelectedMajor(null)
-          }
-        }}
-        onSubmit={handleDialogSubmit}
-      />
+      {canManage ? (
+        <>
+          <MajorFormDialog
+            open={dialogOpen}
+            mode={dialogMode}
+            major={selectedMajor}
+            errorMessage={dialogError}
+            isSubmitting={createMajorPending || updateMajorPending}
+            onOpenChange={(open) => {
+              setDialogOpen(open)
+              if (!open) {
+                setDialogError(null)
+                setSelectedMajor(null)
+              }
+            }}
+            onSubmit={handleDialogSubmit}
+          />
 
-      <MajorDeleteDialog
-        open={deleteDialogOpen}
-        major={majorToDelete}
-        isDeleting={deleteMajorPending}
-        onOpenChange={(open) => {
-          setDeleteDialogOpen(open)
-          if (!open) setMajorToDelete(null)
-        }}
-        onConfirm={handleConfirmDelete}
-      />
+          <MajorDeleteDialog
+            open={deleteDialogOpen}
+            major={majorToDelete}
+            isDeleting={deleteMajorPending}
+            onOpenChange={(open) => {
+              setDeleteDialogOpen(open)
+              if (!open) setMajorToDelete(null)
+            }}
+            onConfirm={handleConfirmDelete}
+          />
+        </>
+      ) : null}
     </div>
   )
 }

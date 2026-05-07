@@ -1,4 +1,5 @@
 import { Activity, LineChart, Loader2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -53,6 +54,7 @@ const LeadScoreHistoryDialog = ({
   isFetching = false,
   onOpenChange,
 }: LeadScoreHistoryDialogProps) => {
+  const { t } = useTranslation("leads")
   const items = history?.items ?? []
   const scores = items.map((item) => item.running_activity_score)
   const points = buildPolylinePoints(scores)
@@ -68,10 +70,10 @@ const LeadScoreHistoryDialog = ({
             </div>
             <div>
               <DialogTitle className="text-base font-semibold text-slate-950">
-                {lead?.full_name || "Lead"} - lịch sử điểm
+                {lead?.full_name || t("lead")} - {t("scoreHistory")}
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-500">
-                Theo dõi biến động điểm dựa trên các hoạt động đã ghi nhận.
+                {t("scoreHistoryDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -89,7 +91,7 @@ const LeadScoreHistoryDialog = ({
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Điểm hiện tại
+                    {t("currentScore")}
                   </p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">
                     {currentScore}
@@ -97,7 +99,7 @@ const LeadScoreHistoryDialog = ({
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Mức độ quan tâm
+                    {t("temperature")}
                   </p>
                   <p className="mt-2 text-sm font-semibold text-slate-900">
                     {history?.temperature ?? lead?.temperature ?? "-"}
@@ -105,7 +107,7 @@ const LeadScoreHistoryDialog = ({
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
                   <p className="text-xs font-medium text-slate-500">
-                    Sự kiện điểm
+                    {t("scoreEvents")}
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-900">
                     {history?.total ?? items.length}
@@ -120,14 +122,14 @@ const LeadScoreHistoryDialog = ({
                 <div className="mb-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-slate-900">
-                      Diễn biến điểm hoạt động
+                      {t("scoreTrend")}
                     </p>
                     <p className="text-xs text-slate-500">
-                      Được tính từ các thay đổi điểm theo thứ tự thời gian.
+                      {t("scoreTrendDescription")}
                     </p>
                   </div>
                   <Badge variant="outline" className="border-slate-200 text-xs">
-                    {items.length} điểm dữ liệu
+                    {t("dataPoints", { count: items.length })}
                   </Badge>
                 </div>
 
@@ -180,11 +182,10 @@ const LeadScoreHistoryDialog = ({
                   <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-12 text-center">
                     <Activity className="size-5 text-slate-400" />
                     <p className="text-sm font-medium text-slate-900">
-                      Chưa có lịch sử điểm
+                      {t("noScoreHistory")}
                     </p>
                     <p className="text-xs text-slate-500">
-                      Biến động điểm sẽ hiển thị sau khi hoạt động của lead được
-                      ghi nhận.
+                      {t("noScoreHistoryHint")}
                     </p>
                   </div>
                 )}

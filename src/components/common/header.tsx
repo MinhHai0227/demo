@@ -1,20 +1,14 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, ShieldCheck, X } from "lucide-react"
 
 import logo from "@/assets/logo.png"
+import LanguageSwitcher from "@/components/common/language-switcher"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import useAuthStore from "@/stores/auth-store"
-
-const sections = [
-  { label: "Trang chủ", href: "/" },
-  { label: "Chương trình đào tạo", href: "/programs" },
-  { label: "Cơ hội học bổng", href: "/scholarship" },
-  { label: "Điều kiện tuyển sinh", href: "/admission-conditions" },
-  { label: "Quy trình tuyển sinh", href: "/admission-process" },
-]
 
 const getInitials = (name?: string | null) => {
   if (!name) {
@@ -33,6 +27,15 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
   const { user } = useAuthStore()
+  const { t } = useTranslation("header")
+
+  const sections = [
+    { label: t("sections.home"), href: "/" },
+    { label: t("sections.programs"), href: "/programs" },
+    { label: t("sections.scholarship"), href: "/scholarship" },
+    { label: t("sections.admissionConditions"), href: "/admission-conditions" },
+    { label: t("sections.admissionProcess"), href: "/admission-process" },
+  ]
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -65,6 +68,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           {user ? (
             <Link to="/admin" className="hidden md:block">
               <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 shadow transition-colors hover:border-primary/30 hover:bg-primary/5">
@@ -87,7 +91,7 @@ const Header = () => {
           ) : (
             <Link to="/login" className="hidden md:block">
               <Button className="cursor-pointer font-medium">
-                Đăng nhập quản trị
+                {t("loginButton")}
               </Button>
             </Link>
           )}
@@ -95,7 +99,7 @@ const Header = () => {
           <button
             className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:hidden"
             onClick={() => setMobileOpen((open) => !open)}
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -143,7 +147,7 @@ const Header = () => {
             ) : (
               <Link to="/login" onClick={() => setMobileOpen(false)}>
                 <Button size="sm" className="w-full cursor-pointer font-medium">
-                  Đăng nhập quản trị
+                  {t("loginButton")}
                 </Button>
               </Link>
             )}

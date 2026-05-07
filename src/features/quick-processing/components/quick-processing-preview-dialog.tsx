@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+
 import { FileText, Loader2, Save, SendHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -69,6 +71,7 @@ const QuickProcessingPreviewDialog = ({
   onSave,
   onSendToKb,
 }: QuickProcessingPreviewDialogProps) => {
+  const { t } = useTranslation("quick-processing")
   const isDirty = draftContent !== content
   const isSent = Boolean(job?.sent_to_kb)
   const canSave = Boolean(draftContent.trim()) && isDirty && !isSent
@@ -86,10 +89,10 @@ const QuickProcessingPreviewDialog = ({
             </div>
             <div className="min-w-0">
               <DialogTitle className="truncate text-[15px] font-semibold text-slate-900">
-                {job?.title || job?.original_filename || "Xem trước OCR"}
+                {job?.title || job?.original_filename || t("previewTitle")}
               </DialogTitle>
               <DialogDescription className="truncate text-[12px] text-slate-500">
-                Xem lại và chỉnh sửa markdown trước khi tạo knowledge chunk.
+                {t("previewDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -101,12 +104,12 @@ const QuickProcessingPreviewDialog = ({
             <FieldGroup className="grid gap-4 md:grid-cols-[minmax(0,1fr)_8rem_8rem]">
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
-                  Danh mục
+                  {t("category")}
                 </FieldLabel>
                 <FieldContent>
                   <Select value={category} onValueChange={onCategoryChange}>
                     <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                      <SelectValue placeholder="Chọn danh mục" />
+                      <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent>
                       {admissionCategoryOptions.map((item) => (
@@ -121,7 +124,7 @@ const QuickProcessingPreviewDialog = ({
 
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
-                  Kích thước chunk
+                  {t("chunkSize")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -137,7 +140,7 @@ const QuickProcessingPreviewDialog = ({
 
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
-                  Overlap
+                  {t("overlap")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -160,7 +163,7 @@ const QuickProcessingPreviewDialog = ({
             {isLoading ? (
               <div className="flex h-[min(46vh,420px)] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 text-[13px] text-slate-500">
                 <Loader2 className="mr-2 size-4 animate-spin" />
-                Đang tải markdown...
+                {t("loadingMarkdown")}
               </div>
             ) : (
               <textarea
@@ -184,10 +187,10 @@ const QuickProcessingPreviewDialog = ({
         <div className="flex flex-col gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] text-slate-500">
             {isSent
-              ? "OCR job này đã được gửi vào knowledge base."
+              ? t("alreadySentToKb")
               : isDirty
-                ? "Lưu thay đổi markdown trước khi gửi vào KB."
-                : "Markdown đã sẵn sàng để gửi."}
+                ? t("saveBeforeSend")
+                : t("markdownReady")}
           </p>
 
           <div className="flex flex-wrap justify-end gap-2">
@@ -198,7 +201,7 @@ const QuickProcessingPreviewDialog = ({
               className="h-9 rounded-xl border-slate-200 bg-white px-4 text-[13px] font-medium text-slate-600 shadow-none hover:bg-slate-50"
               onClick={() => onOpenChange(false)}
             >
-              Đóng
+              {t("close")}
             </Button>
             <Button
               type="button"
@@ -213,7 +216,7 @@ const QuickProcessingPreviewDialog = ({
               ) : (
                 <Save className="size-3.5" />
               )}
-              Lưu markdown
+              {t("saveMarkdown")}
             </Button>
             <Button
               type="button"
@@ -227,7 +230,7 @@ const QuickProcessingPreviewDialog = ({
               ) : (
                 <SendHorizontal className="size-3.5" />
               )}
-              Gửi vào KB
+              {t("sendToKbBtn")}
             </Button>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { ChevronRight, TrendingUp } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -49,6 +50,7 @@ const DashboardDailyTable = ({
   onPageChange,
   onSelectDate,
 }: DashboardDailyTableProps) => {
+  const { t } = useTranslation("dashboard")
   const currentPage = Math.floor(offset / limit) + 1
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const canGoPrevious = currentPage > 1
@@ -62,10 +64,10 @@ const DashboardDailyTable = ({
       <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 pt-5">
         <div>
           <h2 className="text-[14px] font-semibold text-slate-900">
-            Thống kê theo ngày
+            {t("dailyBreakdown")}
           </h2>
           <p className="text-[12px] text-slate-500">
-            Top intents tổng hợp bên trái · Bảng chi tiết bên phải
+            {t("dailyBreakdownHint")}
           </p>
         </div>
         {isFetching && (
@@ -73,7 +75,7 @@ const DashboardDailyTable = ({
             variant="outline"
             className="border-slate-200 text-[11px] text-slate-500"
           >
-            Đang làm mới...
+            {t("refreshing")}
           </Badge>
         )}
       </div>
@@ -83,11 +85,10 @@ const DashboardDailyTable = ({
         <div className="border-b border-slate-100 p-5 xl:border-r xl:border-b-0">
           <div>
             <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-              Top intents
+              {t("topIntents")}
             </p>
             <p className="mt-0.5 text-[11px] text-slate-400">
-              {summary?.days ?? 0} ngày · {summary?.active_days ?? 0} ngày có dữ
-              liệu
+              {t("daysWithData", { days: summary?.days ?? 0, activeDays: summary?.active_days ?? 0 })}
             </p>
           </div>
 
@@ -117,7 +118,7 @@ const DashboardDailyTable = ({
               ))
             ) : (
               <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-[12px] text-slate-400">
-                Chưa có top intents trong khoảng này.
+                {t("noTopIntentsInRange")}
               </div>
             )}
           </div>
@@ -128,14 +129,14 @@ const DashboardDailyTable = ({
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-                Bảng hàng ngày
+                {t("dailyTableLabel")}
               </p>
               <p className="mt-0.5 text-[11px] text-slate-400">
-                Nhấn vào từng ngày để xem chi tiết
+                {t("clickDateForDetail")}
               </p>
             </div>
             <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
-              {total} bản ghi
+              {t("totalRecords", { count: total })}
             </span>
           </div>
 
@@ -144,19 +145,19 @@ const DashboardDailyTable = ({
               <TableHeader>
                 <TableRow className="bg-slate-50/80 hover:bg-slate-50/80">
                   <TableHead className="text-[11px] font-medium text-slate-500">
-                    Ngày
+                    {t("date")}
                   </TableHead>
                   <TableHead className="text-right text-[11px] font-medium text-slate-500">
-                    Hội thoại
+                    {t("conversations")}
                   </TableHead>
                   <TableHead className="text-right text-[11px] font-medium text-slate-500">
-                    Lead mới
+                    {t("newLeads")}
                   </TableHead>
                   <TableHead className="text-right text-[11px] font-medium text-slate-500">
-                    Fallback
+                    {t("fallbacks")}
                   </TableHead>
                   <TableHead className="text-right text-[11px] font-medium text-slate-500">
-                    Tỉ lệ
+                    {t("rate")}
                   </TableHead>
                   <TableHead className="text-right text-[11px] font-medium text-slate-500" />
                 </TableRow>
@@ -235,7 +236,7 @@ const DashboardDailyTable = ({
                           <TrendingUp className="size-4 text-slate-400" />
                         </div>
                         <p className="text-[12px] text-slate-500">
-                          Không có dữ liệu trong khoảng ngày đã chọn.
+                          {t("noDataInRange")}
                         </p>
                       </div>
                     </TableCell>
@@ -248,14 +249,14 @@ const DashboardDailyTable = ({
           {/* Pagination */}
           <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[11px] text-slate-500">
-              Trang {currentPage}/{totalPages} · {items.length} bản ghi
+              {t("pageInfo", { currentPage, totalPages, count: items.length })}
             </p>
             <Pagination className="mx-0 w-auto justify-end">
               <PaginationContent className="gap-1">
                 <PaginationItem>
                   <PaginationPrevious
                     href="#"
-                    text="Trước"
+                    text={t("previous")}
                     className={cn(
                       "h-8 rounded-lg px-3 text-[12px]",
                       !canGoPrevious && "pointer-events-none opacity-40"
@@ -269,7 +270,7 @@ const DashboardDailyTable = ({
                 <PaginationItem>
                   <PaginationNext
                     href="#"
-                    text="Sau"
+                    text={t("next")}
                     className={cn(
                       "h-8 rounded-lg px-3 text-[12px]",
                       !canGoNext && "pointer-events-none opacity-40"

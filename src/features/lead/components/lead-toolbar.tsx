@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { Search, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -54,6 +55,8 @@ const LeadToolbar = ({
   onAssignedStaffFilterChange,
   onClearFilters,
 }: LeadToolbarProps) => {
+  const { t } = useTranslation("leads")
+  const { t: tc } = useTranslation("common")
   const showStaffFilter = staffOptions.length > 0
   const hasFilters = Boolean(
     appliedSearch ||
@@ -78,7 +81,7 @@ const LeadToolbar = ({
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
             <Input
               value={searchInput}
-              placeholder="Tìm theo tên lead, email, số điện thoại..."
+              placeholder={t("searchPlaceholder")}
               className="h-10 rounded-xl border-slate-200 bg-white pl-9 text-sm shadow-xs transition-colors placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-slate-200"
               onChange={(event) => onSearchInputChange(event.target.value)}
             />
@@ -86,10 +89,10 @@ const LeadToolbar = ({
 
           <Select value={statusFilter} onValueChange={onStatusFilterChange}>
             <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-              <SelectValue placeholder="Tất cả trạng thái" />
+              <SelectValue placeholder={t("allStatuses")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
+              <SelectItem value="ALL">{t("allStatuses")}</SelectItem>
               {leadStatusOptions.map((item) => (
                 <SelectItem key={item.value} value={item.value}>
                   {item.label}
@@ -103,10 +106,10 @@ const LeadToolbar = ({
             onValueChange={onTemperatureFilterChange}
           >
             <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-              <SelectValue placeholder="Tất cả mức độ quan tâm" />
+              <SelectValue placeholder={t("allTemperatures")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả mức độ quan tâm</SelectItem>
+              <SelectItem value="ALL">{t("allTemperatures")}</SelectItem>
               {leadTemperatureOptions.map((item) => (
                 <SelectItem key={item.value} value={item.value}>
                   {item.label}
@@ -117,7 +120,7 @@ const LeadToolbar = ({
 
           <Select value={sortOption} onValueChange={onSortOptionChange}>
             <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-              <SelectValue placeholder="Sắp xếp theo" />
+              <SelectValue placeholder={t("sortBy")} />
             </SelectTrigger>
             <SelectContent>
               {leadSortOptions.map((item) => (
@@ -134,10 +137,10 @@ const LeadToolbar = ({
               onValueChange={onAssignedStaffFilterChange}
             >
               <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
-                <SelectValue placeholder="Tất cả tư vấn viên" />
+                <SelectValue placeholder={t("allCounselors")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Tất cả tư vấn viên</SelectItem>
+                <SelectItem value="ALL">{t("allCounselors")}</SelectItem>
                 {staffOptions.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
                     {item.label}
@@ -155,7 +158,7 @@ const LeadToolbar = ({
               variant="ghost"
               size="icon"
               className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-500 shadow-xs transition-colors hover:bg-slate-100 hover:text-slate-950"
-              aria-label="Xóa bộ lọc"
+              aria-label={t("clearFilters")}
               onClick={onClearFilters}
             >
               <X className="size-4" />
@@ -172,18 +175,18 @@ const LeadToolbar = ({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
               </span>
-              Đang chờ nhập xong...
+              {tc("debouncing")}
             </span>
           ) : null}
 
           {hasFilters ? (
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-200 ring-inset">
-              Đang áp dụng bộ lọc
+              {tc("applyingFilters")}
             </span>
           ) : null}
 
           <span className="ml-auto text-xs text-slate-400">
-            Kết quả sẽ cập nhật sau 1 giây khi bạn ngừng nhập
+            {t("resultsUpdateHint")}
           </span>
         </div>
       )}

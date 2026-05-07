@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 import { requestConversationStaffContact } from "@/api/chat-api"
@@ -51,7 +52,10 @@ const HomeChatShell = () => {
   const previousScrollHeightRef = useRef<number | null>(null)
   const shouldPreserveScrollRef = useRef(false)
   const hasInitializedScrollRef = useRef(false)
+  const previousConversationStatusRef = useRef<string | null>(null)
   const tempMessageCounterRef = useRef(0)
+
+  const { t } = useTranslation("home")
 
   const { leadData } = useLeadStore()
 
@@ -110,17 +114,17 @@ const HomeChatShell = () => {
     isHotLead &&
     effectiveConversationStatus !== "CLOSED"
   const assignedCounselorName =
-    conversation?.staff_name || "cố vấn tuyển sinh"
+    conversation?.staff_name || t("chat.fallbackCounselorName")
   const activeChatLabel = isCounselorChatActive
-    ? `Đang chat với ${assignedCounselorName}`
+    ? t("chat.counselorChattingWith", { name: assignedCounselorName })
     : isCounselorPending
-      ? "AI đang hỗ trợ, cố vấn đã được mời"
-      : "Đang chat với VinUni AI"
+      ? t("chat.aiWithCounselorInvited")
+      : t("chat.chattingWithAI")
   const activeChatHint = isCounselorChatActive
-    ? "Tin nhắn từ cố vấn sẽ hiển thị nổi bật trong cuộc trò chuyện."
+    ? t("chat.counselorMessageBanner")
     : isCounselorPending
-      ? "Trong lúc chờ cố vấn phản hồi, VinUni AI vẫn tiếp tục hỗ trợ bạn."
-      : "VinUni AI đang là người trực tiếp hỗ trợ cuộc trò chuyện này."
+      ? t("chat.aiSupportPendingCounselor")
+      : t("chat.aiDirectlySupporting")
   const scopedStaffContactFeedback =
     staffContactFeedback &&
     staffContactFeedback.conversationId === conversation?.id
@@ -129,9 +133,9 @@ const HomeChatShell = () => {
   const counselorNotice = scopedStaffContactFeedback
     ? scopedStaffContactFeedback
     : isCounselorChatActive
-      ? `${assignedCounselorName} đang theo dõi và trả lời trực tiếp trong cuộc trò chuyện này.`
+      ? t("chat.counselorMonitoring", { name: assignedCounselorName })
       : isCounselorPending
-        ? `${assignedCounselorName} đã được mời vào cuộc trò chuyện. Trong lúc chờ phản hồi, AI vẫn có thể hỗ trợ bạn.`
+        ? t("chat.counselorInvitedNotice", { name: assignedCounselorName })
         : null
 
   const requestCounselorMutation = useMutation({
@@ -143,8 +147,7 @@ const HomeChatShell = () => {
     onSuccess: (updatedConversation, conversationId) => {
       setStaffContactFeedback({
         conversationId,
-        message:
-          "Yêu cầu kết nối với cố vấn đã được gửi. Team sẽ phản hồi sớm.",
+        message: t("chat.counselorRequestSent"),
       })
       setLatestChatLeadState({
         conversation_id: updatedConversation.id,
@@ -196,6 +199,23 @@ const HomeChatShell = () => {
     leadData?.conversation_id,
     chatPending,
   ])
+
+  useEffect(() => {
+    const currentStatus = conversation?.status ?? null
+    const previousStatus = previousConversationStatusRef.current
+
+    if (
+      previousStatus === "HANDOFF" &&
+      currentStatus === "OPEN" &&
+      conversation?.id
+    ) {
+      setStaffContactFeedback((current) =>
+        current?.conversationId === conversation.id ? null : current
+      )
+    }
+
+    previousConversationStatusRef.current = currentStatus
+  }, [conversation?.id, conversation?.status])
 
   const handleMessagesScroll = () => {
     const container = messagesContainerRef.current
@@ -317,7 +337,7 @@ const HomeChatShell = () => {
           .filter((item): item is NonNullable<typeof item> => item !== null)
       )
     } catch {
-      setChatError("Không thể gửi tin nhắn lúc này. Vui lòng thử lại sau.")
+      setChatError(t("chat.errorSend"))
 
       setOptimisticMessages((current) =>
         current.filter(
@@ -363,9 +383,7 @@ const HomeChatShell = () => {
         await submitChat(queuedMessage, lead.lead_id, null, null)
       }
     } catch {
-      setChatError(
-        "Không thể tạo lead lúc này. Vui lòng kiểm tra lại thông tin."
-      )
+      setChatError(t("chat.errorCreateLead"))
     }
   }
 
@@ -379,8 +397,8 @@ const HomeChatShell = () => {
     if (hasCounselorAssigned) {
       toast.info(
         isCounselorChatActive
-          ? `Bạn đang được ${assignedCounselorName} hỗ trợ trong cuộc trò chuyện này.`
-          : `${assignedCounselorName} đã được mời vào cuộc trò chuyện. AI vẫn hỗ trợ bạn trong lúc chờ phản hồi.`
+          ? t("chat.counselorAlreadyChattingWith", { name: assignedCounselorName })
+          : t("chat.counselorAlreadyInvitedToChat", { name: assignedCounselorName })
       )
       return
     }
@@ -389,25 +407,23 @@ const HomeChatShell = () => {
 
     try {
       await requestCounselorMutation.mutateAsync(requestConversationId)
-      toast.success("Đã gửi yêu cầu kết nối với cố vấn.")
+      toast.success(t("chat.counselorRequestSuccessToast"))
     } catch {
-      setChatError(
-        "Không thể gửi yêu cầu kết nối cố vấn lúc này. Vui lòng thử lại sau."
-      )
-      toast.error("Chưa thể kết nối với cố vấn lúc này. Vui lòng thử lại sau.")
+      setChatError(t("chat.errorCounselor"))
+      toast.error(t("chat.counselorRequestFailedToast"))
     }
   }
 
   const getMessageAuthor = (message: ChatMessage) => {
     if (message.role === "USER") {
-      return leadData?.full_name || "Bạn"
+      return leadData?.full_name || t("chat.you")
     }
 
     if (message.intent === "staff_reply") {
-      return conversation?.staff_name || "Tư vấn viên"
+      return conversation?.staff_name || t("chat.counselor")
     }
 
-    return "VinUni AI"
+    return t("chat.aiName")
   }
 
   return (
@@ -429,9 +445,9 @@ const HomeChatShell = () => {
 
           <div className="min-w-0 flex-1">
             <h2 className="text-[15px] font-semibold tracking-tight text-slate-950">
-              VinUni Admissions Assistant
+              {t("chat.title")}
             </h2>
-            <p className="text-xs text-slate-400">Luôn sẵn sàng hỗ trợ</p>
+            <p className="text-xs text-slate-400">{t("chat.subtitle")}</p>
           </div>
 
           <div
@@ -454,10 +470,10 @@ const HomeChatShell = () => {
             )}
             <span className="text-[11px] font-medium">
               {isCounselorChatActive
-                ? "Cố vấn"
+                ? t("chat.counselorLabel")
                 : isCounselorPending
-                  ? "AI + Cố vấn"
-                  : "AI"}
+                  ? t("chat.aiAndCounselorLabel")
+                  : t("chat.aiLabel")}
             </span>
           </div>
         </div>
@@ -479,8 +495,8 @@ const HomeChatShell = () => {
                 <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">
                   <span>
                     {conversationPending
-                      ? "Đang tải conversation..."
-                      : "Conversation đã lưu"}
+                      ? t("chat.loadingConversation")
+                      : t("chat.conversationSaved")}
                   </span>
 
                   {conversation?.status ? (
@@ -491,7 +507,7 @@ const HomeChatShell = () => {
 
                   {typeof conversation?.message_count === "number" ? (
                     <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500 normal-case ring-1 ring-slate-200">
-                      {conversation.message_count} tin nhắn
+                      {t("chat.messagesCount", { count: conversation.message_count })}
                     </span>
                   ) : null}
                 </div>
@@ -539,24 +555,25 @@ const HomeChatShell = () => {
               <div className="max-w-[85%] sm:max-w-[72%]">
                 <div className="mb-1.5 flex items-center gap-2 pl-1">
                   <span className="text-[11px] font-semibold text-slate-900">
-                    VinUni AI
+                    {t("chat.aiName")}
                   </span>
                   <span className="text-[11px] text-slate-400">
-                    Sẵn sàng trả lời
+                    {t("chat.readyLabel")}
                   </span>
                 </div>
                 <div className="rounded-2xl rounded-tl-sm border border-slate-200/80 bg-white px-4 py-3 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)]">
                   <p className="text-[14px] leading-relaxed text-slate-700">
-                    Xin chào! Tôi có thể hỗ trợ thông tin về{" "}
+                    {t("chat.welcomeIntro")}
                     <span className="font-medium text-slate-900">
-                      tuyển sinh
+                      {t("chat.welcomeHighlights.admissions")}
                     </span>
                     ,{" "}
-                    <span className="font-medium text-slate-900">học phí</span>,{" "}
-                    <span className="font-medium text-slate-900">học bổng</span>{" "}
-                    và{" "}
+                    <span className="font-medium text-slate-900">{t("chat.welcomeHighlights.tuition")}</span>
+                    ,{" "}
+                    <span className="font-medium text-slate-900">{t("chat.welcomeHighlights.scholarship")}</span>
+                    {t("chat.welcomeAnd")}
                     <span className="font-medium text-slate-900">
-                      quy trình nộp hồ sơ
+                      {t("chat.welcomeHighlights.process")}
                     </span>
                     .
                   </p>
@@ -612,7 +629,7 @@ const HomeChatShell = () => {
                             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:150ms]" />
                             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:300ms]" />
                           </span>
-                          Đang suy nghĩ
+                          {t("chat.thinking")}
                         </span>
                       ) : (
                         ""
@@ -627,7 +644,7 @@ const HomeChatShell = () => {
           {olderConversationMessagesPending ? (
             <div className="flex justify-center">
               <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-slate-500 shadow-sm">
-                Đang tải thêm tin nhắn cũ...
+                {t("chat.loadingOlder")}
               </div>
             </div>
           ) : null}
@@ -635,7 +652,7 @@ const HomeChatShell = () => {
           {conversationMessagesPending ? (
             <div className="flex justify-start">
               <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-4 py-3 text-[13px] text-slate-400 shadow-sm">
-                Đang tải lịch sử chat...
+                {t("chat.loadingHistory")}
               </div>
             </div>
           ) : null}
@@ -668,7 +685,7 @@ const HomeChatShell = () => {
             <textarea
               rows={2}
               value={draftMessage}
-              placeholder="Nhập câu hỏi của bạn tại đây..."
+              placeholder={t("chat.placeholder")}
               onChange={(event) => setDraftMessage(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
@@ -699,7 +716,7 @@ const HomeChatShell = () => {
                   <Mic className="h-3.5 w-3.5" />
                 </Button>
                 <span className="hidden text-[11px] text-slate-400 sm:block">
-                  Enter để gửi · Shift+Enter xuống dòng
+                  {t("chat.enterToSend")}
                 </span>
               </div>
 
@@ -722,12 +739,12 @@ const HomeChatShell = () => {
                   >
                     <Headset className="h-3.5 w-3.5" />
                     {requestCounselorMutation.isPending
-                      ? "Đang gửi..."
+                      ? t("chat.sending")
                       : isCounselorChatActive
-                        ? "Đang chat với cố vấn"
+                        ? t("chat.chatWithCounselor")
                         : isCounselorPending
-                          ? "Đã mời cố vấn"
-                          : "Yêu cầu kết nối với cố vấn"}
+                          ? t("chat.counselorInvited")
+                          : t("chat.requestCounselor")}
                   </Button>
                 ) : null}
 
@@ -740,7 +757,7 @@ const HomeChatShell = () => {
                     void handleSend()
                   }}
                 >
-                  {chatPending ? "Đang gửi..." : "Gửi"}
+                  {chatPending ? t("chat.sending") : t("chat.send")}
                   <SendHorizonal className="h-3.5 w-3.5" />
                 </Button>
               </div>

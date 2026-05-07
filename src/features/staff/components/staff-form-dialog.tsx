@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -55,6 +56,8 @@ const StaffFormDialog = ({
   onOpenChange,
   onSubmit,
 }: StaffFormDialogProps) => {
+  const { t } = useTranslation("staff")
+
   const form = useForm<StaffFormValues>({
     resolver: zodResolver(staffFormSchema),
     defaultValues: { name: "", email: "", password: "", role: "COUNSELOR" },
@@ -77,7 +80,7 @@ const StaffFormDialog = ({
     const nextPassword = values.password.trim()
     if (mode === "create" && !nextPassword) {
       form.setError("password", {
-        message: "Mật khẩu là bắt buộc khi tạo tài khoản mới",
+        message: t("passwordRequired"),
       })
       return
     }
@@ -105,14 +108,10 @@ const StaffFormDialog = ({
             </div>
             <div>
               <DialogTitle className="text-[15px] font-semibold text-slate-900">
-                {isCreate
-                  ? "Tạo tài khoản nhân viên"
-                  : "Chỉnh sửa tài khoản nhân viên"}
+                {isCreate ? t("createNewStaff") : t("editStaff")}
               </DialogTitle>
               <DialogDescription className="text-[12px] text-slate-500">
-                {isCreate
-                  ? "Thêm admin hoặc counselor mới vào hệ thống."
-                  : "Cập nhật thông tin, vai trò hoặc mật khẩu."}
+                {isCreate ? t("createDescription") : t("editDescription")}
               </DialogDescription>
             </div>
           </div>
@@ -132,12 +131,12 @@ const StaffFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <UserRound className="size-3.5 text-slate-400" />
-                  Họ và tên
+                  {t("fullName")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="staff-name"
-                    placeholder="Nguyễn Văn A"
+                    placeholder={t("namePlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("name")}
                   />
@@ -151,13 +150,13 @@ const StaffFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <Mail className="size-3.5 text-slate-400" />
-                  Email
+                  {t("email")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="staff-email"
                     type="email"
-                    placeholder="nhanvien@vinuni.edu.vn"
+                    placeholder={t("emailPlaceholder")}
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("email")}
                   />
@@ -173,22 +172,24 @@ const StaffFormDialog = ({
                   className="text-[12px] font-medium text-slate-600"
                 >
                   <LockKeyhole className="size-3.5 text-slate-400" />
-                  Mật khẩu
+                  {t("password")}
                 </FieldLabel>
                 <FieldContent>
                   <Input
                     id="staff-password"
                     type="password"
                     placeholder={
-                      isCreate ? "Tối thiểu 6 ký tự" : "Để trống nếu không đổi"
+                      isCreate
+                        ? t("passwordPlaceholderCreate")
+                        : t("passwordPlaceholderEdit")
                     }
                     className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                     {...form.register("password")}
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
                     {isCreate
-                      ? "Bắt buộc khi tạo tài khoản mới."
-                      : "Chỉ điền nếu muốn thay đổi mật khẩu."}
+                      ? t("passwordHintCreate")
+                      : t("passwordHintEdit")}
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.password]} />
                 </FieldContent>
@@ -197,7 +198,7 @@ const StaffFormDialog = ({
               <Field>
                 <FieldLabel className="text-[12px] font-medium text-slate-600">
                   <ShieldCheck className="size-3.5 text-slate-400" />
-                  Vai trò
+                  {t("role")}
                 </FieldLabel>
                 <FieldContent>
                   <Controller
@@ -209,7 +210,7 @@ const StaffFormDialog = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none focus:border-slate-300 focus:ring-0">
-                          <SelectValue placeholder="Chọn vai trò" />
+                          <SelectValue placeholder={t("selectRole")} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="ADMIN">Admin</SelectItem>
@@ -219,7 +220,7 @@ const StaffFormDialog = ({
                     )}
                   />
                   <FieldDescription className="text-[11px] text-slate-400">
-                    Admin có toàn quyền. Counselor phụ trách vận hành.
+                    {t("roleHint")}
                   </FieldDescription>
                   <FieldError errors={[form.formState.errors.role]} />
                 </FieldContent>
@@ -243,7 +244,7 @@ const StaffFormDialog = ({
               disabled={isSubmitting}
               onClick={() => onOpenChange(false)}
             >
-              Hủy
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -254,11 +255,11 @@ const StaffFormDialog = ({
               {isSubmitting && <Loader2 className="size-3.5 animate-spin" />}
               {isCreate
                 ? isSubmitting
-                  ? "Đang tạo..."
-                  : "Tạo tài khoản"
+                  ? t("creating")
+                  : t("createAccount")
                 : isSubmitting
-                  ? "Đang lưu..."
-                  : "Lưu thay đổi"}
+                  ? t("saving")
+                  : t("saveChanges")}
             </Button>
           </div>
         </form>

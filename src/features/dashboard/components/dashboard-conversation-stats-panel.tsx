@@ -1,4 +1,5 @@
 import { MessagesSquare, Radio, Workflow } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -14,19 +15,6 @@ type DashboardConversationStatsPanelProps = {
 type BreakdownItem = {
   label: string
   count: number
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  OPEN: "Đang mở",
-  HANDOFF: "Chuyển tư vấn",
-  CLOSED: "Đã đóng",
-}
-
-const CHANNEL_LABELS: Record<string, string> = {
-  WEB: "Web",
-  ZALO: "Zalo",
-  FACEBOOK: "Facebook",
-  TELEGRAM: "Telegram",
 }
 
 const normalizeBreakdown = (
@@ -49,48 +37,67 @@ const BreakdownList = ({
   title: string
   items: BreakdownItem[]
   total: number
-}) => (
-  <div>
-    <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
-      {title}
-    </p>
-    <div className="mt-2.5 space-y-2.5">
-      {items.length ? (
-        items.map((item) => {
-          const percent = total > 0 ? (item.count / total) * 100 : 0
-          return (
-            <div key={item.label} className="space-y-1.5">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[12px] font-medium text-slate-700">
-                  {item.label}
-                </span>
-                <span className="text-[12px] font-semibold text-slate-900">
-                  {item.count}
-                </span>
+}) => {
+  const { t } = useTranslation("dashboard")
+
+  return (
+    <div>
+      <p className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
+        {title}
+      </p>
+      <div className="mt-2.5 space-y-2.5">
+        {items.length ? (
+          items.map((item) => {
+            const percent = total > 0 ? (item.count / total) * 100 : 0
+            return (
+              <div key={item.label} className="space-y-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[12px] font-medium text-slate-700">
+                    {item.label}
+                  </span>
+                  <span className="text-[12px] font-semibold text-slate-900">
+                    {item.count}
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full bg-slate-800 transition-all duration-500"
+                    style={{ width: `${Math.min(100, percent)}%` }}
+                  />
+                </div>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-slate-800 transition-all duration-500"
-                  style={{ width: `${Math.min(100, percent)}%` }}
-                />
-              </div>
-            </div>
-          )
-        })
-      ) : (
-        <div className="rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-[12px] text-slate-400">
-          Chưa có dữ liệu hội thoại.
-        </div>
-      )}
+            )
+          })
+        ) : (
+          <div className="rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-[12px] text-slate-400">
+            {t("noConversationData")}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const DashboardConversationStatsPanel = ({
   stats,
   isLoading,
   isFetching,
 }: DashboardConversationStatsPanelProps) => {
+  const { t } = useTranslation("dashboard")
+
+  const STATUS_LABELS: Record<string, string> = {
+    OPEN: t("statusOpen"),
+    HANDOFF: t("statusHandoff"),
+    CLOSED: t("statusClosed"),
+  }
+
+  const CHANNEL_LABELS: Record<string, string> = {
+    WEB: "Web",
+    ZALO: "Zalo",
+    FACEBOOK: "Facebook",
+    TELEGRAM: "Telegram",
+  }
+
   const statusItems = normalizeBreakdown(stats?.by_status ?? [], STATUS_LABELS)
   const channelItems = normalizeBreakdown(stats?.by_channel ?? [], CHANNEL_LABELS)
   const total = stats?.total ?? 0
@@ -106,13 +113,13 @@ const DashboardConversationStatsPanel = ({
             <MessagesSquare className="size-4" />
           </div>
           <div>
-            <h2 className="text-[13px] font-semibold text-slate-900">Hội thoại</h2>
-            <p className="text-[11px] text-slate-500">Trạng thái và kênh tiếp cận</p>
+            <h2 className="text-[13px] font-semibold text-slate-900">{t("conversation")}</h2>
+            <p className="text-[11px] text-slate-500">{t("statusAndChannel")}</p>
           </div>
         </div>
         {isFetching ? (
           <Badge variant="outline" className="border-slate-200 text-[10px] text-slate-500">
-            Đang làm mới
+            {t("refreshing")}
           </Badge>
         ) : null}
       </div>
@@ -131,7 +138,7 @@ const DashboardConversationStatsPanel = ({
             <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3.5 py-3">
               <div className="flex items-end justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-medium text-slate-500">Tổng hội thoại</p>
+                  <p className="text-[11px] font-medium text-slate-500">{t("totalConversations")}</p>
                   <p className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
                     {total}
                   </p>
@@ -147,12 +154,12 @@ const DashboardConversationStatsPanel = ({
               </div>
             </div>
 
-            <BreakdownList title="Theo trạng thái" items={statusItems} total={total} />
-            <BreakdownList title="Theo kênh" items={channelItems} total={total} />
+            <BreakdownList title={t("byStatus")} items={statusItems} total={total} />
+            <BreakdownList title={t("byChannel")} items={channelItems} total={total} />
 
             <div className="flex items-center gap-2 rounded-xl bg-blue-50/80 px-3 py-2.5 text-[12px] font-medium text-blue-700">
               <Radio className="size-3.5" />
-              Tỉ lệ live chat hiện tại
+              {t("liveChatRate")}
             </div>
           </>
         )}
