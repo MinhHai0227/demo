@@ -397,8 +397,12 @@ const HomeChatShell = () => {
     if (hasCounselorAssigned) {
       toast.info(
         isCounselorChatActive
-          ? t("chat.counselorAlreadyChattingWith", { name: assignedCounselorName })
-          : t("chat.counselorAlreadyInvitedToChat", { name: assignedCounselorName })
+          ? t("chat.counselorAlreadyChattingWith", {
+              name: assignedCounselorName,
+            })
+          : t("chat.counselorAlreadyInvitedToChat", {
+              name: assignedCounselorName,
+            })
       )
       return
     }
@@ -507,7 +511,9 @@ const HomeChatShell = () => {
 
                   {typeof conversation?.message_count === "number" ? (
                     <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500 normal-case ring-1 ring-slate-200">
-                      {t("chat.messagesCount", { count: conversation.message_count })}
+                      {t("chat.messagesCount", {
+                        count: conversation.message_count,
+                      })}
                     </span>
                   ) : null}
                 </div>
@@ -568,9 +574,13 @@ const HomeChatShell = () => {
                       {t("chat.welcomeHighlights.admissions")}
                     </span>
                     ,{" "}
-                    <span className="font-medium text-slate-900">{t("chat.welcomeHighlights.tuition")}</span>
+                    <span className="font-medium text-slate-900">
+                      {t("chat.welcomeHighlights.tuition")}
+                    </span>
                     ,{" "}
-                    <span className="font-medium text-slate-900">{t("chat.welcomeHighlights.scholarship")}</span>
+                    <span className="font-medium text-slate-900">
+                      {t("chat.welcomeHighlights.scholarship")}
+                    </span>
                     {t("chat.welcomeAnd")}
                     <span className="font-medium text-slate-900">
                       {t("chat.welcomeHighlights.process")}
@@ -621,19 +631,22 @@ const HomeChatShell = () => {
                         : "rounded-2xl rounded-tr-sm bg-slate-950 text-white shadow-[0_4px_12px_-4px_rgba(15,23,42,0.3)]"
                     }`}
                   >
-                    {message.content ||
-                      (isAssistant ? (
-                        <span className="flex items-center gap-1.5 text-slate-400">
-                          <span className="flex gap-1">
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:0ms]" />
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:150ms]" />
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:300ms]" />
-                          </span>
-                          {t("chat.thinking")}
+                    {message.content ? (
+                      <p className="wrap-anywhere whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    ) : isAssistant ? (
+                      <span className="flex items-center gap-1.5 text-slate-400">
+                        <span className="flex gap-1">
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:0ms]" />
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:150ms]" />
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:300ms]" />
                         </span>
-                      ) : (
-                        ""
-                      ))}
+                        {t("chat.thinking")}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

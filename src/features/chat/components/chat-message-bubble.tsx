@@ -13,7 +13,7 @@ const ChatMessageBubble = ({ message }: ChatMessageBubbleProps) => {
   if (isSystem) {
     return (
       <div className="flex justify-center">
-        <span className="rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] text-slate-500 shadow-sm">
+        <span className="rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] wrap-anywhere whitespace-pre-wrap text-slate-500 shadow-sm">
           {message.content}
         </span>
       </div>
@@ -31,7 +31,7 @@ const ChatMessageBubble = ({ message }: ChatMessageBubbleProps) => {
         )}
       >
         <div className="max-h-72 overflow-y-auto pr-1">
-          <p className="text-[13px] leading-relaxed wrap-break-word whitespace-pre-wrap">
+          <p className="text-[13px] leading-relaxed wrap-anywhere whitespace-pre-wrap">
             {message.content}
           </p>
         </div>
