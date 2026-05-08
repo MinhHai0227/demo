@@ -17,17 +17,19 @@ const HotQuestionsInsights = ({
   const { t } = useTranslation("hot-questions")
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
-      <div className="border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4">
-        <h2 className="text-sm font-semibold text-slate-950">{t("overview")}</h2>
-        <p className="mt-1 text-xs leading-5 text-slate-500">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+      <div className="border-b border-slate-100 px-5 py-4">
+        <h2 className="text-[14px] font-semibold text-slate-900">
+          {t("overview")}
+        </h2>
+        <p className="text-[12px] leading-5 text-slate-500">
           {t("overviewHint")}
         </p>
       </div>
 
       <div className="space-y-4 px-5 py-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-          <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-3 py-2.5 shadow-xs">
+          <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-3 py-2.5 shadow-none">
             <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
               {t("totalQuestionsLabel")}
             </p>
@@ -36,7 +38,7 @@ const HotQuestionsInsights = ({
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-3 py-2.5 shadow-xs">
+          <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-3 py-2.5 shadow-none">
             <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
               {t("totalAsksLabel")}
             </p>
@@ -46,7 +48,7 @@ const HotQuestionsInsights = ({
           </div>
         </div>
 
-        <div className="rounded-xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-4 shadow-xs">
+        <div className="rounded-xl border border-amber-100 bg-linear-to-br from-amber-50/80 to-white p-4 shadow-none">
           <div className="flex items-start gap-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 ring-1 ring-amber-200">
               <AlertCircle className="size-4 text-amber-600" />
@@ -57,7 +59,10 @@ const HotQuestionsInsights = ({
                 {t("fallbackOverview")}
               </p>
               <p className="mt-1 text-xs leading-5 text-slate-600">
-                {t("fallbackSummary", { questions: summary?.fallback_questions ?? 0, asks: summary?.fallback_asks ?? 0 })}
+                {t("fallbackSummary", {
+                  questions: summary?.fallback_questions ?? 0,
+                  asks: summary?.fallback_asks ?? 0,
+                })}
               </p>
             </div>
           </div>
@@ -84,11 +89,11 @@ const HotQuestionsInsights = ({
                     {index + 1}
                   </span>
 
-                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700">
+                  <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
                     {item.intent}
                   </span>
 
-                  <span className="shrink-0 rounded-lg bg-white px-2 py-0.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
+                  <span className="shrink-0 rounded-lg border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-700">
                     {item.count}
                   </span>
                 </div>

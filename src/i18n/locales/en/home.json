@@ -104,5 +104,9 @@
   "noScholarships": "No scholarships available yet.",
   "scopeGlobal": "University-wide",
   "scopeMajorSpecific": "Major-specific",
-  "viewPrograms": "View Programs"
+  "viewPrograms": "View Programs",
+  "scholarshipMerit": "Merit-based Scholarship",
+  "scholarshipNeedBased": "Need-based Scholarship",
+  "scholarshipTalent": "Talent Scholarship",
+  "scholarshipSpecial": "Special Scholarship"
 }

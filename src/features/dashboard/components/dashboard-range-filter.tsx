@@ -65,7 +65,7 @@ const DashboardRangeFilter = ({
           <SelectContent>
             {DASHBOARD_RANGE_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {t(option.label)}
               </SelectItem>
             ))}
           </SelectContent>

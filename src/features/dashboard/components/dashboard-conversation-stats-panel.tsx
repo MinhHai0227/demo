@@ -92,10 +92,10 @@ const DashboardConversationStatsPanel = ({
   }
 
   const CHANNEL_LABELS: Record<string, string> = {
-    WEB: "Web",
-    ZALO: "Zalo",
-    FACEBOOK: "Facebook",
-    TELEGRAM: "Telegram",
+    WEB: t("channelWeb"),
+    ZALO: t("channelZalo"),
+    FACEBOOK: t("channelFacebook"),
+    TELEGRAM: t("channelTelegram"),
   }
 
   const statusItems = normalizeBreakdown(stats?.by_status ?? [], STATUS_LABELS)

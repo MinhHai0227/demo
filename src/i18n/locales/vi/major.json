@@ -53,5 +53,8 @@
   "deleteWarning": "Thao tác này sẽ xóa vĩnh viễn ngành {{name}} ({{code}}) nếu không còn được tham chiếu ở nơi khác.",
   "deleteWarningGeneric": "Thao tác này sẽ xóa vĩnh viễn ngành học đã chọn.",
   "deleting": "Đang xóa...",
-  "deleteMajor": "Xóa ngành"
+  "deleteMajor": "Xóa ngành",
+  "typeUndergrad": "Đại học",
+  "typeGrad": "Sau đại học",
+  "typeCertificate": "Chứng chỉ"
 }

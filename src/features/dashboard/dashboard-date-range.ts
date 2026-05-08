@@ -17,12 +17,12 @@ export type DashboardRangeParams = {
 }
 
 const DASHBOARD_RANGE_OPTIONS: DashboardRangeOption[] = [
-  { value: "today", label: "Hôm nay" },
-  { value: "yesterday", label: "Hôm qua" },
-  { value: "last_7_days", label: "7 ngày gần đây" },
-  { value: "last_14_days", label: "14 ngày gần đây" },
-  { value: "this_month", label: "Tháng này" },
-  { value: "last_month", label: "Tháng trước" },
+  { value: "today", label: "rangeToday" },
+  { value: "yesterday", label: "rangeYesterday" },
+  { value: "last_7_days", label: "rangeLast7Days" },
+  { value: "last_14_days", label: "rangeLast14Days" },
+  { value: "this_month", label: "rangeThisMonth" },
+  { value: "last_month", label: "rangeLastMonth" },
 ]
 
 const cloneDate = (date: Date) => new Date(date.getTime())

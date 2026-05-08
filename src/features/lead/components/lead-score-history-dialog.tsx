@@ -62,17 +62,19 @@ const LeadScoreHistoryDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-4xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-4xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700 shadow-sm ring-1 ring-amber-200">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <LineChart className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-950">
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
                 {lead?.full_name || t("lead")} - {t("scoreHistory")}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
+              <DialogDescription className="text-[12px] text-slate-500">
                 {t("scoreHistoryDescription")}
               </DialogDescription>
             </div>
@@ -90,7 +92,7 @@ const LeadScoreHistoryDialog = ({
             <div className="space-y-5">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-                  <p className="text-xs font-medium text-slate-500">
+                  <p className="text-[12px] font-medium text-slate-500">
                     {t("currentScore")}
                   </p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">
@@ -98,15 +100,15 @@ const LeadScoreHistoryDialog = ({
                   </p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-                  <p className="text-xs font-medium text-slate-500">
+                  <p className="text-[12px] font-medium text-slate-500">
                     {t("temperature")}
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">
+                  <p className="mt-2 text-[13px] font-semibold text-slate-900">
                     {history?.temperature ?? lead?.temperature ?? "-"}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-                  <p className="text-xs font-medium text-slate-500">
+                  <p className="text-[12px] font-medium text-slate-500">
                     {t("scoreEvents")}
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-900">
@@ -118,17 +120,20 @@ const LeadScoreHistoryDialog = ({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-100">
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-none">
                 <div className="mb-3 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-[13px] font-semibold text-slate-900">
                       {t("scoreTrend")}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-[12px] text-slate-500">
                       {t("scoreTrendDescription")}
                     </p>
                   </div>
-                  <Badge variant="outline" className="border-slate-200 text-xs">
+                  <Badge
+                    variant="outline"
+                    className="border-slate-200 text-[11px] text-slate-600"
+                  >
                     {t("dataPoints", { count: items.length })}
                   </Badge>
                 </div>
@@ -203,7 +208,7 @@ const LeadScoreHistoryDialog = ({
                           <p className="text-sm font-medium text-slate-900">
                             {item.action}
                           </p>
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-[12px] text-slate-500">
                             {formatDateTime(item.created_at)}
                           </p>
                         </div>

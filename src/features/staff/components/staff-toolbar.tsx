@@ -58,8 +58,8 @@ const StaffToolbar = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">{t("allRoles")}</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
-              <SelectItem value="COUNSELOR">Counselor</SelectItem>
+              <SelectItem value="ADMIN">{t("roleAdmin")}</SelectItem>
+              <SelectItem value="COUNSELOR">{t("roleCounselor")}</SelectItem>
             </SelectContent>
           </Select>
 

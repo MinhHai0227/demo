@@ -207,10 +207,10 @@ const TuitionPolicyPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[18px] font-semibold text-slate-950">
+        <h1 className="text-lg font-semibold text-slate-950">
           {t("title")}
         </h1>
-        <p className="text-[13px] text-slate-500">{t("description")}</p>
+        <p className="text-sm text-slate-500">{t("description")}</p>
       </div>
 
       <TuitionPolicyToolbar
@@ -234,13 +234,13 @@ const TuitionPolicyPage = () => {
       />
 
       {actionError ? (
-        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-sm text-red-600">
           {actionError}
         </div>
       ) : null}
 
       {actionSuccess ? (
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-[13px] text-emerald-700">
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700">
           {actionSuccess}
         </div>
       ) : null}

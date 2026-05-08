@@ -46,28 +46,14 @@ const LeadPage = () => {
     string | "ALL"
   >("ALL")
   const [offset, setOffset] = useState(0)
-  const [dialogOpen, setDialogOpen] = useState(false)
   const [activitiesDialogOpen, setActivitiesDialogOpen] = useState(false)
   const [scoreHistoryDialogOpen, setScoreHistoryDialogOpen] = useState(false)
-  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
   const [activityLead, setActivityLead] = useState<Lead | null>(null)
   const [scoreHistoryLead, setScoreHistoryLead] = useState<Lead | null>(null)
   const [activityOffset, setActivityOffset] = useState(0)
   const [actionError, setActionError] = useState<string | null>(null)
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!selectedLeadIdFromQuery) {
-      return
-    }
-
-    setSelectedLeadId((current) =>
-      current === selectedLeadIdFromQuery ? current : selectedLeadIdFromQuery
-    )
-    setDialogOpen(true)
-    setActionError(null)
-    setActionSuccess(null)
-  }, [selectedLeadIdFromQuery])
+  const dialogOpen = Boolean(selectedLeadIdFromQuery)
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -131,7 +117,7 @@ const LeadPage = () => {
     updateLeadPending,
   } = useLead({
     params,
-    leadId: selectedLeadId,
+    leadId: selectedLeadIdFromQuery,
   })
 
   const items = leadList?.items ?? []
@@ -162,10 +148,8 @@ const LeadPage = () => {
   })
 
   const handleSelectLead = (lead: Lead) => {
-    setSelectedLeadId(lead.id)
     setActionError(null)
     setActionSuccess(null)
-    setDialogOpen(true)
     setSearchParams((currentParams) => {
       const nextParams = new URLSearchParams(currentParams)
       nextParams.set("leadId", lead.id)
@@ -186,12 +170,7 @@ const LeadPage = () => {
       })
       setActionSuccess(t("updateSuccess"))
     } catch (error) {
-      setActionError(
-        getErrorMessage(
-          error,
-          t("updateError")
-        )
-      )
+      setActionError(getErrorMessage(error, t("updateError")))
     }
   }
 
@@ -257,13 +236,13 @@ const LeadPage = () => {
       />
 
       {surfaceError ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-sm text-red-600">
           {surfaceError}
         </div>
       ) : null}
 
       {actionSuccess ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700">
           {actionSuccess}
         </div>
       ) : null}
@@ -295,7 +274,6 @@ const LeadPage = () => {
         savePending={updateLeadPending}
         errorMessage={actionError}
         onOpenChange={(open) => {
-          setDialogOpen(open)
           if (!open) {
             setActionError(null)
             setActionSuccess(null)

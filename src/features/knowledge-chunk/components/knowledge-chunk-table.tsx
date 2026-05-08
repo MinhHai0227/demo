@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/table"
 import { formatDateOnly } from "@/lib/date"
 import { stripMarkdown } from "@/lib/markdown"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import {
   admissionCategoryLabelMap,
   type KnowledgeChunk,
@@ -50,19 +50,6 @@ type KnowledgeChunkTableProps = {
   onEdit: (chunk: KnowledgeChunk) => void
   onDelete: (chunk: KnowledgeChunk) => void
   onToggleStatus: (chunk: KnowledgeChunk) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, totalPages]
-  }
-  if (currentPage >= totalPages - 2) {
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  }
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const KnowledgeChunkTable = ({
@@ -202,12 +189,19 @@ const KnowledgeChunkTable = ({
                 return (
                   <TableRow
                     key={chunk.id}
+                    tabIndex={canManage ? 0 : undefined}
                     className={cn(
                       "border-slate-100 transition-colors hover:bg-slate-50/60",
                       canManage && "cursor-pointer"
                     )}
                     onClick={() => {
                       if (canManage) {
+                        onEdit(chunk)
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (canManage && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault()
                         onEdit(chunk)
                       }
                     }}
@@ -249,6 +243,7 @@ const KnowledgeChunkTable = ({
                       <button
                         type="button"
                         disabled={!canManage || isToggling}
+                        tabIndex={-1}
                         onClick={(e) => {
                           e.stopPropagation()
                           if (canManage) {
@@ -306,11 +301,13 @@ const KnowledgeChunkTable = ({
                           type="button"
                           variant="ghost"
                           size="icon"
+                          tabIndex={-1}
                           className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                           onClick={(e) => {
                             e.stopPropagation()
                             onDelete(chunk)
                           }}
+                          aria-label={t("delete")}
                         >
                           <Trash2 className="size-3.5" />
                         </Button>

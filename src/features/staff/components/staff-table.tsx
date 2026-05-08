@@ -30,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatDateOnly } from "@/lib/date"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import type { Staff } from "@/types/staff-type"
 
 type StaffTableProps = {
@@ -45,15 +45,6 @@ type StaffTableProps = {
   onEdit: (staff: Staff) => void
   onDelete: (staff: Staff) => void
   onToggleStatus: (staff: Staff) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5)
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
-  if (currentPage >= totalPages - 2)
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const StaffTable = ({
@@ -182,7 +173,15 @@ const StaffTable = ({
               return (
                 <TableRow
                   key={staff.id}
+                  tabIndex={0}
                   className="border-slate-100 transition-colors hover:bg-slate-50/60"
+                  onClick={() => onEdit(staff)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      onEdit(staff)
+                    }
+                  }}
                 >
                   <TableCell className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
@@ -218,7 +217,7 @@ const StaffTable = ({
                       )}
                     >
                       <ShieldCheck className="size-3" />
-                      {staff.role === "ADMIN" ? "Admin" : "Counselor"}
+                      {staff.role === "ADMIN" ? t("roleAdmin") : t("roleCounselor")}
                     </Badge>
                   </TableCell>
 
@@ -226,7 +225,12 @@ const StaffTable = ({
                     <button
                       type="button"
                       disabled={isToggling}
-                      onClick={() => onToggleStatus(staff)}
+                      tabIndex={-1}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onToggleStatus(staff)
+                      }}
+                      aria-label={staff.is_active ? t("deactivate") : t("activate")}
                       className={cn(
                         "inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-medium transition-colors",
                         staff.is_active
@@ -256,8 +260,13 @@ const StaffTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
+                        tabIndex={-1}
                         className="size-8 rounded-lg border border-slate-200 bg-white text-slate-500 shadow-none hover:border-slate-300 hover:text-slate-900"
-                        onClick={() => onEdit(staff)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onEdit(staff)
+                        }}
+                        aria-label={t("edit")}
                       >
                         <PencilLine className="size-3.5" />
                       </Button>
@@ -265,8 +274,13 @@ const StaffTable = ({
                         type="button"
                         variant="ghost"
                         size="icon"
+                        tabIndex={-1}
                         className="size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-                        onClick={() => onDelete(staff)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDelete(staff)
+                        }}
+                        aria-label={t("delete")}
                       >
                         <Trash2 className="size-3.5" />
                       </Button>

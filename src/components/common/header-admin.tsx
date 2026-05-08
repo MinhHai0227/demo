@@ -1,4 +1,13 @@
-import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
+import {
+  Bell,
+  ChevronDown,
+  Loader2,
+  LogOut,
+  Settings,
+  Trash2,
+  User,
+} from "lucide-react"
+import { type UIEvent, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
@@ -38,16 +47,24 @@ const HeaderAdmin = () => {
   const {
     notifications,
     notificationsPending,
+    notificationsHasMore,
     unreadCount,
     markNotificationRead,
     markAllNotificationsRead,
+    loadMoreNotifications,
+    loadMoreNotificationsPending,
     markAllNotificationsReadPending,
+    deleteNotification,
+    deleteNotificationPending,
   } = useNotification({
     enabled: Boolean(user),
     staffId: notificationStaffId,
     target: notificationTarget,
     limit: 8,
   })
+  const [deletingNotificationId, setDeletingNotificationId] = useState<
+    string | null
+  >(null)
   useRealtime({
     enabled: Boolean(user),
     token: accessToken,
@@ -93,6 +110,28 @@ const HeaderAdmin = () => {
     }
   }
 
+  const handleDeleteNotification = async (notificationId: string) => {
+    setDeletingNotificationId(notificationId)
+    try {
+      await deleteNotification(notificationId)
+    } catch {
+      // Keep notification panel usable even when delete request fails.
+    } finally {
+      setDeletingNotificationId(null)
+    }
+  }
+
+  const handleNotificationListScroll = (event: UIEvent<HTMLDivElement>) => {
+    if (!notificationsHasMore || loadMoreNotificationsPending) {
+      return
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget
+    if (scrollHeight - scrollTop - clientHeight <= 24) {
+      void loadMoreNotifications()
+    }
+  }
+
   return (
     <header className="sticky top-0 z-10 flex h-18 shrink-0 items-center justify-between gap-2 border-b bg-white px-4">
       <div className="flex items-center gap-2">
@@ -123,7 +162,9 @@ const HeaderAdmin = () => {
                 <p className="text-sm font-semibold text-slate-900">
                   {th("notifications")}
                 </p>
-                <p className="text-xs text-slate-500">{unreadCount} {tc("unread")}</p>
+                <p className="text-xs text-slate-500">
+                  {unreadCount} {tc("unread")}
+                </p>
               </div>
               <Button
                 type="button"
@@ -140,39 +181,74 @@ const HeaderAdmin = () => {
 
             <DropdownMenuSeparator />
 
-            {notificationsPending ? (
-              <div className="px-3 py-6 text-center text-sm text-slate-500">
-                {th("loadingNotifications")}
-              </div>
-            ) : notifications.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-slate-500">
-                {th("noNotifications")}
-              </div>
-            ) : (
-              notifications.map((notification) => (
-                <DropdownMenuItem
-                  key={notification.id}
-                  className="items-start gap-3 px-3 py-2.5"
-                  onClick={() => {
-                    void handleNotificationClick(notification)
-                  }}
-                >
-                  <span
-                    className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${
-                      notification.is_read ? "bg-slate-200" : "bg-red-500"
-                    }`}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-3 text-sm leading-5 text-slate-700">
-                      {notification.content}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-400">
-                      {formatDateTime(notification.created_at)}
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-              ))
-            )}
+            <div
+              className="max-h-96 overflow-y-auto"
+              onScroll={handleNotificationListScroll}
+            >
+              {notificationsPending ? (
+                <div className="px-3 py-6 text-center text-sm text-slate-500">
+                  {th("loadingNotifications")}
+                </div>
+              ) : notifications.length === 0 ? (
+                <div className="px-3 py-6 text-center text-sm text-slate-500">
+                  {th("noNotifications")}
+                </div>
+              ) : (
+                <>
+                  {notifications.map((notification) => (
+                    <DropdownMenuItem
+                      key={notification.id}
+                      className="items-start gap-3 px-3 py-2.5"
+                      onClick={() => {
+                        void handleNotificationClick(notification)
+                      }}
+                    >
+                      <span
+                        className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${
+                          notification.is_read ? "bg-slate-200" : "bg-red-500"
+                        }`}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="line-clamp-3 text-sm leading-5 text-slate-700">
+                          {notification.content}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          {formatDateTime(notification.created_at)}
+                        </p>
+                      </div>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 shrink-0 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
+                        disabled={deleteNotificationPending}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          event.stopPropagation()
+                          void handleDeleteNotification(notification.id)
+                        }}
+                        aria-label={tc("delete")}
+                      >
+                        {deletingNotificationId === notification.id &&
+                        deleteNotificationPending ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="size-3.5" />
+                        )}
+                      </Button>
+                    </DropdownMenuItem>
+                  ))}
+
+                  {loadMoreNotificationsPending ? (
+                    <div className="flex items-center justify-center gap-2 px-3 py-3 text-xs text-slate-500">
+                      <Loader2 className="size-3.5 animate-spin" />
+                      {tc("loading")}
+                    </div>
+                  ) : null}
+                </>
+              )}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
 

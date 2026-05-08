@@ -52,5 +52,7 @@
   "deleting": "Deleting...",
   "deleteAccount": "Delete account",
   "notFoundHint": "Try adjusting filters or add new staff.",
-  "genericError": "An error occurred. Please try again."
+  "genericError": "An error occurred. Please try again.",
+  "roleAdmin": "Admin",
+  "roleCounselor": "Counselor"
 }

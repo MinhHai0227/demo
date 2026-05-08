@@ -52,9 +52,9 @@ type UpdateMajorStatusPayload = {
 }
 
 const majorTypeOptions: Array<{ label: string; value: MajorType }> = [
-  { label: "Undergraduate", value: "UNDERGRAD_MAJOR" },
-  { label: "Graduate", value: "GRAD_MAJOR" },
-  { label: "Certificate", value: "CERTIFICATE_PROGRAM" },
+  { label: "typeUndergrad", value: "UNDERGRAD_MAJOR" },
+  { label: "typeGrad", value: "GRAD_MAJOR" },
+  { label: "typeCertificate", value: "CERTIFICATE_PROGRAM" },
 ]
 
 const majorTypeLabelMap: Record<MajorType, string> = Object.fromEntries(

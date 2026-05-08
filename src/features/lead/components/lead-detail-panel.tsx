@@ -77,7 +77,7 @@ type DetailFormState = {
 }
 
 const textareaClassName =
-  "min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 shadow-xs outline-none transition-colors placeholder:text-slate-400 focus:border-slate-300 focus-visible:ring-3 focus-visible:ring-slate-200"
+  "min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-3 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-slate-300 focus:bg-white"
 
 const emptyFormState: DetailFormState = {
   full_name: "",
@@ -236,7 +236,7 @@ const LeadDetailPanel = ({
   if (leadPending) {
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)]">
           <div className="space-y-3">
             <Skeleton className="h-6 w-48 rounded-full" />
             <Skeleton className="h-4 w-64 rounded-full" />
@@ -247,7 +247,7 @@ const LeadDetailPanel = ({
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)]">
           <div className="grid gap-3 sm:grid-cols-2">
             {Array.from({ length: 8 }).map((_, index) => (
               <Skeleton key={index} className="h-16 rounded-2xl" />
@@ -264,8 +264,8 @@ const LeadDetailPanel = ({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
-        <div className="border-b border-slate-100 bg-linear-to-r from-amber-50 via-white to-sky-50 px-5 py-5">
+      <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+        <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -277,7 +277,7 @@ const LeadDetailPanel = ({
                 ) : null}
               </div>
 
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <Mail className="size-3.5 text-slate-400" />
                   {lead.email || t("noEmail")}
@@ -331,7 +331,7 @@ const LeadDetailPanel = ({
         </div>
 
         <div className="grid gap-3 px-5 py-4 sm:grid-cols-2 xl:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-4 py-3 shadow-none">
             <p className="text-xs font-medium text-slate-500">
               {t("lastInteraction")}
             </p>
@@ -339,14 +339,18 @@ const LeadDetailPanel = ({
               {formatDateTime(lead.last_interaction_at)}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-            <p className="text-xs font-medium text-slate-500">{t("dateCreated")}</p>
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-4 py-3 shadow-none">
+            <p className="text-xs font-medium text-slate-500">
+              {t("dateCreated")}
+            </p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.created_at)}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs">
-            <p className="text-xs font-medium text-slate-500">{t("updatedAt")}</p>
+          <div className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-4 py-3 shadow-none">
+            <p className="text-xs font-medium text-slate-500">
+              {t("updatedAt")}
+            </p>
             <p className="mt-2 text-sm font-semibold text-slate-900">
               {formatDateTime(lead.updated_at)}
             </p>
@@ -354,18 +358,20 @@ const LeadDetailPanel = ({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
+      <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">{t("leadProfile")}</h3>
-            <p className="text-xs text-slate-500">
+            <h3 className="text-[14px] font-semibold text-slate-900">
+              {t("leadProfile")}
+            </h3>
+            <p className="text-[12px] text-slate-500">
               {t("leadProfileDescription")}
             </p>
           </div>
 
           <Button
             type="button"
-            className="rounded-xl"
+            className="h-9 rounded-xl bg-slate-950 px-4 text-[13px] font-medium text-white shadow-sm hover:bg-slate-800"
             disabled={savePending}
             onClick={handleSave}
           >
@@ -375,7 +381,7 @@ const LeadDetailPanel = ({
         </div>
 
         {surfaceError ? (
-          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mt-4 rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-[12px] text-red-600">
             {surfaceError}
           </div>
         ) : null}
@@ -392,7 +398,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.full_name}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("full_name", event.target.value)
                   }
@@ -404,7 +410,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.email}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("email", event.target.value)
                   }
@@ -416,7 +422,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.phone}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("phone", event.target.value)
                   }
@@ -428,7 +434,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.province}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("province", event.target.value)
                   }
@@ -440,7 +446,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.high_school}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("high_school", event.target.value)
                   }
@@ -463,7 +469,7 @@ const LeadDetailPanel = ({
                 value={statusDraft}
                 onValueChange={(value) => setStatusDraft(value as LeadStatus)}
               >
-                <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+                <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:ring-0">
                   <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -500,13 +506,11 @@ const LeadDetailPanel = ({
                     )
                   }
                 >
-                  <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm shadow-xs transition-colors focus:ring-slate-200">
+                  <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:ring-0">
                     <SelectValue placeholder={t("noTemperature")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="NONE">
-                      {t("noTemperature")}
-                    </SelectItem>
+                    <SelectItem value="NONE">{t("noTemperature")}</SelectItem>
                     {leadTemperatureOptions.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
@@ -521,7 +525,7 @@ const LeadDetailPanel = ({
                   value={formState.gpa}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("gpa", event.target.value)
                   }
@@ -535,7 +539,7 @@ const LeadDetailPanel = ({
                   value={formState.ielts}
                   type="number"
                   step="0.1"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("ielts", event.target.value)
                   }
@@ -546,7 +550,7 @@ const LeadDetailPanel = ({
                 <Input
                   value={formState.sat}
                   type="number"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("sat", event.target.value)
                   }
@@ -557,7 +561,7 @@ const LeadDetailPanel = ({
                 <Input
                   value={formState.act}
                   type="number"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("act", event.target.value)
                   }
@@ -579,7 +583,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.cv_url}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("cv_url", event.target.value)
                   }
@@ -591,7 +595,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.essay_url}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("essay_url", event.target.value)
                   }
@@ -603,7 +607,7 @@ const LeadDetailPanel = ({
                 </p>
                 <Input
                   value={formState.transcript_url}
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("transcript_url", event.target.value)
                   }
@@ -627,7 +631,7 @@ const LeadDetailPanel = ({
                   value={formState.ability_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("ability_score", event.target.value)
                   }
@@ -641,7 +645,7 @@ const LeadDetailPanel = ({
                   value={formState.aspiration_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("aspiration_score", event.target.value)
                   }
@@ -655,7 +659,7 @@ const LeadDetailPanel = ({
                   value={formState.creativity_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("creativity_score", event.target.value)
                   }
@@ -669,7 +673,7 @@ const LeadDetailPanel = ({
                   value={formState.commitment_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("commitment_score", event.target.value)
                   }
@@ -683,7 +687,7 @@ const LeadDetailPanel = ({
                   value={formState.fit_score}
                   type="number"
                   step="0.01"
-                  className="h-10 rounded-xl border-slate-200 bg-white shadow-xs transition-colors focus-visible:ring-slate-200"
+                  className="h-10 rounded-xl border-slate-200 bg-slate-50/80 text-[13px] shadow-none transition-colors focus:border-slate-300 focus:bg-white focus-visible:ring-0"
                   onChange={(event) =>
                     handleFieldChange("fit_score", event.target.value)
                   }
@@ -711,7 +715,7 @@ const LeadDetailPanel = ({
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)]">
           <div className="flex items-center gap-2">
             <GraduationCap className="size-4 text-slate-500" />
             <h3 className="text-sm font-semibold text-slate-900">
@@ -727,16 +731,14 @@ const LeadDetailPanel = ({
               : null}
 
             {!interestsPending && interests.length === 0 ? (
-              <p className="text-sm text-slate-500">
-                {t("noInterests")}
-              </p>
+              <p className="text-sm text-slate-500">{t("noInterests")}</p>
             ) : null}
 
             {!interestsPending
               ? interests.map((item) => (
                   <div
                     key={`${item.lead_id}-${item.major_id}`}
-                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
+                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-4 py-3 shadow-none"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -760,7 +762,7 @@ const LeadDetailPanel = ({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)]">
           <div className="flex items-center gap-2">
             <FileText className="size-4 text-slate-500" />
             <h3 className="text-sm font-semibold text-slate-900">
@@ -776,16 +778,14 @@ const LeadDetailPanel = ({
               : null}
 
             {!applicationsPending && applications.length === 0 ? (
-              <p className="text-sm text-slate-500">
-                {t("noApplications")}
-              </p>
+              <p className="text-sm text-slate-500">{t("noApplications")}</p>
             ) : null}
 
             {!applicationsPending
               ? applications.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3 shadow-xs"
+                    className="rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50/80 to-white px-4 py-3 shadow-none"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -810,8 +810,12 @@ const LeadDetailPanel = ({
                         <ArrowUpRight className="size-3.5" />
                         {item.source_channel || t("noSourceChannel")}
                       </p>
-                      <p>{t("majorCode")}: {item.major_id}</p>
-                      <p>{t("updatedAt")}: {formatDateOnly(item.updated_at)}</p>
+                      <p>
+                        {t("majorCode")}: {item.major_id}
+                      </p>
+                      <p>
+                        {t("updatedAt")}: {formatDateOnly(item.updated_at)}
+                      </p>
                     </div>
 
                     {item.note ? (

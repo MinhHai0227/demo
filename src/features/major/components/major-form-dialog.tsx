@@ -198,7 +198,7 @@ const MajorFormDialog = ({
                         <SelectContent>
                           {majorTypeOptions.map((item) => (
                             <SelectItem key={item.value} value={item.value}>
-                              {item.label}
+                              {t(item.label)}
                             </SelectItem>
                           ))}
                         </SelectContent>

@@ -12,16 +12,6 @@ type DashboardConversionFunnelPanelProps = {
   isFetching: boolean
 }
 
-const STAGE_LABELS: Record<string, string> = {
-  lead_created: "Lead created",
-  contact_collected: "Contact collected",
-  chat_interacted: "Chat interacted",
-  interest_detected: "Interest detected",
-  hot_lead: "Hot lead",
-  assigned: "Assigned",
-  contacted_or_later: "Contacted+",
-}
-
 const formatPercent = (value: number | null) =>
   value === null ? "--" : `${(value * 100).toFixed(1)}%`
 
@@ -31,6 +21,17 @@ const DashboardConversionFunnelPanel = ({
   isFetching,
 }: DashboardConversionFunnelPanelProps) => {
   const { t } = useTranslation("dashboard")
+
+  const stageLabelMap: Record<string, string> = {
+    lead_created: t("funnelLeadCreated"),
+    contact_collected: t("funnelContactCollected"),
+    chat_interacted: t("funnelChatInteracted"),
+    interest_detected: t("funnelInterestDetected"),
+    hot_lead: t("funnelHotLead"),
+    assigned: t("funnelAssigned"),
+    contacted_or_later: t("funnelContactedOrLater"),
+  }
+
   const stages = funnel?.stages ?? []
   const maxCount = Math.max(...stages.map((stage) => stage.count), 0)
 
@@ -67,7 +68,7 @@ const DashboardConversionFunnelPanel = ({
           stages.map((stage, index) => {
             const percentOfMax =
               maxCount > 0 ? Math.max(4, (stage.count / maxCount) * 100) : 0
-            const label = STAGE_LABELS[stage.stage] ?? stage.stage
+            const label = stageLabelMap[stage.stage] ?? stage.stage
             const conversionLabel = formatPercent(
               stage.conversion_from_previous
             )

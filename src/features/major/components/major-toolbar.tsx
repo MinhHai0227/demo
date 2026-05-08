@@ -63,7 +63,7 @@ const MajorToolbar = ({
               <SelectItem value="ALL">{t("allTypes")}</SelectItem>
               {majorTypeOptions.map((item) => (
                 <SelectItem key={item.value} value={item.value}>
-                  {item.label}
+                  {t(item.label)}
                 </SelectItem>
               ))}
             </SelectContent>

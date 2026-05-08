@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/pagination"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatDateTime } from "@/lib/date"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import type { Lead, LeadActivity } from "@/types/lead-type"
 
 type LeadActivitiesDialogProps = {
@@ -33,15 +33,6 @@ type LeadActivitiesDialogProps = {
   isFetching?: boolean
   onOpenChange: (open: boolean) => void
   onPageChange: (page: number) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5)
-    return Array.from({ length: totalPages }, (_, index) => index + 1)
-  if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
-  if (currentPage >= totalPages - 2)
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const LeadActivitiesDialog = ({
@@ -63,17 +54,19 @@ const LeadActivitiesDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 sm:max-w-3xl">
-        <DialogHeader className="border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
+      <DialogContent className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-0 shadow-[0_32px_80px_-24px_rgba(15,23,42,0.18)] sm:max-w-3xl">
+        <div className="h-0.75 bg-linear-to-r from-[#d6ae4e] via-[#e8c96a] to-[#d6ae4e]/30" />
+
+        <DialogHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm ring-1 ring-slate-900/10">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-sm">
               <Activity className="size-4" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-slate-950">
+              <DialogTitle className="text-[15px] font-semibold text-slate-900">
                 {lead?.full_name || t("lead")} - {t("activities")}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
+              <DialogDescription className="text-[12px] text-slate-500">
                 {t("activitiesDescription")}
               </DialogDescription>
             </div>
@@ -81,9 +74,9 @@ const LeadActivitiesDialog = ({
         </DialogHeader>
 
         <div className="max-h-[calc(100vh-14rem)] overflow-y-auto px-6 py-5">
-          <div className="mb-4 flex items-center justify-between text-xs text-slate-500">
+          <div className="mb-4 flex items-center justify-between text-[12px] text-slate-500">
             <span>{t("totalActivities", { count: total })}</span>
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
               {isFetching && !isLoading ? (
                 <Loader2 className="size-3.5 animate-spin" />
               ) : null}
@@ -151,7 +144,7 @@ const LeadActivitiesDialog = ({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-slate-500">
+          <p className="text-[12px] text-slate-500">
             {t("page", { current: currentPage, total: totalPages })}
           </p>
 
@@ -162,7 +155,7 @@ const LeadActivitiesDialog = ({
                   href="#"
                   text={t("prev")}
                   className={cn(
-                    "h-8 rounded-lg px-3 text-xs",
+                    "h-8 rounded-lg px-3 text-[12px]",
                     currentPage === 1 && "pointer-events-none opacity-40"
                   )}
                   onClick={(event) => {
@@ -177,7 +170,7 @@ const LeadActivitiesDialog = ({
                   <PaginationLink
                     href="#"
                     isActive={page === currentPage}
-                    className="h-8 w-8 rounded-lg text-xs"
+                    className="h-8 w-8 rounded-lg text-[12px]"
                     onClick={(event) => {
                       event.preventDefault()
                       onPageChange(page)
@@ -193,7 +186,7 @@ const LeadActivitiesDialog = ({
                   href="#"
                   text={t("next")}
                   className={cn(
-                    "h-8 rounded-lg px-3 text-xs",
+                    "h-8 rounded-lg px-3 text-[12px]",
                     currentPage === totalPages &&
                       "pointer-events-none opacity-40"
                   )}

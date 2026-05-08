@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatDateOnly } from "@/lib/date"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import { majorTypeLabelMap, type Major } from "@/types/major-type"
 
 type MajorTableProps = {
@@ -44,19 +44,6 @@ type MajorTableProps = {
   onEdit: (major: Major) => void
   onDelete: (major: Major) => void
   onToggleStatus: (major: Major) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, totalPages]
-  }
-  if (currentPage >= totalPages - 2) {
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  }
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const MajorTable = ({
@@ -198,12 +185,19 @@ const MajorTable = ({
                 return (
                   <TableRow
                     key={major.id}
+                    tabIndex={canManage ? 0 : undefined}
                     className={cn(
                       "border-slate-100 transition-colors hover:bg-slate-50/60",
                       canManage && "cursor-pointer"
                     )}
                     onClick={() => {
                       if (canManage) {
+                        onEdit(major)
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (canManage && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault()
                         onEdit(major)
                       }
                     }}
@@ -229,15 +223,15 @@ const MajorTable = ({
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className="rounded-full border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700"
-                      >
-                        <BookType className="size-3" />
-                        {majorTypeLabelMap[major.major_type]}
-                      </Badge>
-                    </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className="rounded-full border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-700"
+                    >
+                      <BookType className="size-3" />
+                      {t(majorTypeLabelMap[major.major_type])}
+                    </Badge>
+                  </TableCell>
 
                     <TableCell className="text-[12px] text-slate-500">
                       {major.degree_type || "—"}
@@ -255,6 +249,7 @@ const MajorTable = ({
                       <button
                         type="button"
                         disabled={!canManage || isToggling}
+                        tabIndex={-1}
                         onClick={(e) => {
                           e.stopPropagation()
                           if (canManage) {
@@ -293,11 +288,13 @@ const MajorTable = ({
                           type="button"
                           variant="ghost"
                           size="icon"
+                          tabIndex={-1}
                           className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                           onClick={(e) => {
                             e.stopPropagation()
                             onDelete(major)
                           }}
+                          aria-label={t("delete")}
                         >
                           <Trash2 className="size-3.5" />
                         </Button>

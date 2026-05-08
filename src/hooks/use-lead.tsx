@@ -23,8 +23,7 @@ const useLead = ({ params, leadId }: UseLeadOptions) => {
     placeholderData: (previousData) => previousData,
   })
 
-  const leadItems = leadListQuery.data?.items ?? []
-  const resolvedLeadId = leadId ?? leadItems[0]?.id ?? null
+  const resolvedLeadId = leadId ?? null
 
   const leadDetailQuery = useQuery({
     queryKey: ["lead", resolvedLeadId],
@@ -49,8 +48,12 @@ const useLead = ({ params, leadId }: UseLeadOptions) => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ["leads"] }),
       queryClient.invalidateQueries({ queryKey: ["lead", nextLeadId] }),
-      queryClient.invalidateQueries({ queryKey: ["lead", nextLeadId, "interests"] }),
-      queryClient.invalidateQueries({ queryKey: ["lead", nextLeadId, "applications"] }),
+      queryClient.invalidateQueries({
+        queryKey: ["lead", nextLeadId, "interests"],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: ["lead", nextLeadId, "applications"],
+      }),
     ])
   }
 

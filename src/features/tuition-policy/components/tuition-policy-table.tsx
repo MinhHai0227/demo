@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatDateOnly } from "@/lib/date"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import {
   feeTypeLabelMap,
   type TuitionPolicy,
@@ -41,19 +41,6 @@ type TuitionPolicyTableProps = {
   onEdit: (policy: TuitionPolicy) => void
   onDelete: (policy: TuitionPolicy) => void
   onToggleStatus: (policy: TuitionPolicy) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, totalPages]
-  }
-  if (currentPage >= totalPages - 2) {
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  }
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const formatCurrency = (value: number) =>
@@ -199,12 +186,19 @@ const TuitionPolicyTable = ({
                 return (
                   <TableRow
                     key={policy.id}
+                    tabIndex={canManage ? 0 : undefined}
                     className={cn(
                       "border-slate-100 transition-colors hover:bg-slate-50/60",
                       canManage && "cursor-pointer"
                     )}
                     onClick={() => {
                       if (canManage) {
+                        onEdit(policy)
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (canManage && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault()
                         onEdit(policy)
                       }
                     }}
@@ -246,6 +240,7 @@ const TuitionPolicyTable = ({
                       <button
                         type="button"
                         disabled={!canManage || isToggling}
+                        tabIndex={-1}
                         onClick={(e) => {
                           e.stopPropagation()
                           if (canManage) {
@@ -288,11 +283,13 @@ const TuitionPolicyTable = ({
                           type="button"
                           variant="ghost"
                           size="icon"
+                          tabIndex={-1}
                           className="ml-auto size-8 rounded-lg border border-red-100 bg-white text-red-400 shadow-none hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                           onClick={(e) => {
                             e.stopPropagation()
                             onDelete(policy)
                           }}
+                          aria-label={t("delete")}
                         >
                           <Trash2 className="size-3.5" />
                         </Button>

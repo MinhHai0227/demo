@@ -14,15 +14,15 @@ import { getScholarshipPolicies } from "@/api/scholarship-policy-api"
 
 const PAGE_SIZE = 12
 
-const scholarshipTypeLabels: Record<ScholarshipType, string> = {
-  MERIT: "Học bổng theo thành tích",
-  NEED_BASED: "Học bổng theo nhu cầu",
-  TALENT: "Học bổng tài năng",
-  SPECIAL: "Học bổng đặc biệt",
-}
-
 const ScholarshipPage = () => {
   const { t } = useTranslation("home")
+
+  const scholarshipTypeLabels: Record<ScholarshipType, string> = {
+    MERIT: t("scholarshipMerit"),
+    NEED_BASED: t("scholarshipNeedBased"),
+    TALENT: t("scholarshipTalent"),
+    SPECIAL: t("scholarshipSpecial"),
+  }
   const [offset, setOffset] = useState(0)
 
   const { data, isLoading, isFetching } = useQuery({
@@ -43,15 +43,15 @@ const ScholarshipPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/30">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-amber-50 to-white py-16">
+      <section className="relative overflow-hidden bg-gradient-to-b from-amber-50 to-white py-16 dark:from-amber-950/20 dark:to-background">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground lg:text-5xl">
               {t("scholarshipTitle")}
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
               {t("scholarshipSubtitle")}
             </p>
           </div>
@@ -66,19 +66,19 @@ const ScholarshipPage = () => {
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="animate-pulse rounded-2xl border border-slate-200 bg-white p-6"
+                  className="animate-pulse rounded-2xl border border-border bg-card p-6"
                 >
-                  <div className="h-12 w-12 rounded-xl bg-slate-200" />
-                  <div className="mt-4 h-6 w-3/4 rounded bg-slate-200" />
-                  <div className="mt-2 h-4 w-full rounded bg-slate-200" />
-                  <div className="mt-2 h-4 w-2/3 rounded bg-slate-200" />
+                  <div className="h-12 w-12 rounded-xl bg-muted" />
+                  <div className="mt-4 h-6 w-3/4 rounded bg-muted" />
+                  <div className="mt-2 h-4 w-full rounded bg-muted" />
+                  <div className="mt-2 h-4 w-2/3 rounded bg-muted" />
                 </div>
               ))}
             </div>
           ) : scholarships.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-16 text-center">
-              <Award className="mx-auto size-12 text-slate-300" />
-              <p className="mt-4 text-slate-500">{t("noScholarships")}</p>
+            <div className="rounded-2xl border border-dashed border-border bg-muted/50 py-16 text-center">
+              <Award className="mx-auto size-12 text-muted-foreground" />
+              <p className="mt-4 text-muted-foreground">{t("noScholarships")}</p>
             </div>
           ) : (
             <>
@@ -86,7 +86,7 @@ const ScholarshipPage = () => {
                 {scholarships.map((policy: ScholarshipPolicy) => (
                   <div
                     key={policy.id}
-                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md"
+                    className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-md dark:shadow-none"
                   >
                     <div className="p-6">
                       <div className="flex items-start justify-between">
@@ -101,10 +101,10 @@ const ScholarshipPage = () => {
                         </Badge>
                       </div>
 
-                      <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                      <h3 className="mt-4 text-lg font-semibold text-foreground">
                         {policy.name}
                       </h3>
-                      <p className="mt-1 text-xs tracking-[0.18em] text-slate-400 uppercase">
+                      <p className="mt-1 text-xs tracking-[0.18em] text-muted-foreground uppercase">
                         {policy.year}
                       </p>
 
@@ -115,16 +115,13 @@ const ScholarshipPage = () => {
                       )}
 
                       <div className="mt-4">
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                           {policy.scope === "GLOBAL"
                             ? t("scopeGlobal")
                             : t("scopeMajorSpecific")}
                         </p>
                       </div>
 
-                      <button className="mt-4 w-full rounded-xl border border-slate-200 bg-slate-50 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
-                        {t("learnMore")}
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -144,7 +141,7 @@ const ScholarshipPage = () => {
                     ) : null}
                     {t("prev") || "Previous"}
                   </Button>
-                  <span className="text-sm text-slate-500">
+                  <span className="text-sm text-muted-foreground">
                     {offset + 1}–{offset + scholarships.length} / {total}
                   </span>
                   <Button
@@ -166,12 +163,12 @@ const ScholarshipPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-slate-900 py-16">
+      <section className="bg-foreground py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-primary-foreground">
             {t("readyToApply")}
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-slate-300">
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
             {t("applyCtaText")}
           </p>
           <div className="mt-8 flex justify-center gap-4">
@@ -183,7 +180,7 @@ const ScholarshipPage = () => {
             </Link>
             <Link
               to="/programs"
-              className="rounded-xl border border-slate-600 px-6 py-3 font-medium text-slate-300 transition-colors hover:border-slate-500 hover:bg-slate-800"
+              className="rounded-xl border border-border px-6 py-3 font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:bg-muted"
             >
               <GraduationCap className="mr-2 inline size-4" />
               {t("viewPrograms")}

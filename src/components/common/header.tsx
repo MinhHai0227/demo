@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, ShieldCheck, X } from "lucide-react"
@@ -28,6 +28,10 @@ const Header = () => {
   const location = useLocation()
   const { user } = useAuthStore()
   const { t } = useTranslation("header")
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
 
   const sections = [
     { label: t("sections.home"), href: "/" },
@@ -71,17 +75,17 @@ const Header = () => {
           <LanguageSwitcher />
           {user ? (
             <Link to="/admin" className="hidden md:block">
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 shadow transition-colors hover:border-primary/30 hover:bg-primary/5">
+              <div className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-2 shadow transition-colors hover:border-primary/30 hover:bg-primary/5">
                 <Avatar >
                   <AvatarFallback className=" font-semibold ">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <p className="max-w-36 truncate text-sm font-semibold text-slate-950">
+                  <p className="max-w-36 truncate text-sm font-semibold text-foreground">
                     {user.name}
                   </p>
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <ShieldCheck className="h-3.5 w-3.5 text-primary" />
                     <span>{user.role}</span>
                   </div>
@@ -130,17 +134,17 @@ const Header = () => {
           <div className="mt-3 border-t border-border/50 pt-3">
             {user ? (
               <Link to="/admin" onClick={() => setMobileOpen(false)}>
-                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-3 shadow-sm">
+                <div className="flex items-center gap-3 rounded-2xl border border-border bg-background px-3 py-3 shadow-sm">
                   <Avatar size="lg" className="bg-slate-950 text-white">
                     <AvatarFallback className="bg-slate-950 font-semibold text-white">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-950">
+                    <p className="truncate text-sm font-semibold text-foreground">
                       {user.name}
                     </p>
-                    <p className="text-xs text-slate-500">{user.role}</p>
+                    <p className="text-xs text-muted-foreground">{user.role}</p>
                   </div>
                 </div>
               </Link>

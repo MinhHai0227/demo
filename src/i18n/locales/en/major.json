@@ -53,5 +53,8 @@
   "deleteWarning": "This will permanently delete the major {{name}} ({{code}}) if it is no longer referenced elsewhere.",
   "deleteWarningGeneric": "This will permanently delete the selected major.",
   "deleting": "Deleting...",
-  "deleteMajor": "Delete major"
+  "deleteMajor": "Delete major",
+  "typeUndergrad": "Undergraduate",
+  "typeGrad": "Graduate",
+  "typeCertificate": "Certificate"
 }

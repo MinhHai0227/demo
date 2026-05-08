@@ -103,5 +103,9 @@
   "noScholarships": "Chưa có học bổng nào.",
   "scopeGlobal": "Áp dụng toàn trường",
   "scopeMajorSpecific": "Theo ngành cụ thể",
-  "viewPrograms": "Xem chương trình"
+  "viewPrograms": "Xem chương trình",
+  "scholarshipMerit": "Học bổng theo thành tích",
+  "scholarshipNeedBased": "Học bổng theo nhu cầu",
+  "scholarshipTalent": "Học bổng tài năng",
+  "scholarshipSpecial": "Học bổng đặc biệt"
 }

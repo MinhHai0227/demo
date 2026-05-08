@@ -23,10 +23,20 @@ const StaffPage = () => {
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null)
   const [dialogError, setDialogError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [staffToDelete, setStaffToDelete] = useState<Staff | null>(null)
   const [togglingStaffId, setTogglingStaffId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (actionSuccess) {
+      const timer = window.setTimeout(() => {
+        setActionSuccess(null)
+      }, 3000)
+      return () => window.clearTimeout(timer)
+    }
+  }, [actionSuccess])
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -65,6 +75,8 @@ const StaffPage = () => {
     setDialogMode("create")
     setSelectedStaff(null)
     setDialogError(null)
+    setActionError(null)
+    setActionSuccess(null)
     setDialogOpen(true)
   }
 
@@ -72,6 +84,8 @@ const StaffPage = () => {
     setDialogMode("edit")
     setSelectedStaff(staff)
     setDialogError(null)
+    setActionError(null)
+    setActionSuccess(null)
     setDialogOpen(true)
   }
 
@@ -86,6 +100,7 @@ const StaffPage = () => {
           role: values.role,
         })
         setDialogOpen(false)
+        setActionSuccess(t("createSuccess"))
         return
       }
       if (!selectedStaff) return
@@ -98,6 +113,7 @@ const StaffPage = () => {
       await updateStaffAction({ staffId: selectedStaff.id, values: payload })
       setDialogOpen(false)
       setSelectedStaff(null)
+      setActionSuccess(t("updateSuccess"))
     } catch (error) {
       setDialogError(
         error instanceof Error
@@ -160,8 +176,8 @@ const StaffPage = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[18px] font-semibold text-slate-950">{t("title")}</h1>
-        <p className="text-[13px] text-slate-500">{t("description")}</p>
+        <h1 className="text-lg font-semibold text-slate-950">{t("title")}</h1>
+        <p className="text-sm text-slate-500">{t("description")}</p>
       </div>
 
       <StaffToolbar
@@ -178,8 +194,14 @@ const StaffPage = () => {
       />
 
       {actionError && (
-        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-[13px] text-red-600">
+        <div className="rounded-2xl border border-red-100 bg-red-50/80 px-4 py-3 text-sm text-red-600">
           {actionError}
+        </div>
+      )}
+
+      {actionSuccess && (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {actionSuccess}
         </div>
       )}
 

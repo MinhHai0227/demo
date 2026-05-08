@@ -54,5 +54,22 @@
   "noDateSelected": "No date selected",
   "dailyDetailHint": "Daily detail data for {{date}}",
   "noTopIntentsForDate": "No top intents for this date.",
-  "selectDateForDetail": "Select a date in the table to view details."
+  "selectDateForDetail": "Select a date in the table to view details.",
+  "rangeToday": "Today",
+  "rangeYesterday": "Yesterday",
+  "rangeLast7Days": "Last 7 days",
+  "rangeLast14Days": "Last 14 days",
+  "rangeThisMonth": "This month",
+  "rangeLastMonth": "Last month",
+  "funnelLeadCreated": "Lead created",
+  "funnelContactCollected": "Contact collected",
+  "funnelChatInteracted": "Chat interacted",
+  "funnelInterestDetected": "Interest detected",
+  "funnelHotLead": "Hot lead",
+  "funnelAssigned": "Assigned",
+  "funnelContactedOrLater": "Contacted+",
+  "channelWeb": "Web",
+  "channelZalo": "Zalo",
+  "channelFacebook": "Facebook",
+  "channelTelegram": "Telegram"
 }

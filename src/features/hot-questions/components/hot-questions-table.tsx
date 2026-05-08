@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatDateTime } from "@/lib/date"
-import { cn } from "@/lib/utils"
+import { buildPageItems, cn } from "@/lib/utils"
 import type { HotQuestion } from "@/types/admin-analytics-type"
 
 type HotQuestionsTableProps = {
@@ -33,19 +33,6 @@ type HotQuestionsTableProps = {
   isFetching?: boolean
   onPageChange: (page: number) => void
   onSelect: (question: HotQuestion) => void
-}
-
-const buildPageItems = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1)
-  }
-
-  if (currentPage <= 3) return [1, 2, 3, 4, totalPages]
-  if (currentPage >= totalPages - 2) {
-    return [1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-  }
-
-  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
 }
 
 const HotQuestionsTable = ({
@@ -65,20 +52,20 @@ const HotQuestionsTable = ({
   const pageItems = buildPageItems(currentPage, totalPages)
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
-      <div className="flex flex-col gap-2 border-b border-slate-100 bg-linear-to-r from-slate-50 to-white px-5 py-4 md:flex-row md:items-center md:justify-between">
+    <div className="overflow-hidden rounded-2xl border border-t-[2.5px] border-slate-200/70 border-t-[#d6ae4e] bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)]">
+      <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-950">
+          <h2 className="text-[14px] font-semibold text-slate-900">
             {t("table")}
           </h2>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="text-[12px] text-slate-500">
             {t("totalQuestions", { count: total })}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500">
           {isFetching && !isLoading ? (
-            <Loader2 className="size-3.5 animate-spin text-slate-400" />
+            <Loader2 className="size-3.5 animate-spin" />
           ) : null}
           <span>
             {items.length ? offset + 1 : 0}-{offset + items.length} / {total}
@@ -89,19 +76,19 @@ const HotQuestionsTable = ({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-100 bg-slate-50/70 hover:bg-slate-50/70">
-            <TableHead className="px-5 text-xs font-semibold text-slate-500">
+            <TableHead className="px-5 text-[11px] font-medium text-slate-500">
               {t("question")}
             </TableHead>
-            <TableHead className="text-xs font-semibold text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               {t("intent")}
             </TableHead>
-            <TableHead className="text-xs font-semibold text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               {t("fallback")}
             </TableHead>
-            <TableHead className="text-xs font-semibold text-slate-500">
+            <TableHead className="text-[11px] font-medium text-slate-500">
               {t("count")}
             </TableHead>
-            <TableHead className="pr-5 text-xs font-semibold text-slate-500">
+            <TableHead className="pr-5 text-[11px] font-medium text-slate-500">
               {t("lastAsked")}
             </TableHead>
           </TableRow>
@@ -139,15 +126,15 @@ const HotQuestionsTable = ({
           {!isLoading && items.length === 0 ? (
             <TableRow className="hover:bg-white">
               <TableCell colSpan={5} className="py-20 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
-                  <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                <div className="mx-auto flex max-w-xs flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8">
+                  <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
                     <MessageSquareQuote className="size-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-[13px] font-medium text-slate-900">
                       {t("notFoundTable")}
                     </p>
-                    <p className="mt-0.5 text-xs leading-5 text-slate-500">
+                    <p className="mt-0.5 text-[12px] leading-5 text-slate-500">
                       {t("notFoundHint")}
                     </p>
                   </div>
@@ -163,11 +150,18 @@ const HotQuestionsTable = ({
                 return (
                   <TableRow
                     key={item.id}
+                    tabIndex={0}
                     className={cn(
                       "cursor-pointer border-slate-100 transition-colors hover:bg-slate-50/70",
                       isActive && "bg-amber-50/70 hover:bg-amber-50/80"
                     )}
                     onClick={() => onSelect(item)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        onSelect(item)
+                      }
+                    }}
                   >
                     <TableCell className="px-5 py-3.5">
                       <div className="flex items-start gap-3">
@@ -176,10 +170,10 @@ const HotQuestionsTable = ({
                         </div>
 
                         <div className="min-w-0">
-                          <p className="line-clamp-2 text-sm font-semibold text-slate-900">
+                          <p className="line-clamp-2 text-[13px] font-medium text-slate-900">
                             {item.question}
                           </p>
-                          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-slate-500">
                             <span>
                               {item.normalized || t("normalizedMissing")}
                             </span>
@@ -207,15 +201,17 @@ const HotQuestionsTable = ({
                             : "border-emerald-200 bg-emerald-50 text-emerald-700"
                         )}
                       >
-                        {item.is_fallback ? t("fallbackStatus") : t("answeredStatus")}
+                        {item.is_fallback
+                          ? t("fallbackStatus")
+                          : t("answeredStatus")}
                       </Badge>
                     </TableCell>
 
-                    <TableCell className="font-mono text-xs font-semibold text-slate-700">
+                    <TableCell className="font-mono text-[12px] font-semibold text-slate-700">
                       {item.count}
                     </TableCell>
 
-                    <TableCell className="pr-5 text-xs text-slate-500">
+                    <TableCell className="pr-5 text-[12px] text-slate-500">
                       {formatDateTime(item.last_asked_at)}
                     </TableCell>
                   </TableRow>
@@ -225,8 +221,8 @@ const HotQuestionsTable = ({
         </TableBody>
       </Table>
 
-      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-slate-500">
+      <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3 md:flex-row md:items-center md:justify-between">
+        <p className="text-[12px] text-slate-500">
           {t("page", { current: currentPage, total: totalPages })}
         </p>
 
@@ -237,7 +233,7 @@ const HotQuestionsTable = ({
                 href="#"
                 text={t("prev")}
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === 1 && "pointer-events-none opacity-40"
                 )}
                 onClick={(event) => {
@@ -252,7 +248,7 @@ const HotQuestionsTable = ({
                 <PaginationLink
                   href="#"
                   isActive={page === currentPage}
-                  className="h-8 w-8 rounded-lg text-xs"
+                  className="h-8 w-8 rounded-lg text-[12px]"
                   onClick={(event) => {
                     event.preventDefault()
                     onPageChange(page)
@@ -268,7 +264,7 @@ const HotQuestionsTable = ({
                 href="#"
                 text={t("next")}
                 className={cn(
-                  "h-8 rounded-lg px-3 text-xs",
+                  "h-8 rounded-lg px-3 text-[12px]",
                   currentPage === totalPages && "pointer-events-none opacity-40"
                 )}
                 onClick={(event) => {

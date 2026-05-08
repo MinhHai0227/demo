@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, Loader2, LockKeyhole, ShieldCheck } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 
 import logo from "@/assets/logo.png"
 import { Button } from "@/components/ui/button"
@@ -13,14 +13,11 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import useAuth from "@/hooks/use-auth"
 import { loginSchema, type LoginSchema } from "@/schemas/auth-schema"
 
-const inputClassName =
-  "h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-[14px] text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-slate-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(15,23,42,0.06)]"
-
 const LoginLayout = () => {
-  const navigate = useNavigate()
   const { t } = useTranslation("login")
   const { accessToken, user, login, loginPending, loginError } = useAuth()
 
@@ -55,8 +52,12 @@ const LoginLayout = () => {
   }
 
   const handleSubmit = async (values: LoginSchema) => {
-    await login(values)
-    navigate("/admin", { replace: true })
+    try {
+      await login(values)
+      // Redirect handled by <Navigate> above when accessToken/user update
+    } catch {
+      // login mutation sets loginError automatically
+    }
   }
 
   const errorMessage =
@@ -174,11 +175,11 @@ const LoginLayout = () => {
                         {t("emailLabel")}
                       </FieldLabel>
                       <FieldContent>
-                        <input
+                        <Input
                           id="login-email"
                           type="email"
                           autoComplete="email"
-                          className={inputClassName}
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-[14px] text-slate-800 placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:bg-white focus-visible:shadow-[0_0_0_3px_rgba(15,23,42,0.06)]"
                           placeholder="admin@vinuni.edu.vn"
                           {...form.register("email")}
                         />
@@ -194,11 +195,11 @@ const LoginLayout = () => {
                         {t("passwordLabel")}
                       </FieldLabel>
                       <FieldContent>
-                        <input
+                        <Input
                           id="login-password"
                           type="password"
                           autoComplete="current-password"
-                          className={inputClassName}
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-[14px] text-slate-800 placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:bg-white focus-visible:shadow-[0_0_0_3px_rgba(15,23,42,0.06)]"
                           placeholder={t("passwordPlaceholder")}
                           {...form.register("password")}
                         />

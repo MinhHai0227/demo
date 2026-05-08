@@ -33,7 +33,14 @@ const markAllNotificationsRead = async (params?: {
   return await axios.patch("notifications/read-all", undefined, { params })
 }
 
+const deleteNotification = async (
+  notificationId: string
+): Promise<{ message: string }> => {
+  return await axios.delete(`notifications/${notificationId}`)
+}
+
 export {
+  deleteNotification,
   getNotifications,
   getUnreadNotificationCount,
   markAllNotificationsRead,

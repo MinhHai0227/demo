@@ -54,5 +54,22 @@
   "noDateSelected": "Chưa chọn ngày",
   "dailyDetailHint": "Dữ liệu chi tiết của ngày {{date}}",
   "noTopIntentsForDate": "Ngày này chưa có top intents.",
-  "selectDateForDetail": "Chọn một ngày trong bảng để xem chi tiết."
+  "selectDateForDetail": "Chọn một ngày trong bảng để xem chi tiết.",
+  "rangeToday": "Hôm nay",
+  "rangeYesterday": "Hôm qua",
+  "rangeLast7Days": "7 ngày gần đây",
+  "rangeLast14Days": "14 ngày gần đây",
+  "rangeThisMonth": "Tháng này",
+  "rangeLastMonth": "Tháng trước",
+  "funnelLeadCreated": "Lead được tạo",
+  "funnelContactCollected": "Đã thu thập liên hệ",
+  "funnelChatInteracted": "Đã tương tác chat",
+  "funnelInterestDetected": "Phát hiện quan tâm",
+  "funnelHotLead": "Lead tiềm năng",
+  "funnelAssigned": "Đã phân công",
+  "funnelContactedOrLater": "Đã liên hệ+",
+  "channelWeb": "Web",
+  "channelZalo": "Zalo",
+  "channelFacebook": "Facebook",
+  "channelTelegram": "Telegram"
 }

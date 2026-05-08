@@ -213,8 +213,8 @@ const StaffFormDialog = ({
                           <SelectValue placeholder={t("selectRole")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ADMIN">Admin</SelectItem>
-                          <SelectItem value="COUNSELOR">Counselor</SelectItem>
+                          <SelectItem value="ADMIN">{t("roleAdmin")}</SelectItem>
+                          <SelectItem value="COUNSELOR">{t("roleCounselor")}</SelectItem>
                         </SelectContent>
                       </Select>
                     )}

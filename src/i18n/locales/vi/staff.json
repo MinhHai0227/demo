@@ -52,5 +52,7 @@
   "deleting": "Đang xóa...",
   "deleteAccount": "Xóa tài khoản",
   "notFoundHint": "Thử điều chỉnh bộ lọc hoặc thêm nhân viên mới.",
-  "genericError": "Có lỗi xảy ra. Vui lòng thử lại."
+  "genericError": "Có lỗi xảy ra. Vui lòng thử lại.",
+  "roleAdmin": "Admin",
+  "roleCounselor": "Counselor"
 }

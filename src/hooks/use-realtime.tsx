@@ -34,6 +34,15 @@ type RealtimeEvent = {
   payload?: RealtimePayload
 }
 
+type NotificationListQueryData =
+  | NotificationListResponse
+  | InfiniteData<NotificationListResponse, number>
+
+const isNotificationInfiniteData = (
+  data: NotificationListQueryData | undefined
+): data is InfiniteData<NotificationListResponse, number> =>
+  Boolean(data && typeof data === "object" && "pages" in data)
+
 type UseRealtimeOptions = {
   enabled?: boolean
   token?: string | null
@@ -227,14 +236,14 @@ const syncConversation = (
     .getQueryCache()
     .findAll({ queryKey: ["admin-message-conversations"] })
     .forEach((query) => {
-      queryClient.setQueryData<InfiniteData<ChatConversationsPage, string | null>>(
-        query.queryKey,
-        (data) =>
-          syncConversationInPages(
-            data,
-            conversation,
-            shouldConversationStayInQuery(conversation, query.queryKey)
-          )
+      queryClient.setQueryData<
+        InfiniteData<ChatConversationsPage, string | null>
+      >(query.queryKey, (data) =>
+        syncConversationInPages(
+          data,
+          conversation,
+          shouldConversationStayInQuery(conversation, query.queryKey)
+        )
       )
     })
 }
@@ -357,7 +366,7 @@ const syncNotification = (
         return
       }
 
-      queryClient.setQueryData<NotificationListResponse>(
+      queryClient.setQueryData<NotificationListQueryData>(
         query.queryKey,
         (data) => syncNotificationInList(data, notification)
       )
@@ -365,11 +374,59 @@ const syncNotification = (
 }
 
 const syncNotificationInList = (
-  data: NotificationListResponse | undefined,
+  data: NotificationListQueryData | undefined,
   notification: NotificationItem
 ) => {
   if (!data) {
     return data
+  }
+
+  if (isNotificationInfiniteData(data)) {
+    let exists = false
+    const nextPages = data.pages.map((page) => {
+      const existingIndex = page.items.findIndex(
+        (item) => item.id === notification.id
+      )
+
+      if (existingIndex >= 0) {
+        exists = true
+        return {
+          ...page,
+          items: page.items.map((item) =>
+            item.id === notification.id ? notification : item
+          ),
+        }
+      }
+
+      return page
+    })
+
+    if (exists) {
+      return {
+        ...data,
+        pages: nextPages,
+      }
+    }
+
+    const [firstPage, ...restPages] = nextPages
+    if (!firstPage) {
+      return data
+    }
+
+    return {
+      ...data,
+      pages: [
+        {
+          ...firstPage,
+          items: [notification, ...firstPage.items].slice(0, firstPage.limit),
+          total: firstPage.total + 1,
+        },
+        ...restPages.map((page) => ({
+          ...page,
+          total: page.total + 1,
+        })),
+      ],
+    }
   }
 
   const existingIndex = data.items.findIndex(
@@ -401,18 +458,34 @@ const markNotificationListsRead = (
         return
       }
 
-      queryClient.setQueryData<NotificationListResponse>(
+      queryClient.setQueryData<NotificationListQueryData>(
         query.queryKey,
-        (data) =>
-          data
-            ? {
-                ...data,
-                items: data.items.map((item) => ({
+        (data) => {
+          if (!data) {
+            return data
+          }
+
+          if (isNotificationInfiniteData(data)) {
+            return {
+              ...data,
+              pages: data.pages.map((page) => ({
+                ...page,
+                items: page.items.map((item) => ({
                   ...item,
                   is_read: true,
                 })),
-              }
-            : data
+              })),
+            }
+          }
+
+          return {
+            ...data,
+            items: data.items.map((item) => ({
+              ...item,
+              is_read: true,
+            })),
+          }
+        }
       )
     })
 
@@ -438,7 +511,9 @@ const markNotificationListsRead = (
 
 const matchesNotificationListQuery = (
   queryKey: readonly unknown[],
-  source: Pick<RealtimePayload, "staff_id" | "target"> | Pick<NotificationItem, "staff_id" | "target">
+  source:
+    | Pick<RealtimePayload, "staff_id" | "target">
+    | Pick<NotificationItem, "staff_id" | "target">
 ) => {
   const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
   const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined
@@ -484,7 +559,9 @@ const syncNotificationUnreadCount = (
 
 const matchesUnreadCountQuery = (
   queryKey: readonly unknown[],
-  source: Pick<RealtimePayload, "staff_id" | "target"> | Pick<NotificationItem, "staff_id" | "target">
+  source:
+    | Pick<RealtimePayload, "staff_id" | "target">
+    | Pick<NotificationItem, "staff_id" | "target">
 ) => {
   const staffId = typeof queryKey[1] === "string" ? queryKey[1] : undefined
   const target = typeof queryKey[2] === "string" ? queryKey[2] : undefined

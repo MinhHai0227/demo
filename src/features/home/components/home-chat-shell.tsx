@@ -703,7 +703,9 @@ const HomeChatShell = () => {
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className="h-8 w-8 rounded-xl text-slate-400 hover:text-slate-600"
+                  disabled
+                  aria-label={t("chat.attachFile")}
+                  className="h-8 w-8 rounded-xl text-slate-400"
                 >
                   <Paperclip className="h-3.5 w-3.5" />
                 </Button>
@@ -711,7 +713,9 @@ const HomeChatShell = () => {
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className="h-8 w-8 rounded-xl text-slate-400 hover:text-slate-600"
+                  disabled
+                  aria-label={t("chat.recordVoice")}
+                  className="h-8 w-8 rounded-xl text-slate-400"
                 >
                   <Mic className="h-3.5 w-3.5" />
                 </Button>
