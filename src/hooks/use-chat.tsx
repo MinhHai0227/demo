@@ -48,7 +48,11 @@ const useChat = () => {
   })
 
   const chatQueryMutation = useMutation({
-    mutationFn: (data: ChatQueryRequest) => queryChat(data),
+    mutationFn: (data: ChatQueryRequest) =>
+      queryChat({
+        ...data,
+        source_domain: data.source_domain ?? leadData?.source_domain ?? null,
+      }),
     onSuccess: (data) => {
       updateLeadData({
         conversation_id: data.conversation_id,

@@ -6,6 +6,7 @@ export type LeadData = {
   conversation_id?: string | null
   conversation_token?: string | null
   full_name: string
+  source_domain?: string | null
 }
 
 type LeadStore = {

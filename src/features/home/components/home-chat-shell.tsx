@@ -13,6 +13,7 @@ import { toast } from "sonner"
 
 import { requestConversationStaffContact } from "@/api/chat-api"
 import { Button } from "@/components/ui/button"
+import ChatCitations from "@/features/chat/components/chat-citations"
 import HomeLeadFormDialog from "@/features/home/components/home-lead-form-dialog"
 import useChat from "@/hooks/use-chat"
 import { formatDateTime } from "@/lib/date"
@@ -268,6 +269,7 @@ const HomeChatShell = () => {
           content: message,
           intent: null,
           is_fallback: false,
+          citations: [],
           created_at: null,
         },
       ]
@@ -280,6 +282,7 @@ const HomeChatShell = () => {
           content: "",
           intent: null,
           is_fallback: false,
+          citations: [],
           created_at: null,
         })
       }
@@ -312,6 +315,7 @@ const HomeChatShell = () => {
                 ...item,
                 id: response.user_message_id,
                 conversation_id: response.conversation_id,
+                citations: [],
                 created_at: response.created_at,
               }
             }
@@ -328,6 +332,7 @@ const HomeChatShell = () => {
                 content: response.answer,
                 intent: response.blocked ? "blocked" : null,
                 is_fallback: response.confidence < 0.4,
+                citations: response.citations ?? [],
                 created_at: response.created_at,
               }
             }
@@ -632,9 +637,14 @@ const HomeChatShell = () => {
                     }`}
                   >
                     {message.content ? (
-                      <p className="wrap-anywhere whitespace-pre-wrap">
-                        {message.content}
-                      </p>
+                      <>
+                        <p className="wrap-anywhere whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                        {isAssistant ? (
+                          <ChatCitations citations={message.citations} tone="light" />
+                        ) : null}
+                      </>
                     ) : isAssistant ? (
                       <span className="flex items-center gap-1.5 text-slate-400">
                         <span className="flex gap-1">

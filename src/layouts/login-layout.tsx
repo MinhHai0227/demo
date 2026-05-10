@@ -60,9 +60,7 @@ const LoginLayout = () => {
     }
   }
 
-  const errorMessage =
-    (loginError as { response?: { data?: { detail?: string } } } | null)
-      ?.response?.data?.detail ?? null
+  const errorMessage = loginError?.message ?? null
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#faf9f6]">

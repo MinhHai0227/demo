@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Link, useLocation } from "react-router-dom"
 import {
   BookOpenText,
+  Code2,
   CreditCard,
   Globe2,
   GraduationCap,
@@ -78,6 +79,11 @@ const AppSidebar = () => {
           label: t("nav.knowledgeChunks"),
           icon: BookOpenText,
           href: "/admin/knowledge-chunks",
+        },
+        {
+          label: "Embed Widget",
+          icon: Code2,
+          href: "/admin/widget-integration",
         },
       ],
     },

@@ -129,7 +129,7 @@ const QuickProcessingUploadDialog = ({
                 <input
                   id="ocr-upload-file"
                   type="file"
-                  accept=".pdf,.png,.jpg,.jpeg,.webp,.tiff"
+                  accept=".pdf,.png,.jpg,.jpeg,.webp,.tiff,.xlsx,.xls,.csv"
                   className="block w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 text-[13px] text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-950 file:px-3 file:py-1.5 file:text-[11px] file:font-medium file:text-white hover:file:bg-slate-800"
                   onChange={(e) => {
                     const selectedFile = e.target.files?.[0] ?? null

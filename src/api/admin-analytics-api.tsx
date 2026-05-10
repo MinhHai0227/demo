@@ -51,8 +51,10 @@ const getConversationStats = async (): Promise<ConversationStats> => {
   return await axios.get("admin/analytics/conversation-stats")
 }
 
-const getConversionFunnel = async (): Promise<ConversionFunnel> => {
-  return await axios.get("admin/analytics/conversion-funnel")
+const getConversionFunnel = async (
+  params?: AnalyticsRangeParams
+): Promise<ConversionFunnel> => {
+  return await axios.get("admin/analytics/conversion-funnel", { params })
 }
 
 const getHotQuestionsSummary = async (): Promise<HotQuestionsSummary> => {

@@ -1,3 +1,4 @@
+import ChatCitations from "@/features/chat/components/chat-citations"
 import { formatTime } from "@/features/chat/chat-utils"
 import { cn } from "@/lib/utils"
 import type { ChatMessage } from "@/types/chat-type"
@@ -13,7 +14,7 @@ const ChatMessageBubble = ({ message }: ChatMessageBubbleProps) => {
   if (isSystem) {
     return (
       <div className="flex justify-center">
-        <span className="rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] wrap-anywhere whitespace-pre-wrap text-slate-500 shadow-sm">
+        <span className="rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] whitespace-pre-wrap text-slate-500 shadow-sm wrap-anywhere">
           {message.content}
         </span>
       </div>
@@ -31,9 +32,12 @@ const ChatMessageBubble = ({ message }: ChatMessageBubbleProps) => {
         )}
       >
         <div className="max-h-72 overflow-y-auto pr-1">
-          <p className="text-[13px] leading-relaxed wrap-anywhere whitespace-pre-wrap">
+          <p className="text-[13px] leading-relaxed whitespace-pre-wrap wrap-anywhere">
             {message.content}
           </p>
+          {!isUser ? (
+            <ChatCitations citations={message.citations} tone="dark" />
+          ) : null}
         </div>
 
         <p

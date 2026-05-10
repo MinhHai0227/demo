@@ -12,7 +12,7 @@ import {
   getHotQuestions,
 } from "@/api/admin-analytics-api"
 import DashboardConversationStatsPanel from "@/features/dashboard/components/dashboard-conversation-stats-panel"
-import DashboardConversionFunnelPanel from "@/features/dashboard/components/dashboard-conversion-funnel-panel"
+import DashboardFunnelChart from "@/features/dashboard/components/dashboard-funnel-chart"
 import DashboardDailyDetailDialog from "@/features/dashboard/components/dashboard-daily-detail-dialog"
 import DashboardDailyTable from "@/features/dashboard/components/dashboard-daily-table"
 import DashboardHotQuestionsPreview from "@/features/dashboard/components/dashboard-hot-questions-preview"
@@ -96,8 +96,14 @@ const DashboardPage = () => {
   })
 
   const conversionFunnelQuery = useQuery({
-    queryKey: ["admin-analytics", "conversion-funnel"],
-    queryFn: getConversionFunnel,
+    queryKey: [
+      "admin-analytics",
+      "conversion-funnel",
+      rangePreset,
+      rangeParams.from,
+      rangeParams.to,
+    ],
+    queryFn: () => getConversionFunnel(rangeParams),
     placeholderData: (previousData) => previousData,
   })
 
@@ -165,7 +171,7 @@ const DashboardPage = () => {
           isLoading={conversationStatsQuery.isLoading}
           isFetching={conversationStatsQuery.isFetching}
         />
-        <DashboardConversionFunnelPanel
+        <DashboardFunnelChart
           funnel={conversionFunnelQuery.data}
           isLoading={conversionFunnelQuery.isLoading}
           isFetching={conversionFunnelQuery.isFetching}

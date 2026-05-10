@@ -49,6 +49,7 @@
   "conversionFunnelTitle": "Conversion Funnel",
   "leadJourneyByStage": "Lead journey by stage.",
   "fromPrevious": "From previous:",
+  "count": "Count",
   "noFunnelData": "No conversion funnel data yet.",
   "dailyDetail": "Daily Detail Analysis",
   "noDateSelected": "No date selected",

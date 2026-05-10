@@ -12,10 +12,12 @@ import StaffPage from "@/features/staff/staff-page"
 import TuitionPolicyPage from "@/features/tuition-policy/tuition-policy-page"
 import QuickProcessingPage from "@/features/quick-processing/quick-processing-page"
 import WebCrawlerPage from "@/features/web-crawler/web-crawler-page"
+import WidgetIntegrationPage from "@/features/widget-integration/widget-integration-page"
 import AdminLayout from "@/layouts/admin-layout"
 import HomeLayout from "@/layouts/home-layout"
 import LoginLayout from "@/layouts/login-layout"
 import MessageLayout from "@/layouts/message-layout"
+import WidgetLayout from "@/layouts/widget-layout"
 import { hasAnyRole } from "@/lib/permissions"
 import useAuthStore from "@/stores/auth-store"
 import type { UserRole } from "@/types/auth-type"
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginLayout />,
+  },
+  {
+    path: "/widget",
+    element: <WidgetLayout />,
   },
   {
     path: "/message",
@@ -132,6 +138,10 @@ const router = createBrowserRouter([
             <WebCrawlerPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "widget-integration",
+        element: <WidgetIntegrationPage />,
       },
     ],
   },

@@ -19,6 +19,7 @@ type ChatQueryRequest = {
   conversation_token?: string | null
   query: string
   top_k?: number
+  source_domain?: string | null
 }
 
 type ChatSourceItem = {
@@ -27,6 +28,10 @@ type ChatSourceItem = {
   source: string | null
   score: number
   content: string
+}
+
+type ChatCitation = {
+  url: string
 }
 
 type MessageSourceItem = {
@@ -72,6 +77,7 @@ type ChatQueryResponse = {
   blocked: boolean
   retrieval_mode: ChatRetrievalMode
   selected_tools: string[]
+  citations: ChatCitation[]
   sources: ChatSourceItem[]
   follow_up_suggestions: string[]
   created_at: string
@@ -130,6 +136,7 @@ type ChatMessage = {
   content: string
   intent: string | null
   is_fallback: boolean
+  citations?: ChatCitation[]
   created_at: string | null
 }
 
@@ -149,6 +156,7 @@ export type {
   ChatRetrievalMode,
   ChatQueryRequest,
   ChatQueryResponse,
+  ChatCitation,
   ChatSourceItem,
   MessageSourceItem,
   MessageSources,
