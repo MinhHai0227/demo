@@ -17,11 +17,19 @@ const ChatCitations = ({
   return (
     <div
       className={cn(
-        "mt-3 border-t pt-3",
+        "mt-2.5 border-t pt-2.5",
         tone === "dark" ? "border-white/10" : "border-slate-200/80"
       )}
     >
-      <div className="flex flex-wrap gap-2">
+      <p
+        className={cn(
+          "mb-1.5 text-[10px] font-medium tracking-[0.08em] uppercase",
+          tone === "dark" ? "text-white/55" : "text-slate-500"
+        )}
+      >
+        Nguon tham khao
+      </p>
+      <div className="flex flex-wrap gap-1.5">
         {citations.map((citation) => (
           <a
             key={citation.url}
@@ -30,7 +38,7 @@ const ChatCitations = ({
             rel="noopener noreferrer"
             title={citation.url}
             className={cn(
-              "max-w-full rounded-full border px-2.5 py-1 text-[11px] transition hover:-translate-y-0.5",
+              "max-w-full rounded-full border px-2 py-0.5 text-[10px] transition hover:-translate-y-0.5",
               "overflow-hidden text-ellipsis whitespace-nowrap",
               tone === "dark"
                 ? "border-white/15 bg-white/8 text-white/90 hover:bg-white/14"
