@@ -1,30 +1,33 @@
-import HomeChatShell from "@/features/home/components/home-chat-shell"
-import HomeHero from "@/features/home/components/home-hero"
+import { useEffect } from "react"
+import HomeAdmissionConditionsSection from "@/features/home/components/home-admission-conditions-section"
+import HomeAdmissionProcessSection from "@/features/home/components/home-admission-process-section"
+import HomeLandingSection from "@/features/home/components/home-landing-section"
+import HomeProgramsSection from "@/features/home/components/home-programs-section"
+import HomeScholarshipSection from "@/features/home/components/home-scholarship-section"
+import { useLocation } from "react-router-dom"
 
 const HomePage = () => {
-  return (
-    <section className="relative overflow-x-clip bg-[#faf9f6]">
-      {/* Ambient background layers */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_-10%_-10%,rgba(214,174,78,0.13),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_110%_110%,rgba(15,23,42,0.04),transparent)]" />
-        {/* Subtle grid texture */}
-        <div
-          className="absolute inset-0 opacity-[0.018]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg,#0f172a 0px,#0f172a 1px,transparent 1px,transparent 64px),repeating-linear-gradient(90deg,#0f172a 0px,#0f172a 1px,transparent 1px,transparent 64px)",
-          }}
-        />
-      </div>
+  const location = useLocation()
 
-      <div className="relative mx-auto max-w-7xl px-6 py-6 lg:px-10 lg:py-8">
-        <div className="grid gap-6 lg:h-[calc(100dvh-10rem)] lg:grid-cols-[1fr_1.18fr] lg:items-stretch">
-          <HomeHero />
-          <HomeChatShell />
-        </div>
-      </div>
-    </section>
+  useEffect(() => {
+    const sectionId = location.hash.replace("#", "") || "home"
+    const element = document.getElementById(sectionId)
+
+    if (!element) {
+      return
+    }
+
+    element.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [location.hash])
+
+  return (
+    <div className="bg-[#faf9f6]">
+      <HomeLandingSection />
+      <HomeProgramsSection />
+      <HomeScholarshipSection />
+      <HomeAdmissionConditionsSection />
+      <HomeAdmissionProcessSection />
+    </div>
   )
 }
 

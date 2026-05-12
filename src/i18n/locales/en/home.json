@@ -5,9 +5,21 @@
     "headlineHighlight": "ask anything.",
     "description": "Get accurate info about programs, tuition, scholarships, and application process — anytime.",
     "highlights": [
-      { "label": "Response", "value": "~30 sec", "description": "Quick answers to common admissions questions." },
-      { "label": "Content", "value": "24/7", "description": "Always available for program, tuition, and application info." },
-      { "label": "Counseling", "value": "1:1", "description": "Suggested Q&A pathway before contacting admissions." }
+      {
+        "label": "Response",
+        "value": "~30 sec",
+        "description": "Quick answers to common admissions questions."
+      },
+      {
+        "label": "Content",
+        "value": "24/7",
+        "description": "Always available for program, tuition, and application info."
+      },
+      {
+        "label": "Counseling",
+        "value": "1:1",
+        "description": "Suggested Q&A pathway before contacting admissions."
+      }
     ],
     "telegramButton": "Chat on Telegram",
     "orUseChatbox": "or use the chatbox on the right"
@@ -108,5 +120,146 @@
   "scholarshipMerit": "Merit-based Scholarship",
   "scholarshipNeedBased": "Need-based Scholarship",
   "scholarshipTalent": "Talent Scholarship",
-  "scholarshipSpecial": "Special Scholarship"
+  "scholarshipSpecial": "Special Scholarship",
+  "admissionSections": {
+    "programs": {
+      "badge": "Academics",
+      "title": "Programs Built For Real-World Leadership",
+      "description": "Students learn through interdisciplinary coursework, experiential projects, and mentorship from faculty and industry partners.",
+      "learningModelTitle": "Learning Model",
+      "learningModelItems": [
+        "Core foundation + major specialization",
+        "Early exposure to research and innovation",
+        "Career readiness embedded in every semester"
+      ],
+      "tracks": {
+        "business": {
+          "title": "Business and Management",
+          "description": "Practice-based learning with project studios, case clinics, and startup mentoring."
+        },
+        "engineering": {
+          "title": "Science and Engineering",
+          "description": "Strong foundation in STEM with lab work, research pathways, and industry capstones."
+        },
+        "health": {
+          "title": "Health Sciences",
+          "description": "Integrated clinical thinking, public health impact, and interdisciplinary teamwork."
+        },
+        "law": {
+          "title": "Law and Public Policy",
+          "description": "Policy analysis, legal reasoning, and leadership for complex societal challenges."
+        },
+        "arts": {
+          "title": "Arts and Design",
+          "description": "Creative practice with portfolio-driven outcomes and cross-disciplinary collaboration."
+        },
+        "digital": {
+          "title": "Digital and Data Studies",
+          "description": "Data literacy, AI fluency, and problem-solving skills across every field of study."
+        }
+      }
+    },
+    "scholarship": {
+      "badge": "Scholarships",
+      "title": "Investment In Potential, Not Just Performance",
+      "description": "Scholarship decisions are aligned with admissions outcomes, helping applicants evaluate their options early and plan confidently.",
+      "stats": {
+        "coverage": {
+          "label": "Coverage",
+          "value": "Up to full tuition"
+        },
+        "approach": {
+          "label": "Approach",
+          "value": "Holistic review"
+        },
+        "decision": {
+          "label": "Decision",
+          "value": "Announced with offer"
+        }
+      },
+      "types": {
+        "merit": {
+          "title": "Merit Scholarship",
+          "value": "25% - 100%",
+          "description": "For high-achieving applicants with strong academic records."
+        },
+        "needBased": {
+          "title": "Need-based Support",
+          "value": "Flexible",
+          "description": "Additional financial support based on family circumstances."
+        },
+        "talent": {
+          "title": "Talent Scholarship",
+          "value": "Up to 75%",
+          "description": "For exceptional achievements in leadership, arts, sports, or innovation."
+        }
+      },
+      "timelineTitle": "Support timeline",
+      "timeline": [
+        "Submit application and supporting documents",
+        "Holistic scholarship and admission review",
+        "Interview for shortlisted candidates",
+        "Receive admission and scholarship decision together"
+      ]
+    },
+    "conditions": {
+      "badge": "Admission Requirements",
+      "title": "What We Look For In Applicants",
+      "description": "Admissions decisions are based on a holistic review across academic performance, personal potential, and alignment with program goals.",
+      "criteria": {
+        "academic": {
+          "title": "Academic Readiness",
+          "items": [
+            "Strong high school results or equivalent credentials",
+            "Consistent performance in relevant subject groups"
+          ]
+        },
+        "language": {
+          "title": "Language Proficiency",
+          "items": [
+            "English proficiency aligned with program expectations",
+            "Evidence of communication skills for global learning"
+          ]
+        },
+        "leadership": {
+          "title": "Leadership And Engagement",
+          "items": [
+            "Meaningful extracurricular participation",
+            "Community involvement, projects, or initiative building"
+          ]
+        },
+        "statement": {
+          "title": "Personal Statement",
+          "items": [
+            "Clear academic goals and motivation",
+            "Reflection on values, impact, and growth mindset"
+          ]
+        }
+      }
+    },
+    "process": {
+      "badge": "Application Journey",
+      "title": "A Clear Admission Process, Step By Step",
+      "description": "We keep the process structured and transparent so applicants can plan their timelines and prepare confidently.",
+      "stepLabel": "STEP {{number}}",
+      "steps": {
+        "application": {
+          "title": "Build Your Application",
+          "text": "Complete the form and upload transcripts, certificates, and supporting materials."
+        },
+        "review": {
+          "title": "Holistic Review",
+          "text": "The admissions committee evaluates academic profile, personal fit, and potential."
+        },
+        "interview": {
+          "title": "Interview Stage",
+          "text": "Shortlisted applicants are invited to interviews online or in person."
+        },
+        "decision": {
+          "title": "Final Decision",
+          "text": "Receive your admission outcome and next-step guidance for enrollment."
+        }
+      }
+    }
+  }
 }

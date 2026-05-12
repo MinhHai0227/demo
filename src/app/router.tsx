@@ -1,9 +1,6 @@
 import type { ReactNode } from "react"
-
 import DashboardPage from "@/features/dashboard/dashboard-page"
 import HomePage from "@/features/home/home-page"
-import ProgramsPage from "@/features/home/programs-page"
-import ScholarshipPage from "@/features/home/scholarship-page"
 import HotQuestionsPage from "@/features/hot-questions/hot-questions-page"
 import LeadPage from "@/features/lead/lead-page"
 import KnowledgeChunkPage from "@/features/knowledge-chunk/knowledge-chunk-page"
@@ -56,14 +53,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
-      },
-      {
-        path: "programs",
-        element: <ProgramsPage />,
-      },
-      {
-        path: "scholarship",
-        element: <ScholarshipPage />,
       },
     ],
   },

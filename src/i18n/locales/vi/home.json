@@ -5,9 +5,21 @@
     "headlineHighlight": "hỏi bất cứ điều gì.",
     "description": "Nhận thông tin chính xác về chương trình học, học phí, học bổng và quy trình nộp hồ sơ — bất kỳ lúc nào.",
     "highlights": [
-      { "label": "Phản hồi", "value": "~30 giây", "description": "Trả lời nhanh các câu hỏi tuyển sinh phổ biến." },
-      { "label": "Nội dung", "value": "24/7", "description": "Sẵn sàng hỗ trợ thông tin chương trình, học phí và hồ sơ." },
-      { "label": "Tư vấn", "value": "1:1", "description": "Gợi ý lộ trình hỏi đáp trước khi liên hệ bộ phận admissions." }
+      {
+        "label": "Phản hồi",
+        "value": "~30 giây",
+        "description": "Trả lời nhanh các câu hỏi tuyển sinh phổ biến."
+      },
+      {
+        "label": "Nội dung",
+        "value": "24/7",
+        "description": "Sẵn sàng hỗ trợ thông tin chương trình, học phí và hồ sơ."
+      },
+      {
+        "label": "Tư vấn",
+        "value": "1:1",
+        "description": "Gợi ý lộ trình hỏi đáp trước khi liên hệ bộ phận admissions."
+      }
     ],
     "telegramButton": "Chat trên Telegram",
     "orUseChatbox": "hoặc dùng chatbox bên phải"
@@ -107,5 +119,146 @@
   "scholarshipMerit": "Học bổng theo thành tích",
   "scholarshipNeedBased": "Học bổng theo nhu cầu",
   "scholarshipTalent": "Học bổng tài năng",
-  "scholarshipSpecial": "Học bổng đặc biệt"
+  "scholarshipSpecial": "Học bổng đặc biệt",
+  "admissionSections": {
+    "programs": {
+      "badge": "Học thuật",
+      "title": "Chương trình đào tạo cho năng lực lãnh đạo thực tế",
+      "description": "Sinh viên học qua các học phần liên ngành, dự án trải nghiệm và cố vấn học thuật từ giảng viên, đối tác doanh nghiệp.",
+      "learningModelTitle": "Mô hình học tập",
+      "learningModelItems": [
+        "Nền tảng cốt lõi + chuyên ngành chuyên sâu",
+        "Sớm tiếp cận nghiên cứu và đổi mới",
+        "Sẵn sàng nghề nghiệp trong từng học kỳ"
+      ],
+      "tracks": {
+        "business": {
+          "title": "Kinh doanh và Quản trị",
+          "description": "Học theo dự án thực tế, case study và cố vấn khởi nghiệp."
+        },
+        "engineering": {
+          "title": "Khoa học và Kỹ thuật",
+          "description": "Nền tảng STEM vững chắc với phòng thí nghiệm, nghiên cứu và đồ án doanh nghiệp."
+        },
+        "health": {
+          "title": "Khoa học Sức khỏe",
+          "description": "Kết hợp tư duy lâm sàng, tác động cộng đồng và hợp tác liên ngành."
+        },
+        "law": {
+          "title": "Luật và Chính sách công",
+          "description": "Rèn luyện tư duy pháp lý, phân tích chính sách và năng lực lãnh đạo xã hội."
+        },
+        "arts": {
+          "title": "Nghệ thuật và Thiết kế",
+          "description": "Phát triển năng lực sáng tạo qua portfolio và hợp tác đa lĩnh vực."
+        },
+        "digital": {
+          "title": "Dữ liệu và Công nghệ số",
+          "description": "Trang bị tư duy dữ liệu, năng lực AI và kỹ năng giải quyết vấn đề."
+        }
+      }
+    },
+    "scholarship": {
+      "badge": "Học bổng",
+      "title": "Đầu tư vào tiềm năng, không chỉ thành tích",
+      "description": "Kết quả học bổng được công bố cùng kết quả tuyển sinh, giúp ứng viên chủ động lập kế hoạch tài chính sớm.",
+      "stats": {
+        "coverage": {
+          "label": "Mức hỗ trợ",
+          "value": "Tối đa toàn bộ học phí"
+        },
+        "approach": {
+          "label": "Cách đánh giá",
+          "value": "Đánh giá toàn diện"
+        },
+        "decision": {
+          "label": "Thông báo",
+          "value": "Công bố cùng thư mời"
+        }
+      },
+      "types": {
+        "merit": {
+          "title": "Học bổng thành tích",
+          "value": "25% - 100%",
+          "description": "Dành cho ứng viên có thành tích học tập nổi bật."
+        },
+        "needBased": {
+          "title": "Hỗ trợ theo nhu cầu",
+          "value": "Linh hoạt",
+          "description": "Hỗ trợ thêm dựa trên điều kiện tài chính gia đình."
+        },
+        "talent": {
+          "title": "Học bổng tài năng",
+          "value": "Tối đa 75%",
+          "description": "Dành cho ứng viên có thành tích đặc biệt về lãnh đạo, nghệ thuật, thể thao hoặc đổi mới."
+        }
+      },
+      "timelineTitle": "Tiến độ hỗ trợ",
+      "timeline": [
+        "Nộp hồ sơ và tài liệu bổ sung",
+        "Đánh giá toàn diện học bổng và tuyển sinh",
+        "Phỏng vấn với ứng viên được chọn",
+        "Nhận kết quả học bổng cùng thư mời nhập học"
+      ]
+    },
+    "conditions": {
+      "badge": "Điều kiện tuyển sinh",
+      "title": "Tiêu chí đánh giá ứng viên",
+      "description": "Quyết định tuyển sinh được đưa ra dựa trên đánh giá toàn diện về học lực, tiềm năng cá nhân và sự phù hợp với chương trình.",
+      "criteria": {
+        "academic": {
+          "title": "Năng lực học thuật",
+          "items": [
+            "Kết quả học tập THPT hoặc tương đương tốt",
+            "Tính ổn định ở nhóm môn liên quan"
+          ]
+        },
+        "language": {
+          "title": "Năng lực ngôn ngữ",
+          "items": [
+            "Tiếng Anh đáp ứng yêu cầu của chương trình",
+            "Thể hiện kỹ năng giao tiếp trong môi trường học tập quốc tế"
+          ]
+        },
+        "leadership": {
+          "title": "Lãnh đạo và đóng góp",
+          "items": [
+            "Hoạt động ngoại khóa có ý nghĩa",
+            "Tham gia cộng đồng, dự án hoặc sáng kiến cá nhân"
+          ]
+        },
+        "statement": {
+          "title": "Bài luận cá nhân",
+          "items": [
+            "Mục tiêu học tập và động lực rõ ràng",
+            "Thể hiện giá trị cá nhân, tác động và tư duy phát triển"
+          ]
+        }
+      }
+    },
+    "process": {
+      "badge": "Lộ trình ứng tuyển",
+      "title": "Quy trình tuyển sinh rõ ràng theo từng bước",
+      "description": "Quy trình được thiết kế minh bạch để ứng viên dễ dàng theo dõi và chuẩn bị theo đúng mốc thời gian.",
+      "stepLabel": "BƯỚC {{number}}",
+      "steps": {
+        "application": {
+          "title": "Hoàn tất hồ sơ",
+          "text": "Điền thông tin ứng viên và tải bảng điểm, chứng chỉ, tài liệu cần thiết."
+        },
+        "review": {
+          "title": "Đánh giá toàn diện",
+          "text": "Hội đồng tuyển sinh xem xét học lực, mức độ phù hợp và tiềm năng phát triển."
+        },
+        "interview": {
+          "title": "Vòng phỏng vấn",
+          "text": "Ứng viên phù hợp được mời phỏng vấn online hoặc trực tiếp."
+        },
+        "decision": {
+          "title": "Kết quả cuối cùng",
+          "text": "Nhận kết quả tuyển sinh và hướng dẫn các bước nhập học tiếp theo."
+        }
+      }
+    }
+  }
 }

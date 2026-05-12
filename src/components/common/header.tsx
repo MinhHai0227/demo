@@ -31,14 +31,22 @@ const Header = () => {
 
   useEffect(() => {
     setMobileOpen(false)
-  }, [location.pathname])
+  }, [location.pathname, location.hash])
 
   const sections = [
-    { label: t("sections.home"), href: "/" },
-    { label: t("sections.programs"), href: "/programs" },
-    { label: t("sections.scholarship"), href: "/scholarship" },
-    { label: t("sections.admissionConditions"), href: "/admission-conditions" },
-    { label: t("sections.admissionProcess"), href: "/admission-process" },
+    { label: t("sections.home"), href: "/#home", sectionId: "home" },
+    { label: t("sections.programs"), href: "/#programs", sectionId: "programs" },
+    { label: t("sections.scholarship"), href: "/#scholarship", sectionId: "scholarship" },
+    {
+      label: t("sections.admissionConditions"),
+      href: "/#admission-conditions",
+      sectionId: "admission-conditions",
+    },
+    {
+      label: t("sections.admissionProcess"),
+      href: "/#admission-process",
+      sectionId: "admission-process",
+    },
   ]
 
   return (
@@ -50,7 +58,8 @@ const Header = () => {
 
         <nav className="hidden items-center gap-2 md:flex">
           {sections.map((section) => {
-            const isActive = location.pathname === section.href
+            const currentHash = location.hash.replace("#", "") || "home"
+            const isActive = location.pathname === "/" && currentHash === section.sectionId
 
             return (
               <Link
@@ -113,7 +122,8 @@ const Header = () => {
       {mobileOpen ? (
         <div className="flex flex-col gap-1 border-t border-border/50 bg-background/95 px-6 py-4 backdrop-blur-xl md:hidden">
           {sections.map((section) => {
-            const isActive = location.pathname === section.href
+            const currentHash = location.hash.replace("#", "") || "home"
+            const isActive = location.pathname === "/" && currentHash === section.sectionId
 
             return (
               <Link
